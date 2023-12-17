@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'htproject.apps.HtprojectConfig',
     'rest_framework',
     'oauth2_provider',
+    'ckeditor',
+    'ckeditor_uploader',
+
 ]
 
 MIDDLEWARE = [
@@ -56,6 +59,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'app.urls'
 
 MEDIA_ROOT = '%s/htproject/static/' % BASE_DIR
+CKEDITOR_UPLOAD_PATH = "ckeditor/"
 
 import pymysql
 pymysql.install_as_MySQLdb()

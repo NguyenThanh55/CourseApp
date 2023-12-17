@@ -15,12 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
-from htproject.admin import admin_site
+from django.urls import path, include, re_path
 
 urlpatterns = [
     path('', include('htproject.urls')),
-    path('admin/', admin_site.urls),
     # path('admin/', admin.site.urls),
-    path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    # path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
+
 ]
