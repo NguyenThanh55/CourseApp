@@ -4,7 +4,13 @@ from rest_framework.routers import DefaultRouter
 from .admin import admin_site
 
 router = DefaultRouter()
-# router.register('courses', views.CourseViewSet)
+router.register('city', views.CityViewSet)
+router.register('district', views.DistrictViewSet)
+router.register('ward', views.WardViewSet)
+router.register('order', views.OrderViewSet)
+router.register('rating', views.RatingViewSet)
+router.register('auction', views.AuctionViewSet)
+router.register('voucher', views.VoucherViewSet)
 
 
 urlpatterns = [
