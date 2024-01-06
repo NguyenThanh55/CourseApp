@@ -5,7 +5,18 @@ from .models import User, City, District, Order, Rating, Auction, Voucher
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'username', 'password']
+        fields = ['id', 'first_name', 'last_name', 'username', 'password', 'email', 'avatar', 'role', 'identityCard',
+                  'isApproved']
+        extra_kwargs = {
+            "password": { "write_only":"true" }
+        }
+
+    def create(self, validated_data):
+        user = User(**validated_data)
+        user.set_password(validated_data["password"])
+        user.save()
+
+        return user
 
 
 class CitySerializer(ModelSerializer):
