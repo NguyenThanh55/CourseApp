@@ -1,7 +1,10 @@
+from django.template.response import TemplateResponse
+from django.urls import path
 from django import forms
 from django.contrib import admin
 from .models import User, Voucher, City, District, Ward, Order, Rating, Auction
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
+from htproject import dao
 
 
 class VoucherAdmin(admin.ModelAdmin):
@@ -25,6 +28,16 @@ class AuctionAdmin(admin.ModelAdmin):
 class HTProjectAdminSite(admin.AdminSite):
     site_header = "HT Express"
     site_title = "HT Express"
+
+    def get_urls(self):
+        return [
+                   path('course-stats/', self.stats_view)
+               ] + super().get_urls()
+
+    def stats_view(self, request):
+        return TemplateResponse(request, 'admin/stats_view.html', {
+                                'order_count': dao.count_order_by_shipper()
+                                })
 
 
 admin_site = HTProjectAdminSite('HTExpress')

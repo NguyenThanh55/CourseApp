@@ -21,23 +21,6 @@ class BaseModel(models.Model):
         abstract = True
 
 
-# class Category(BaseModel):
-#     name = models.CharField(max_length=100, null=False)
-#
-#     def __str__(self):
-#         return self.name
-#
-#
-# class Course(BaseModel):
-#     subject = models.CharField(max_length=100, null=False)
-#     description = models.TextField()
-#     image = models.ImageField(upload_to='image/%Y/%m')
-#     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-#
-#     def __str__(self):
-#         return self.subject
-
-
 class City(models.Model):
     name = models.CharField(max_length=255, null=False)
 

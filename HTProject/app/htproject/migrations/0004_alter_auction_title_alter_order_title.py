@@ -3,6 +3,199 @@
 from django.db import migrations, models
 
 
+def create_seed_data(apps, schema_editor):
+    City = apps.get_model('htproject', 'City')
+    District = apps.get_model('htproject', 'District')
+    Ward = apps.get_model('htproject', 'Ward')
+
+    hcm_city = City.objects.create(name='Thành phố Hồ Chí Minh')
+
+    districts = [
+        {
+            'name': 'Quận 1',
+            'wards': ['Bến Nghé', 'Bến Thành', 'Cầu Kho',
+                      'Cầu Ông Lãnh', 'Cô Giang', 'Đa Kao',
+                      'Nguyễn Cư Trinh', 'Nguyễn Thái Bình', 'Phạm Ngũ Lão',
+                      'Tân Định']
+        },
+        {
+            'name': 'Quận 2',
+            'wards': ['An Khánh', 'An Lợi Đông', 'An Phú',
+                      'Bình An', 'Bình Khánh', 'Bình Trưng Đông',
+                      'Bình Trưng Tây', 'Cát Lái', 'Thạnh Mỹ Lợi',
+                      'Thảo Điền', 'Thủ Thiêm']
+        },
+        {
+            'name': 'Quận 3',
+            'wards': ['Phường 01', 'Phường 02', 'Phường 03', 'Phường 04',
+                      'Phường 05', 'Phường 06', 'Phường 07', 'Phường 08',
+                      'Phường 09', 'Phường 10', 'Phường 11', 'Phường 12',
+                      'Phường 13', 'Phường 14', 'Võ Thị Sáu']
+        },
+        {
+            'name': 'Quận 4',
+            'wards': ['Phường 01', 'Phường 02', 'Phường 03', 'Phường 04',
+                      'Phường 05', 'Phường 06', 'Phường 07', 'Phường 08',
+                      'Phường 09', 'Phường 10', 'Phường 12', 'Phường 13',
+                      'Phường 14', 'Phường 15', 'Phường 16', 'Phường 18']
+        },
+        {
+            'name': 'Quận 5',
+            'wards': ['Phường 01', 'Phường 02', 'Phường 03', 'Phường 04',
+                      'Phường 05', 'Phường 06', 'Phường 07', 'Phường 08',
+                      'Phường 09', 'Phường 10', 'Phường 11', 'Phường 12',
+                      'Phường 13', 'Phường 14', 'Phường 15']
+        },
+        {
+            'name': 'Quận 6',
+            'wards': ['Phường 01', 'Phường 02', 'Phường 03', 'Phường 04',
+                      'Phường 05', 'Phường 06', 'Phường 07', 'Phường 08',
+                      'Phường 09', 'Phường 10', 'Phường 11', 'Phường 12',
+                      'Phường 13', 'Phường 14']
+        },
+        {
+            'name': 'Quận 7',
+            'wards': ['Bình Thuận', 'Phú Mỹ', 'Phú Thuận',
+                      'Tân Hưng', 'Tân Kiểng', 'Tân Phong',
+                      'Tân Phú', 'Tân Quy', 'Tân Thuận Đông', 'Tân Thuận Tây']
+        },
+        {
+            'name': 'Quận 8',
+            'wards': ['Phường 01', 'Phường 02', 'Phường 03', 'Phường 04',
+                      'Phường 05', 'Phường 06', 'Phường 07', 'Phường 08',
+                      'Phường 09', 'Phường 10', 'Phường 11', 'Phường 12',
+                      'Phường 13', 'Phường 14', 'Phường 15', 'Phường 16']
+        },
+        {
+            'name': 'Quận 9',
+            'wards': ['Hiệp Phú', 'Long Bình', 'Long Phước',
+                      'Long Thạnh Mỹ', 'Long Trường', 'Phú Hữu',
+                      'Phước Bình', 'Phước Long A', 'Phước Long B',
+                      'Tân Phú', 'Tăng Nhơn Phú A', 'Tăng Nhơn Phú B', 'Trường Thạnh']
+        },
+        {
+            'name': 'Quận 10',
+            'wards': ['Phường 01', 'Phường 02', 'Phường 03', 'Phường 04',
+                      'Phường 05', 'Phường 06', 'Phường 07', 'Phường 08',
+                      'Phường 09', 'Phường 10', 'Phường 11', 'Phường 12',
+                      'Phường 13', 'Phường 14', 'Phường 15']
+        },
+        {
+            'name': 'Quận 11',
+            'wards': ['Phường 01', 'Phường 02', 'Phường 03', 'Phường 04',
+                      'Phường 05', 'Phường 06', 'Phường 07', 'Phường 08',
+                      'Phường 09', 'Phường 10', 'Phường 11', 'Phường 12',
+                      'Phường 13', 'Phường 14', 'Phường 15', 'Phường 16']
+        },
+        {
+            'name': 'Quận 12',
+            'wards': ['An Phú Đông', 'Đông Hưng Thuận', 'Hiệp Thành',
+                      'Tân Chánh Hiệp', 'Tân Hưng Thuận', 'Tân Thới Hiệp',
+                      'Tân Thới Nhất', 'Thạnh Lộc', 'Thạnh Xuân',
+                      'Thới An', 'Trung Mỹ Tây']
+        },
+        {
+            'name': 'Bình Chánh',
+            'wards': ['An Phú Tây', 'Bình Chánh', 'Bình Hưng',
+                      'Bình Lợi', 'Đa Phước', 'Hưng Long',
+                      'Lê Minh Xuân', 'Phạm Văn Hai', 'Phong Phú',
+                      'Quy Đức', 'Tân Kiên', 'Tân Nhựt',
+                      'Tân Quý Tây', 'Tân Túc', 'Vĩnh Lộc A',
+                      'Vĩnh Lộc B'
+                      ]
+        },
+        {
+            'name': 'Bình Tân',
+            'wards': ['An Lạc', 'An Lạc A', 'Bình Hưng Hòa',
+                      'Binh Hưng Hoà A', 'Binh Hưng Hoà B', 'Bình Trị Đông',
+                      'Bình Trị Đông A', 'Bình Trị Đông B', 'Tân Tạo', 'Tân Tạo A']
+        },
+        {
+            'name': 'Bình Thạnh',
+            'wards': ['Phường 01', 'Phường 02', 'Phường 03', 'Phường 04',
+                      'Phường 05', 'Phường 06', 'Phường 07', 'Phường 08',
+                      'Phường 09', 'Phường 10', 'Phường 11', 'Phường 12',
+                      'Phường 13', 'Phường 14', 'Phường 15', 'Phường 16',
+                      'Phường 17', 'Phường 18', 'Phường 19', 'Phường 20',
+                      'Phường 21', 'Phường 22', 'Phường 23', 'Phường 24',
+                      'Phường 25', 'Phường 26', 'Phường 27', 'Phường 28'
+                      ]
+        },
+        {
+            'name': 'Cần Giờ',
+            'wards': ['An Thới Đông', 'Bình Khánh', 'Cần Thạnh',
+                      'Long Hòa', 'Lý Nhơn', 'Tam Thôn Hiệp',
+                      'Thạnh An']
+        },
+        {
+            'name': 'Củ Chi',
+            'wards': ['An Nhơn Tây', 'An Phú', 'Bình Mỹ',
+                      'Củ Chi', 'Hòa Phú', 'Nhuận Đức',
+                      'Phạm Văn Cội', 'Phú Hòa Đông', 'Phú Mỹ Hưng',
+                      'Phước Hiệp', 'Phước Thạnh', 'Phước Vĩnh An',
+                      'Tân An Hội', 'Tân Phú Trung', 'Tân Thạnh Đông',
+                      'Tân Thạnh Tây', 'Tân Thông Hội', 'Thái Mỹ',
+                      'Trung An', 'Trung Lập Hạ', 'Trung Lập Thượng']
+        },
+        {
+            'name': 'Gò Vấp',
+            'wards': ['Phường 01', 'Phường 02', 'Phường 03', 'Phường 04',
+                      'Phường 05', 'Phường 06', 'Phường 07', 'Phường 08',
+                      'Phường 09', 'Phường 10', 'Phường 11', 'Phường 12',
+                      'Phường 13', 'Phường 14', 'Phường 15', 'Phường 16',
+                      'Phường 17']
+        },
+        {
+            'name': 'Hóc Môn',
+            'wards': [ 'Bà Điểm', 'Đông Thạnh', 'Hóc Môn',
+                       'Nhị Bình', 'Tân Hiệp', 'Tân Thới Nhì',
+                       'Tân Xuân', 'Thới Tam Thôn', 'Trung Chánh',
+                       'Xuân Thới Đông', 'Xuân Thới Sơn', 'Xuân Thới Thượng']
+        },
+        {
+            'name': 'Nhà Bè',
+            'wards': ['Hiệp Phước','Long Thới', 'Nhà Bè',
+                      'Nhơn Đức', 'Phú Xuân', 'Phước Kiển',
+                      'Phước Lộc']
+        },
+        {
+            'name': 'Phú Nhuận',
+            'wards': ['Phường 01', 'Phường 02', 'Phường 03',
+                      'Phường 04', 'Phường 05', 'Phường 07', 'Phường 08',
+                      'Phường 09', 'Phường 10', 'Phường 11', 'Phường 12',
+                      'Phường 13', 'Phường 14', 'Phường 15', 'Phường 16',
+                      'Phường 17', 'Phường 6']
+        },
+        {
+            'name': 'Tân Bình',
+            'wards': ['Phường 01', 'Phường 02', 'Phường 03', 'Phường 04',
+                      'Phường 05', 'Phường 06', 'Phường 07', 'Phường 08',
+                      'Phường 09', 'Phường 10', 'Phường 11', 'Phường 12',
+                      'Phường 13', 'Phường 14', 'Phường 15']
+        },
+        {
+            'name': 'Tân Phú',
+            'wards': ['Hiệp Tân', 'HIEPTAN', 'Hoà Thạnh', 'Phú Thạnh',
+                      'Phú Thọ Hoà', 'Phú Trung', 'Sơn Kỳ', 'Tân Quý',
+                      'Tân Sơn Nhì', 'Tân Thành', 'TANTHANH', 'Tân Thới Hoà',
+                      'TANTHOIHOA', 'Tây Thạnh']
+        },
+        {
+            'name': 'Thủ Đức',
+            'wards': ['Bình Chiểu', 'Bình Thọ', 'Hiệp Bình Chánh',
+                      'Hiệp Bình Phước', 'Linh Chiểu', 'Linh Đông',
+                      'Linh Tây', 'Linh Trung', 'Linh Xuân',
+                      'Tam Bình', 'Tam Phú', 'Tân Phú', 'Trường Thọ']
+        },
+    ]
+
+    for district_data in districts:
+        district = District.objects.create(name=district_data['name'], city=hcm_city)
+
+        for ward_name in district_data['wards']:
+            Ward.objects.create(name=ward_name, district=district)
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -20,4 +213,5 @@ class Migration(migrations.Migration):
             name='title',
             field=models.CharField(default='Đơn hàng của ', max_length=255),
         ),
+        migrations.RunPython(create_seed_data),
     ]

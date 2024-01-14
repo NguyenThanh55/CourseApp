@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-hgwqsmc&!dz1&%6phrfdtizglnqk6r-$4u-$tw@!i)(z#!+w-k
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 ALLOWED_HOSTS = []
 
 # Application definition
@@ -42,7 +43,7 @@ INSTALLED_APPS = [
     'oauth2_provider',
     'ckeditor',
     'ckeditor_uploader',
-
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -66,12 +67,20 @@ pymysql.install_as_MySQLdb()
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS':
-    'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 2,
-    'DEFAULT_AUTHENTICATION_CLASSES': (
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    # 'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-    ),
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',  # enables simple command line authentication
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAdminUser',
+    # ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ]
 }
 
 TEMPLATES = [
