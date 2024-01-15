@@ -17,4 +17,4 @@ def load_courses(params={}):
 
 
 def count_order_by_shipper():
-    return User.objects.annotate(count=Count('id')).values("id", "first_name", "count").order_by('-count')
+    return User.objects.annotate(count=Count('id')).values("id", "first_name", "avatar", "count").order_by('-count')

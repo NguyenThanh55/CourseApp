@@ -1,12 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from ckeditor.fields import RichTextField
+from cloudinary.models import CloudinaryField
 
 # Create your models here.
 
 
 class User(AbstractUser):
-    avatar = models.ImageField(upload_to='imageUser/%Y/%m', null=False)
+    # avatar = models.ImageField(upload_to='imageUser/%Y/%m', null=False)
+    avatar = CloudinaryField('avatar', null=True)
     identityCard = models.CharField(max_length=12, null=False)
     isApproved = models.BooleanField(default=False)
     role = models.CharField(max_length=100, null=False)

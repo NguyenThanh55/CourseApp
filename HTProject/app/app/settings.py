@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-hgwqsmc&!dz1&%6phrfdtizglnqk6r-$4u-$tw@!i)(z#!+w-k
 DEBUG = True
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -44,13 +44,16 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'drf_yasg',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'htproject.middleware.OAuth2Middleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -61,10 +64,24 @@ ROOT_URLCONF = 'app.urls'
 
 MEDIA_ROOT = '%s/htproject/static/' % BASE_DIR
 CKEDITOR_UPLOAD_PATH = "ckeditor/"
+CORS_ALLOW_ALL_ORIGINS = True
 
 import pymysql
 pymysql.install_as_MySQLdb()
 
+
+import cloudinary
+# Import the cloudinary.api for managing assets
+# import cloudinary.api
+# Import the cloudinary.uploader for uploading assets
+# import cloudinary.uploader
+
+cloudinary.config(
+    cloud_name="dohcsyfoi",
+    api_key="688866398336719",
+    api_secret="KG9wodomxnCS7iNhE1bubRkinlk",
+    secure=True,
+)
 
 REST_FRAMEWORK = {
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',

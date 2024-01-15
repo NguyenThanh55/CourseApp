@@ -8,7 +8,7 @@ class UserSerializer(ModelSerializer):
         fields = ['id', 'first_name', 'last_name', 'username', 'password', 'email', 'avatar', 'role', 'identityCard',
                   'isApproved']
         extra_kwargs = {
-            "password": { "write_only":"true" }
+            "password": {"write_only": "true"}
         }
 
     def create(self, validated_data):
@@ -43,6 +43,7 @@ class OrderSerializer(ModelSerializer):
         fields = ['id', 'title', 'content', 'image', 'shipper',
                   'customer', 'deliveryDate', 'fromWard', 'fromStreet', 'toWard',
                   'toStreet']
+        # fields = '__all__'
 
 
 class RatingSerializer(ModelSerializer):

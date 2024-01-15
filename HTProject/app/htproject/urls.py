@@ -12,7 +12,7 @@ router.register('order', views.OrderViewSet)
 router.register('rating', views.RatingViewSet)
 router.register('auction', views.AuctionViewSet)
 router.register('voucher', views.VoucherViewSet)
-
+# router.register('current_account', views.VoucherViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
