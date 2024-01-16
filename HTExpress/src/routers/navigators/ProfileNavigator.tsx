@@ -5,10 +5,10 @@ import Profile from './../../screens/Profile';
 
 
 const ProfileNavigator = () => {
-    const ProfileStack = createNativeStackNavigator();
+  const ProfileStack = createNativeStackNavigator();
   return (
     <ProfileStack.Navigator>
-      <ProfileStack.Screen name="Profile" component={Profile}/>
+      <ProfileStack.Screen name="Profile" component={Profile} />
     </ProfileStack.Navigator>
   )
 }
