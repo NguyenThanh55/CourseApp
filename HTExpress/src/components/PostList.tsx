@@ -15,7 +15,7 @@ class PostList extends Component {
 //   fetchPosts() {
 //     // ...
 //   }
-constructor(props) {
+  constructor(props) {
     super(props);
     this.state.posts = [
       {
@@ -49,7 +49,7 @@ constructor(props) {
         <View style={styles.content}>
           <Text style={styles.username}>{post.username}</Text>
           <Text style={styles.content}>{post.content}</Text>
-          <FontAwesomeIcon icon="fa-regular fa-flux-capacitor" />
+          {/* <FontAwesomeIcon icon="fa-regular fa-flux-capacitor" /> */}
         </View>
       </View>
     );

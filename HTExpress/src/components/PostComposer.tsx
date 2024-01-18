@@ -5,6 +5,7 @@ class PostComposer extends Component {
   state = {
     content: "",
   };
+  
 
   onTextChange = (event) => {
     this.setState({

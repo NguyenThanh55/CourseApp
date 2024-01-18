@@ -4,15 +4,29 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d757144f-fa3c-4e67-8823-a6c162431a78" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../HTExpress/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../HTExpress/android/app/build.gradle" afterDir="false" />
+    <list default="true" id="f460f85c-3b1f-4a83-80fb-70da748cdf08" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/htproject/perms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../HTExpress/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../HTExpress/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../HTExpress/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../HTExpress/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../HTExpress/src/components/PostComposer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../HTExpress/src/components/PostComposer.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../HTExpress/src/components/PostList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../HTExpress/src/components/PostList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../HTExpress/src/routers/TabNavigator.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../HTExpress/src/routers/TabNavigator.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../HTExpress/src/screens/Profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../HTExpress/src/screens/Profile.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../HTExpress/src/screens/Order.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../HTExpress/src/screens/Order.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../HTExpress/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../HTExpress/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/htproject/middleware.py" beforeDir="false" afterPath="$PROJECT_DIR$/htproject/middleware.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/htproject/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htproject/migrations/0002_alter_auction_content_alter_order_content_and_more.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htproject/migrations/0003_auction_title.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htproject/migrations/0004_alter_auction_title_alter_order_title.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htproject/migrations/0005_alter_user_avatar.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htproject/migrations/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/htproject/email.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/htproject/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/htproject/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/htproject/paginators.py" beforeDir="false" afterPath="$PROJECT_DIR$/htproject/paginators.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/htproject/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/htproject/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/htproject/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/htproject/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/htproject/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/htproject/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,6 +35,13 @@
   </component>
   <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
@@ -39,7 +60,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/Code/ReactNative/HTProject/app",
+    "last_opened_file_path": "C:/Users/Thanh/OneDrive/Desktop/ATHTTT_MyTour_NHOM10",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
 }]]></component>
@@ -71,7 +92,7 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="d757144f-fa3c-4e67-8823-a6c162431a78" name="Changes" comment="" />
+      <changelist id="f460f85c-3b1f-4a83-80fb-70da748cdf08" name="Changes" comment="" />
       <created>1704293353720</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />

@@ -9,3 +9,6 @@ class DistrictPaginator(PageNumberPagination):
     page_size = 10
 
 
+class AuctionPaginator(PageNumberPagination):
+    page_size = 20
+

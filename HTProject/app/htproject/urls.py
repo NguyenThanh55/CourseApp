@@ -5,6 +5,7 @@ from .admin import admin_site
 
 router = DefaultRouter()
 router.register('user', views.UserViewSet)
+# router.register('shipper/<int:pk>', views.UserViewSet.shipper_orders)
 router.register('city', views.CityViewSet)
 router.register('district', views.DistrictViewSet)
 router.register('ward', views.WardViewSet)
@@ -12,7 +13,6 @@ router.register('order', views.OrderViewSet)
 router.register('rating', views.RatingViewSet)
 router.register('auction', views.AuctionViewSet)
 router.register('voucher', views.VoucherViewSet)
-# router.register('current_account', views.VoucherViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
