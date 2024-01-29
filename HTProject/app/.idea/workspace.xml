@@ -5,13 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d757144f-fa3c-4e67-8823-a6c162431a78" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../HTExpress/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../../HTExpress/android/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../HTExpress/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../HTExpress/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../HTExpress/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../HTExpress/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../HTExpress/src/components/PostList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../HTExpress/src/components/PostList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../HTExpress/src/routers/TabNavigator.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../HTExpress/src/routers/TabNavigator.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../HTExpress/src/screens/Profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../HTExpress/src/screens/Profile.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../HTExpress/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../HTExpress/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -34,15 +29,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/Code/ReactNative/HTProject/app",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Code/ReactNative/HTProject/app&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="app" type="Python.DjangoServer" factoryName="Django server">
       <module name="app" />
@@ -51,7 +46,7 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="D:\Code\ReactNative\HTProject\app\venv\Scripts\python.exe" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -77,6 +72,7 @@
       <option name="presentableId" value="Default" />
       <updated>1704293353720</updated>
       <workItem from="1704293354893" duration="1344000" />
+      <workItem from="1706537008314" duration="1886000" />
     </task>
     <servers />
   </component>

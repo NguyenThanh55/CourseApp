@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-hgwqsmc&!dz1&%6phrfdtizglnqk6r-$4u-$tw@!i)(z#!+w-k
 DEBUG = True
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.5']
 
 # Application definition
 
@@ -109,7 +109,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'db',
         'USER': 'root',
-        'PASSWORD': 'Thanh@123',
+#        'PASSWORD': 'Thanh@123',
+        'PASSWORD': '12345678',
         'HOST': ''  # mặc định localhost
     }
 }

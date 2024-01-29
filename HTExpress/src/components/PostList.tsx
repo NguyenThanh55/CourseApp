@@ -62,7 +62,7 @@ constructor(props) {
           {this.state.posts.map((post) => this.renderPost(post))}
         </ScrollView>
       </View>
-    );
+    )
   }
 }
 
