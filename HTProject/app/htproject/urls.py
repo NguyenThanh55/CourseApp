@@ -1,7 +1,8 @@
 from django.urls import path, include
-from . import views
+from . import views, payment
 from rest_framework.routers import DefaultRouter
 from .admin import admin_site
+
 
 router = DefaultRouter()
 router.register('user', views.UserViewSet)
@@ -17,4 +18,10 @@ router.register('voucher', views.VoucherViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin_site.urls),
+    path('pay/', payment.create_payment),
+    path('paypal/', include("paypal.standard.ipn.urls")),
+    path('order/<int:pk>/checkout/', views.OrderViewSet.checkout, name='checkout'),
+    path('order/<int:pk>/payment-success/', views.OrderViewSet.paymentsuccessful, name='paymentsuccessful'),
+    path('order/<int:pk>/payment-failed/', views.OrderViewSet.paymentfailed, name='paymentfailed'),
+
 ]

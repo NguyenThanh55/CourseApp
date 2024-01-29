@@ -63,13 +63,17 @@ class Order(BaseModel):
     toWard = models.ForeignKey(Ward, related_name="toWard", on_delete=models.SET_NULL, null=True)
     toStreet = models.CharField(max_length=100, null=False)
     status = models.CharField(max_length=100, default="New")
-    total_money = models.DecimalField(max_digits=10, decimal_places=3, default=0)
 
     class Meta:
         ordering = ["-created_date"]
 
     def __str__(self):
         return self.title + self.customer.first_name + " " + self.customer.last_name
+
+
+class Bill(BaseModel):
+    total_money = models.DecimalField(max_digits=10, decimal_places=3, default=0)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
 
 
 class Rating(BaseModel):

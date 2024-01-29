@@ -11,26 +11,33 @@
 
 <div class="table-responsive">
     <table class="table table-striped">
-      <thead>
+        <thead>
         <tr>
-          <th>STT</th>
-          <th>First Name</th>
-          <th>Avatar</th>
-          <th>Count</th>
+            <th>STT</th>
+            <th>First Name</th>
+            <th>Avatar</th>
+            <th>Count</th>
         </tr>
-      </thead>
-      <tbody>
+        </thead>
+        <tbody>
         {% for o in order_count %}
-        <tr>
-          <td>{{ o.id }}-{{ o.user.id }}</td>
-          <td>{{ o.first_name }}</td>
-          <td><img src="{{ o.avatar.url }}"/></td>
-          <td>{{ o.count }}</td>
 
-        </tr>
+<!--        <form method="post" action="/order/{{ o.id }}/payment/">-->
+            <tr>
+                <td>{{ o.id }}-{{ o.user.id }}</td>
+<!--                <td><a href="/order/{{ o.id }}/get_pay/">{{ o.first_name }}</a></td>-->
+                <td><a href="/order/{{ o.id }}/checkout/">{{ o.first_name }}</a></td>
+<!--                <td><img src="{{ o.avatar.url }}"/></td>-->
+                <td>{{ o.count }}</td>
+                <td>
+<!--                    <button type="submit">Đặt ngay</button>-->
+                </td>
+            </tr>
+<!--        </form>-->
         {% endfor %}
-      </tbody>
+        </tbody>
     </table>
-  </div>
+
+</div>
 
 {% endblock %}

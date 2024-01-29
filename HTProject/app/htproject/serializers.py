@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from .models import User, City, District, Order, Rating, Auction, Voucher, OrderVoucher
+from .models import User, City, District, Order, Rating, Auction, Voucher, OrderVoucher, Ward, Bill
 
 
 class UserDetailSerializer(ModelSerializer):
@@ -33,7 +33,7 @@ class DistrictSerializer(ModelSerializer):
 
 class WardSerializer(ModelSerializer):
     class Meta:
-        model = District
+        model = Ward
         fields = ['id', 'name', 'district']
 
 
@@ -61,7 +61,7 @@ class OrderDetailSerializer(ModelSerializer):
         model = Order
         fields = ['id', 'title', 'content', 'image', 'shipper',
                   'customer', 'deliveryDate', 'fromWard', 'fromStreet', 'toWard',
-                  'toStreet',
+                  'toStreet', 'total_money'
                   ]
         # fields = '__all__'
 
@@ -72,7 +72,7 @@ class OrderSerializer(ModelSerializer):
         model = Order
         fields = ['id', 'title', 'content', 'image', 'shipper',
                   'customer', 'deliveryDate', 'fromWard', 'fromStreet', 'toWard',
-                  'toStreet', 'total_money']
+                  'toStreet']
 
 
 class AuctionDetailSerializer(ModelSerializer):
@@ -96,3 +96,11 @@ class RatingSerializer(ModelSerializer):
     class Meta:
         model = Rating
         fields = ['id', 'content', 'score', 'user', 'order']
+
+
+class BillSerializer(ModelSerializer):
+    order = OrderDetailSerializer()
+
+    class Meta:
+        model = Bill
+        fields = ['id', 'total_money', 'order']

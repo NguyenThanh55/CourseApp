@@ -9,7 +9,7 @@ const Order = () => {
   useEffect(() => {
     const getOrders = async () => {
         try {
-            const {data} = await axios.get("http://192.168.1.22:8000/order/");
+            const {data} = await axios.get("http://192.168.1.104:8081/order/");
             setOrders(data.results)
             console.log(data.results)
         } catch (error) {

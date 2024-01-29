@@ -7,14 +7,14 @@ class PostList extends Component {
     posts: [],
   };
 
-// componentDidMount() {
-//     // Lấy dữ liệu bài đăng từ API
-//     this.fetchPosts();
-//   }
+componentDidMount() {
+    // Lấy dữ liệu bài đăng từ API
+    this.fetchPosts();
+  }
 
-//   fetchPosts() {
-//     // ...
-//   }
+  fetchPosts() {
+    // ...
+  }
   constructor(props) {
     super(props);
     this.state.posts = [
