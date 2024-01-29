@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="PYTHON_MODULE" version="4">
+<<<<<<< HEAD
   <component name="FacetManager">
     <facet type="django" name="Django">
       <configuration>
@@ -12,17 +13,24 @@
       </configuration>
     </facet>
   </component>
+=======
+>>>>>>> bb8afa7838553282550b31244f6a3a15104af5d5
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
+<<<<<<< HEAD
     <orderEntry type="jdk" jdkName="Python 3.10 (app) (3)" jdkType="Python SDK" />
+=======
+    <orderEntry type="jdk" jdkName="Python 3.11 (app)" jdkType="Python SDK" />
+>>>>>>> bb8afa7838553282550b31244f6a3a15104af5d5
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="format" value="PLAIN" />
     <option name="myDocStringFormat" value="Plain" />
   </component>
+<<<<<<< HEAD
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />
     <option name="TEMPLATE_FOLDERS">
@@ -31,4 +39,6 @@
       </list>
     </option>
   </component>
+=======
+>>>>>>> bb8afa7838553282550b31244f6a3a15104af5d5
 </module>

@@ -7,15 +7,15 @@ class PostList extends Component {
     posts: [],
   };
 
-// componentDidMount() {
-//     // Lấy dữ liệu bài đăng từ API
-//     this.fetchPosts();
-//   }
+componentDidMount() {
+    // Lấy dữ liệu bài đăng từ API
+    this.fetchPosts();
+  }
 
-//   fetchPosts() {
-//     // ...
-//   }
-constructor(props) {
+  fetchPosts() {
+    // ...
+  }
+  constructor(props) {
     super(props);
     this.state.posts = [
       {
@@ -49,7 +49,7 @@ constructor(props) {
         <View style={styles.content}>
           <Text style={styles.username}>{post.username}</Text>
           <Text style={styles.content}>{post.content}</Text>
-          <FontAwesomeIcon icon="fa-regular fa-flux-capacitor" />
+          {/* <FontAwesomeIcon icon="fa-regular fa-flux-capacitor" /> */}
         </View>
       </View>
     );

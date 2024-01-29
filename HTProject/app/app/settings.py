@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 
+import paypalrestsdk
 from django.conf.global_settings import AUTH_USER_MODEL
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,8 +27,13 @@ SECRET_KEY = 'django-insecure-hgwqsmc&!dz1&%6phrfdtizglnqk6r-$4u-$tw@!i)(z#!+w-k
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+PAYPAL_RECEIVER_EMAIL = 'sb-ptjap29441924@business.example.com'
+PAYPAL_TEST = True
+PAYPAL_BUY_BUTTON_IMAGE = 'https://res.cloudinary.com/the-proton-guy/image/upload/v1685882223/paypal-PhotoRoom_v9pay7.png'
 
-ALLOWED_HOSTS = ['192.168.1.5']
+
+ALLOWED_HOSTS = ['*']
+
 
 # Application definition
 
@@ -44,13 +50,17 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'drf_yasg',
+    'corsheaders',
+    'paypal.standard.ipn',
 ]
 
 MIDDLEWARE = [
+    'htproject.middleware.OAuth2Middleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -61,10 +71,38 @@ ROOT_URLCONF = 'app.urls'
 
 MEDIA_ROOT = '%s/htproject/static/' % BASE_DIR
 CKEDITOR_UPLOAD_PATH = "ckeditor/"
+CORS_ALLOW_ALL_ORIGINS = True
 
 import pymysql
+
 pymysql.install_as_MySQLdb()
 
+import cloudinary
+
+# Import the cloudinary.api for managing assets
+# import cloudinary.api
+# Import the cloudinary.uploader for uploading assets
+# import cloudinary.uploader
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'jennythanh2001@gmail.com'
+EMAIL_HOST_PASSWORD = 'lovqghqkrxizhnxv'
+
+cloudinary.config(
+    cloud_name="dohcsyfoi",
+    api_key="688866398336719",
+    api_secret="KG9wodomxnCS7iNhE1bubRkinlk",
+    secure=True,
+)
+
+paypalrestsdk.configure({
+    "mode": "sandbox",
+    "client_id": "EFAzCkUOVhiUVErho_a3_EfnZiNeF3JmVFEjdtQBMIx7IRftjf58iYaYcT_hFZBYsMKUGvej9mwh5ncs",
+    "client_secret": "EFAzCkUOVhiUVErho_a3_EfnZiNeF3JmVFEjdtQBMIx7IRftjf58iYaYcT_hFZBYsMKUGvej9mwh5ncs"
+})
 
 REST_FRAMEWORK = {
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',

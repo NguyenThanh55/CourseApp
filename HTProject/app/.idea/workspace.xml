@@ -4,10 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="d757144f-fa3c-4e67-8823-a6c162431a78" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../../HTExpress/src/components/PostList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../HTExpress/src/components/PostList.tsx" afterDir="false" />
+=======
+    <list default="true" id="f460f85c-3b1f-4a83-80fb-70da748cdf08" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/htproject/payment.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htproject/static/images/bannerpay.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htproject/templates/admin/checkout.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htproject/templates/admin/payment-failed.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htproject/templates/admin/payment-success.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htproject/templates/paypal/pay.html" afterDir="false" />
+>>>>>>> bb8afa7838553282550b31244f6a3a15104af5d5
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/htproject/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/htproject/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/htproject/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/htproject/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/htproject/templates/admin/stats_view.html" beforeDir="false" afterPath="$PROJECT_DIR$/htproject/templates/admin/stats_view.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/htproject/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/htproject/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/htproject/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/htproject/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,6 +31,14 @@
   </component>
   <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+        <option value="HTML File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
@@ -29,6 +52,7 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+<<<<<<< HEAD
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
@@ -38,6 +62,23 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
 }</component>
+=======
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/Thanh/OneDrive/Desktop/CourseApp/HTProject/app/htproject/static/images",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Thanh\OneDrive\Desktop\CourseApp\HTProject\app\htproject\static\images" />
+    </key>
+  </component>
+>>>>>>> bb8afa7838553282550b31244f6a3a15104af5d5
   <component name="RunManager">
     <configuration name="app" type="Python.DjangoServer" factoryName="Django server">
       <module name="app" />
@@ -66,7 +107,7 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="d757144f-fa3c-4e67-8823-a6c162431a78" name="Changes" comment="" />
+      <changelist id="f460f85c-3b1f-4a83-80fb-70da748cdf08" name="Changes" comment="" />
       <created>1704293353720</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />

@@ -1,11 +1,43 @@
 {% extends 'admin/base_site.html' %}
 {% block content %}
 <h1>THỐNG KÊ THÔNG TIN CÁC KHOÁ HỌC</h1>
-<h2>Số lượng đơn hàng của shipper: {{ order_count }}</h2>
+<h2>Số lượng đơn hàng của shipper:</h2>
 <!--<ul>-->
 <!--{% for c in course_stats %}-->
 <!--<li><strong>{{ c.subject }}</strong> có {{-->
 <!--c.lesson_count }} bài học </li>-->
 <!--{% endfor %}-->
 <!--</ul>-->
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>STT</th>
+            <th>First Name</th>
+            <th>Avatar</th>
+            <th>Count</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for o in order_count %}
+
+<!--        <form method="post" action="/order/{{ o.id }}/payment/">-->
+            <tr>
+                <td>{{ o.id }}-{{ o.user.id }}</td>
+<!--                <td><a href="/order/{{ o.id }}/get_pay/">{{ o.first_name }}</a></td>-->
+                <td><a href="/order/{{ o.id }}/checkout/">{{ o.first_name }}</a></td>
+<!--                <td><img src="{{ o.avatar.url }}"/></td>-->
+                <td>{{ o.count }}</td>
+                <td>
+<!--                    <button type="submit">Đặt ngay</button>-->
+                </td>
+            </tr>
+<!--        </form>-->
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
 {% endblock %}
