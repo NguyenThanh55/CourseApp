@@ -1,8 +1,12 @@
 from django.utils.deprecation import MiddlewareMixin
+import logging
 
+logger = logging.getLogger(__name__)
 
 class OAuth2Middleware(MiddlewareMixin):
+    logger.info("API call successful")
     def process_request(self, request):
+
         if request.path_info == '/o/token/' and request.method == 'POST':
             request.POST = request.POST.copy()
             request.POST['client_id'] = 'YAZKTBdtmg6Jwrz0npyrlGsxg4k2pgch0pjMkHQl'

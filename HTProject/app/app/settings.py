@@ -31,8 +31,12 @@ PAYPAL_RECEIVER_EMAIL = 'sb-ptjap29441924@business.example.com'
 PAYPAL_TEST = True
 PAYPAL_BUY_BUTTON_IMAGE = 'https://res.cloudinary.com/the-proton-guy/image/upload/v1685882223/paypal-PhotoRoom_v9pay7.png'
 
+<<<<<<< HEAD
 
 ALLOWED_HOSTS = ['*']
+=======
+ALLOWED_HOSTS = ['*', '192.168.1.79']
+>>>>>>> 41d320b083f7564bbdee119a6e69c48faf8282de
 
 
 # Application definition
@@ -104,6 +108,27 @@ paypalrestsdk.configure({
     "client_secret": "EFAzCkUOVhiUVErho_a3_EfnZiNeF3JmVFEjdtQBMIx7IRftjf58iYaYcT_hFZBYsMKUGvej9mwh5ncs"
 })
 
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'django.log',  # Adjust the filename and path as needed
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+
 REST_FRAMEWORK = {
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     # 'PAGE_SIZE': 10,
@@ -147,7 +172,11 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'db',
         'USER': 'root',
+<<<<<<< HEAD
 #        'PASSWORD': 'Thanh@123',
+=======
+        #'PASSWORD': 'Thanh@123',
+>>>>>>> 41d320b083f7564bbdee119a6e69c48faf8282de
         'PASSWORD': '12345678',
         'HOST': ''  # mặc định localhost
     }
