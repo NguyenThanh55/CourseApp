@@ -87,7 +87,6 @@ const Login = ({ navigation }) => {
             <TextInput
               placeholder='Nhập tài khoản'
               placeholderTextColor={COLORS.black}
-              keyboardType='text'
               value={username}
               onChangeText={(u) => setUsername(u)}
               style={{

@@ -1854,6 +1854,11 @@
   resolved "https://registry.npmjs.org/@react-native-community/hooks/-/hooks-2.8.1.tgz"
   integrity sha512-DCmCIC0Gn9m6K0Mlg2MwNmTxMEpBu5lTLsI6b/XUAv/vLGa6o+X7RhCai4FWeqkjCU36+ZOwaLzDo4NBWMXaoQ==
 
+"@react-native-picker/picker@^2.6.1":
+  version "2.6.1"
+  resolved "https://registry.npmjs.org/@react-native-picker/picker/-/picker-2.6.1.tgz"
+  integrity sha512-oJftvmLOj6Y6/bF4kPcK6L83yNBALGmqNYugf94BzP0FQGpHBwimVN2ygqkQ2Sn2ZU3pGUZMs0jV6+Gku2GyYg==
+
 "@react-native/assets-registry@^0.72.0":
   version "0.72.0"
   resolved "https://registry.npmjs.org/@react-native/assets-registry/-/assets-registry-0.72.0.tgz"
@@ -3617,6 +3622,18 @@ expo-font@~11.4.0:
   dependencies:
     fontfaceobserver "^2.1.0"
 
+expo-image-loader@~4.6.0:
+  version "4.6.0"
+  resolved "https://registry.npmjs.org/expo-image-loader/-/expo-image-loader-4.6.0.tgz"
+  integrity sha512-RHQTDak7/KyhWUxikn2yNzXL7i2cs16cMp6gEAgkHOjVhoCJQoOJ0Ljrt4cKQ3IowxgCuOrAgSUzGkqs7omj8Q==
+
+expo-image-picker@^14.7.1:
+  version "14.7.1"
+  resolved "https://registry.npmjs.org/expo-image-picker/-/expo-image-picker-14.7.1.tgz"
+  integrity sha512-ILQVOJgI3aEzrDmCFGDPtpAepYkn8mot8G7vfQ51BfFdQbzL6N3Wm1fS/ofdWlAZJl/qT2DwaIh5xYmf3SyGZA==
+  dependencies:
+    expo-image-loader "~4.6.0"
+
 expo-keep-awake@~12.3.0:
   version "12.3.0"
   resolved "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-12.3.0.tgz"
@@ -3626,6 +3643,11 @@ expo-linear-gradient@~12.3.0:
   version "12.3.0"
   resolved "https://registry.npmjs.org/expo-linear-gradient/-/expo-linear-gradient-12.3.0.tgz"
   integrity sha512-f9e+Oxe5z7fNQarTBZXilMyswlkbYWQHONVfq8MqmiEnW3h9XsxxmVJLG8uVQSQPUsbW+x1UUT/tnU6mkMWeLg==
+
+expo-media-library@^15.9.1:
+  version "15.9.1"
+  resolved "https://registry.npmjs.org/expo-media-library/-/expo-media-library-15.9.1.tgz"
+  integrity sha512-Y29uKFJ3qWwNejIrjoCppXp3OgIFs/RYHWXkF9xey6evpNrUlHoP1WHG2jYAMSrss6aIRVt3tO7EtYUCZxz50Q==
 
 expo-modules-autolinking@>=0.8.1, expo-modules-autolinking@1.5.1:
   version "1.5.1"
@@ -3646,6 +3668,11 @@ expo-modules-core@1.5.13:
   dependencies:
     compare-versions "^3.4.0"
     invariant "^2.2.4"
+
+expo-permissions@^14.4.0:
+  version "14.4.0"
+  resolved "https://registry.npmjs.org/expo-permissions/-/expo-permissions-14.4.0.tgz"
+  integrity sha512-oAcnJ7dlZhpBydK73cwomA2xofizayVUz+FW5REl7dMu7MYyeN/3aqhlpZ3mYddrxvG161bqu97MQr01UixUnw==
 
 expo-status-bar@~1.6.0:
   version "1.6.0"
@@ -4762,6 +4789,11 @@ leven@^3.1.0:
   version "3.1.0"
   resolved "https://registry.npmjs.org/leven/-/leven-3.1.0.tgz"
   integrity sha512-qsda+H8jTaUaN/x5vzW2rzc+8Rw4TAQ/4KjB46IwK5VH+IlVeeeje/EoZRpiXvIqjFgK84QffqPztGI3VBLG1A==
+
+lightningcss-win32-x64-msvc@1.19.0:
+  version "1.19.0"
+  resolved "https://registry.npmjs.org/lightningcss-win32-x64-msvc/-/lightningcss-win32-x64-msvc-1.19.0.tgz"
+  integrity sha512-C+VuUTeSUOAaBZZOPT7Etn/agx/MatzJzGRkeV+zEABmPuntv1zihncsi+AyGmjkkzq3wVedEy7h0/4S84mUtg==
 
 lightningcss@~1.19.0:
   version "1.19.0"
@@ -6325,6 +6357,11 @@ react-native-button@^2.3.0:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-dropdown-picker@^5.4.6:
+  version "5.4.6"
+  resolved "https://registry.npmjs.org/react-native-dropdown-picker/-/react-native-dropdown-picker-5.4.6.tgz"
+  integrity sha512-T1XBHbE++M6aRU3wFYw3MvcOuabhWZ29RK/Ivdls2r1ZkZ62iEBZknLUPeVLMX3x6iUxj4Zgr3X2DGlEGXeHsA==
+
 react-native-feather@^1.1.2:
   version "1.1.2"
   resolved "https://registry.npmjs.org/react-native-feather/-/react-native-feather-1.1.2.tgz"
@@ -6381,6 +6418,11 @@ react-native-render-html@^6.3.4:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
+react-native-select-dropdown@^3.4.0:
+  version "3.4.0"
+  resolved "https://registry.npmjs.org/react-native-select-dropdown/-/react-native-select-dropdown-3.4.0.tgz"
+  integrity sha512-9xK1z4tYpwMxp3hsM0y1+xfqq/JoMh+l7sBsJ81b2eikFwT6ZbndFBqupQXrsQ1akce9hgC/10Nkzj0LjVjeXQ==
+
 react-native-snap-carousel@^4.0.0-beta.6:
   version "4.0.0-beta.6"
   resolved "https://registry.npmjs.org/react-native-snap-carousel/-/react-native-snap-carousel-4.0.0-beta.6.tgz"
@@ -6416,7 +6458,7 @@ react-native-vector-icons@^4.5.0:
     prop-types "^15.5.10"
     yargs "^8.0.2"
 
-react-native@*, react-native@^*, "react-native@^0.0.0-0 || >=0.60 <1.0", react-native@>=0.46, react-native@>=0.5.0, react-native@>=0.58.0, react-native@>=0.59, react-native@>=0.69, react-native@0.72.6:
+react-native@*, react-native@^*, "react-native@^0.0.0-0 || >=0.60 <1.0", react-native@>=0.46, react-native@>=0.5.0, react-native@>=0.57, react-native@>=0.58.0, react-native@>=0.59, react-native@>=0.69, react-native@0.72.6:
   version "0.72.6"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.72.6.tgz"
   integrity sha512-RafPY2gM7mcrFySS8TL8x+TIO3q7oAlHpzEmC7Im6pmXni6n1AuufGaVh0Narbr1daxstw7yW7T9BKW5dpVc2A==
@@ -6479,7 +6521,7 @@ react-shallow-renderer@^16.15.0:
     object-assign "^4.1.1"
     react-is "^16.12.0 || ^17.0.0 || ^18.0.0"
 
-react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", react@^18.0, react@>=16.0.0, react@>=16.8, react@>=16.8.0, react@>=17.0.0, react@18.2.0:
+react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", react@^18.0, react@>=16, react@>=16.0.0, react@>=16.8, react@>=16.8.0, react@>=17.0.0, react@18.2.0:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
