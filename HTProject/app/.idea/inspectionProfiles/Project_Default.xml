@@ -4,7 +4,10 @@
     <inspection_tool class="PyPep8NamingInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <option name="ignoredErrors">
         <list>
+<<<<<<< HEAD
+=======
           <option value="N801" />
+>>>>>>> bb8afa7838553282550b31244f6a3a15104af5d5
           <option value="N806" />
         </list>
       </option>
@@ -12,7 +15,12 @@
     <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoredIdentifiers">
         <list>
+<<<<<<< HEAD
+          <option value="saleapp.models.typeroom" />
+          <option value="saleapp.SecuredAdminIndexView" />
+=======
           <option value="QLPhongmachtu.PhongMachTu.index.PhongMachTu" />
+>>>>>>> bb8afa7838553282550b31244f6a3a15104af5d5
         </list>
       </option>
     </inspection_tool>

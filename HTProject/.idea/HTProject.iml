@@ -3,8 +3,13 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/venv" />
+      <excludeFolder url="file://$MODULE_DIR$/app" />
     </content>
+<<<<<<< HEAD
+    <orderEntry type="jdk" jdkName="Python 3.10 (HTProject) (2)" jdkType="Python SDK" />
+=======
     <orderEntry type="jdk" jdkName="Python 3.12 (HTProject)" jdkType="Python SDK" />
+>>>>>>> 41d320b083f7564bbdee119a6e69c48faf8282de
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

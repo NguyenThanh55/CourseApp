@@ -107,31 +107,27 @@ const Login = ({ navigation }) => {
               >
                 Tài khoản
               </Text>
-
-              <View
-                style={{
-                  width: "100%",
-                  height: 48,
-                  borderColor: COLORS.black,
-                  borderWidth: 1,
-                  borderRadius: 8,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  paddingLeft: 22,
-                }}
-              >
-                <TextInput
-                  placeholder="Nhập tài khoản"
-                  placeholderTextColor={COLORS.black}
-                  keyboardType="text"
-                  value={username}
-                  onChangeText={(u) => setUsername(u)}
-                  style={{
-                    width: "100%",
-                  }}
-                />
-              </View>
-            </View>
+          <View style={{
+            width: "100%",
+            height: 48,
+            borderColor: COLORS.black,
+            borderWidth: 1,
+            borderRadius: 8,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingLeft: 22
+          }}>
+            <TextInput
+              placeholder='Nhập tài khoản'
+              placeholderTextColor={COLORS.black}
+              value={username}
+              onChangeText={(u) => setUsername(u)}
+              style={{
+                width: "100%"
+              }}
+            />
+          </View>
+        </View>
 
             <View style={{ marginBottom: 12 }}>
               <Text

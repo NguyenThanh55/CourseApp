@@ -4,7 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="f460f85c-3b1f-4a83-80fb-70da748cdf08" name="Changes" comment="Create requirements">
+=======
+<<<<<<< HEAD
+    <list default="true" id="d757144f-fa3c-4e67-8823-a6c162431a78" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../HTExpress/src/components/PostList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../HTExpress/src/components/PostList.tsx" afterDir="false" />
+=======
+    <list default="true" id="f460f85c-3b1f-4a83-80fb-70da748cdf08" name="Changes" comment="">
+<<<<<<< HEAD
+      <change afterPath="$PROJECT_DIR$/htproject/payment.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htproject/static/images/bannerpay.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htproject/templates/admin/checkout.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htproject/templates/admin/payment-failed.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htproject/templates/admin/payment-success.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htproject/templates/paypal/pay.html" afterDir="false" />
+>>>>>>> bb8afa7838553282550b31244f6a3a15104af5d5
+=======
+>>>>>>> 41d320b083f7564bbdee119a6e69c48faf8282de
+>>>>>>> 06bbfd8c72e2056eba0277875a3d75f37b8ff3dd
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/htproject/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/htproject/models.py" afterDir="false" />
@@ -39,6 +57,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+<<<<<<< HEAD
+<<<<<<< HEAD
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Code/ReactNative/HTProject/app&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  }
+}</component>
+=======
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/Thanh/OneDrive/Desktop/CourseApp/HTProject/app/htproject/static/images",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+=======
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
@@ -47,6 +86,7 @@
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/Thanh/OneDrive/Desktop/CourseApp/HTProject/app/htproject/static/images&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+>>>>>>> 41d320b083f7564bbdee119a6e69c48faf8282de
   }
 }</component>
   <component name="RecentsManager">
@@ -54,6 +94,7 @@
       <recent name="C:\Users\Thanh\OneDrive\Desktop\CourseApp\HTProject\app\htproject\static\images" />
     </key>
   </component>
+>>>>>>> bb8afa7838553282550b31244f6a3a15104af5d5
   <component name="RunManager">
     <configuration name="app" type="Python.DjangoServer" factoryName="Django server">
       <module name="app" />
@@ -62,7 +103,7 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="D:\Code\ReactNative\HTProject\app\venv\Scripts\python.exe" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -88,6 +129,7 @@
       <option name="presentableId" value="Default" />
       <updated>1704293353720</updated>
       <workItem from="1704293354893" duration="1344000" />
+      <workItem from="1706537008314" duration="1886000" />
     </task>
     <task id="LOCAL-00001" summary="Create requirements">
       <created>1706541473918</created>

@@ -31,6 +31,7 @@ PAYPAL_RECEIVER_EMAIL = 'sb-ptjap29441924@business.example.com'
 PAYPAL_TEST = True
 PAYPAL_BUY_BUTTON_IMAGE = 'https://res.cloudinary.com/the-proton-guy/image/upload/v1685882223/paypal-PhotoRoom_v9pay7.png'
 
+
 ALLOWED_HOSTS = ['*', '192.168.1.79', '192.168.1.104']
 
 # Application definition
@@ -165,9 +166,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'db',
         'USER': 'root',
-        'PASSWORD': 'Thanh@123',
-        # 'PASSWORD': '12345678',
-        # 'HOST': ''  # mặc định localhost
+        # 'PASSWORD': 'Thanh@123',
+        'PASSWORD': '12345678',
+        'HOST': ''  # mặc định localhost
     }
 }
 
