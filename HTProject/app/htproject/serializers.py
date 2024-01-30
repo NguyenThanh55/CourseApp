@@ -11,6 +11,14 @@ class UserDetailSerializer(ModelSerializer):
             "password": {"write_only": "true"}
         }
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        if representation.get('avatar'):
+            representation['avatar'] = "https://res.cloudinary.com/dohcsyfoi/" + representation['avatar']
+
+        return representation
+
     def create(self, validated_data):
         user = User(**validated_data)
         user.set_password(validated_data["password"])

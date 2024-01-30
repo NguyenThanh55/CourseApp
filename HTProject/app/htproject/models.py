@@ -8,9 +8,9 @@ from cloudinary.models import CloudinaryField
 
 class User(AbstractUser):
     # avatar = models.ImageField(upload_to='imageUser/%Y/%m', null=False)
-    avatar = CloudinaryField('avatar', null=True)
-    identityCard = models.CharField(max_length=12, null=False)
-    isApproved = models.BooleanField(default=False)
+    avatar = CloudinaryField('avatar', null=True, blank=True)
+    identityCard = models.CharField(max_length=12, null=True)
+    isApproved = models.BooleanField(default=False, null=True)
     role = models.CharField(max_length=100, null=False)
     phone = models.DecimalField(max_digits=10, decimal_places=0, default=0)
 

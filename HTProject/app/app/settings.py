@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-
+import cloudinary
 import paypalrestsdk
 from django.conf.global_settings import AUTH_USER_MODEL
 
@@ -31,7 +31,7 @@ PAYPAL_RECEIVER_EMAIL = 'sb-ptjap29441924@business.example.com'
 PAYPAL_TEST = True
 PAYPAL_BUY_BUTTON_IMAGE = 'https://res.cloudinary.com/the-proton-guy/image/upload/v1685882223/paypal-PhotoRoom_v9pay7.png'
 
-ALLOWED_HOSTS = ['*', '192.168.1.79']
+ALLOWED_HOSTS = ['*', '192.168.1.79', '192.168.1.104']
 
 # Application definition
 
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'corsheaders',
     'paypal.standard.ipn',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -74,8 +75,6 @@ CORS_ALLOW_ALL_ORIGINS = True
 import pymysql
 
 pymysql.install_as_MySQLdb()
-
-import cloudinary
 
 # Import the cloudinary.api for managing assets
 # import cloudinary.api
@@ -166,9 +165,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'db',
         'USER': 'root',
-        #'PASSWORD': 'Thanh@123',
-        'PASSWORD': '12345678',
-        'HOST': ''  # mặc định localhost
+        'PASSWORD': 'Thanh@123',
+        # 'PASSWORD': '12345678',
+        # 'HOST': ''  # mặc định localhost
     }
 }
 

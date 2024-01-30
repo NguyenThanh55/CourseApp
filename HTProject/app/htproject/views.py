@@ -19,7 +19,7 @@ from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 import utils
-from app import  settings
+from app import settings
 from htproject import email
 from . import paginators, serializers, perms
 from .models import User, City, District, Ward, Order, Rating, Auction, Voucher, Bill

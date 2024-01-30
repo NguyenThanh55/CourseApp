@@ -4,8 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f460f85c-3b1f-4a83-80fb-70da748cdf08" name="Changes" comment="">
+    <list default="true" id="f460f85c-3b1f-4a83-80fb-70da748cdf08" name="Changes" comment="Create requirements">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/htproject/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/htproject/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/htproject/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/htproject/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/htproject/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/htproject/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,6 +89,14 @@
       <updated>1704293353720</updated>
       <workItem from="1704293354893" duration="1344000" />
     </task>
+    <task id="LOCAL-00001" summary="Create requirements">
+      <created>1706541473918</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1706541473918</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -100,5 +112,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Create requirements" />
+    <option name="LAST_COMMIT_MESSAGE" value="Create requirements" />
   </component>
 </project>
