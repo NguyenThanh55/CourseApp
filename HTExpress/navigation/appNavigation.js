@@ -4,14 +4,16 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '../screens/HomeScreen';
 import { Dimensions, LogBox, Platform, Text, View } from 'react-native';
 import ProductScreen from '../screens/ProductScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 import LoginScreen from '../screens/LoginScreen';
 import { themeColors } from '../theme';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { HomeIcon as HomeOutline, HeartIcon as HeartOutline, ShoppingBagIcon as BagOutline } from 'react-native-heroicons/outline';
+import { HomeIcon as HomeOutline, HeartIcon as HeartOutline, UserIcon as UserOutline } from 'react-native-heroicons/outline';
 import { HomeIcon as HomeSolid, HeartIcon as HeartSolid, ShoppingBagIcon as BagSolid } from 'react-native-heroicons/solid';
 import MyUserReducer from '../reducers/MyUserReducer';
 import MyContext from "../configs/MyContext";
 import Signup from '../screens/SingUpScreen';
+
 
 
 const Stack = createNativeStackNavigator();
@@ -37,7 +39,7 @@ export default function AppNavigation() {
         <Stack.Navigator screenOptions={{
           contentStyle: { backgroundColor: 'white' }
         }}>
-          {/* {user === null ?
+          {user === null ?
             <>
               <Stack.Screen name="Login" options={{ headerShown: false }} component={LoginScreen} />
               <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false}}  />
@@ -46,12 +48,12 @@ export default function AppNavigation() {
             <>
               <Stack.Screen name="Home" options={{ headerShown: false }} component={HomeTabs} />
               <Stack.Screen name="Product" options={{ headerShown: false }} component={ProductScreen} />
-            </>} */}
+            </>}
 
-            <Stack.Screen name="Login" options={{ headerShown: false }} component={LoginScreen} />
+            {/* <Stack.Screen name="Login" options={{ headerShown: false }} component={LoginScreen} />
               <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false}}  />
               <Stack.Screen name="Home" options={{ headerShown: false }} component={HomeTabs} />
-              <Stack.Screen name="Product" options={{ headerShown: false }} component={ProductScreen} />
+              <Stack.Screen name="Product" options={{ headerShown: false }} component={ProductScreen} /> */}
 
 
         </Stack.Navigator>
@@ -87,7 +89,7 @@ function HomeTabs() {
     >
       <Tab.Screen name="home" component={HomeScreen} />
       <Tab.Screen name="favourite" component={HomeScreen} />
-      <Tab.Screen name="cart" component={HomeScreen} />
+      <Tab.Screen name="profile" component={ProfileScreen} />
     </Tab.Navigator>
   )
 }
@@ -100,8 +102,8 @@ const menuIcons = (route, focused) => {
     icon = focused ? <HomeSolid size="30" color={themeColors.bgLight} /> : <HomeOutline size="30" strokeWidth={2} color="white" />
   } else if (route.name === 'favourite') {
     icon = focused ? <HeartSolid size="30" color={themeColors.bgLight} /> : <HeartOutline size="30" strokeWidth={2} color="white" />
-  } else if (route.name === 'cart') {
-    icon = focused ? <BagSolid size="30" color={themeColors.bgLight} /> : <BagOutline size="30" strokeWidth={2} color="white" />
+  } else if (route.name === 'profile') {
+    icon = focused ? <BagSolid size="30" color={themeColors.bgLight} /> : <UserOutline size="30" strokeWidth={2} color="white" />
   }
 
 

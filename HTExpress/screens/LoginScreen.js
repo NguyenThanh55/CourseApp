@@ -21,6 +21,7 @@ import COLORS from "../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import Signup from "./SingUpScreen";
 import Button from "../components/Button";
+import LoaddingButton from "../components/LoaddingButton";
 
 const Login = ({ navigation }) => {
   const [username, setUsername] = useState();
@@ -30,12 +31,12 @@ const Login = ({ navigation }) => {
 
   const [isPasswordShown, setIsPasswordShown] = useState(false);
 
+
   const login = async () => {
     setLoading(true);
 
     try {
-      console.log(username);
-      console.log(password);
+   
 
       let res = await API.post(
         endpoints["login"],
@@ -49,17 +50,27 @@ const Login = ({ navigation }) => {
           },
         }
       );
-      console.log(res.data);
+     
       await AsyncStorage.setItem("access-token", res.data.access_token);
+      await AsyncStorage.setItem("refresh_token", res.data.refresh_token);
+
       let user = await authApi(res.data.access_token).get(
-        endpoints["current-user"]
+        endpoints["current-user"],
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
       );
-      console.log(user);
+
+     
+
       dispatch({
         type: "login",
         payload: user.data,
       });
       navigation.navigate("Home");
+
     } catch (ex) {
       console.error(ex.message);
     } finally {
@@ -107,27 +118,27 @@ const Login = ({ navigation }) => {
               >
                 Tài khoản
               </Text>
-          <View style={{
-            width: "100%",
-            height: 48,
-            borderColor: COLORS.black,
-            borderWidth: 1,
-            borderRadius: 8,
-            alignItems: "center",
-            justifyContent: "center",
-            paddingLeft: 22
-          }}>
-            <TextInput
-              placeholder='Nhập tài khoản'
-              placeholderTextColor={COLORS.black}
-              value={username}
-              onChangeText={(u) => setUsername(u)}
-              style={{
-                width: "100%"
-              }}
-            />
-          </View>
-        </View>
+              <View style={{
+                width: "100%",
+                height: 48,
+                borderColor: COLORS.black,
+                borderWidth: 1,
+                borderRadius: 8,
+                alignItems: "center",
+                justifyContent: "center",
+                paddingLeft: 22
+              }}>
+                <TextInput
+                  placeholder='Nhập tài khoản'
+                  placeholderTextColor={COLORS.black}
+                  value={username}
+                  onChangeText={(u) => setUsername(u)}
+                  style={{
+                    width: "100%"
+                  }}
+                />
+              </View>
+            </View>
 
             <View style={{ marginBottom: 12 }}>
               <Text
@@ -155,7 +166,7 @@ const Login = ({ navigation }) => {
                 <TextInput
                   placeholder="Nhập mật khẩu"
                   placeholderTextColor={COLORS.black}
-                  secureTextEntry={isPasswordShown}
+                  secureTextEntry={!isPasswordShown}
                   value={password}
                   onChangeText={(p) => setPassword(p)}
                   style={{
@@ -179,16 +190,30 @@ const Login = ({ navigation }) => {
               </View>
             </View>
 
-            <Button
-              title="Đăng nhập"
-              filled
-              onPress={login}
-              disabled={loading}
-              style={{
-                marginTop: 18,
-                marginBottom: 4,
-              }}
-            />
+
+
+              
+              {!loading ? <Button
+                title="Đăng nhập"
+                filled
+                onPress={login}
+                disabled={loading}
+                style={{
+                  marginTop: 18,
+                  marginBottom: 4,
+                }}
+              /> : <LoaddingButton
+                title="Đang đăng nhập"
+                filled
+                onPress={login}
+                disabled={loading}
+                style={{
+                  marginTop: 18,
+                  marginBottom: 4,
+                }}
+              />}
+            
+
 
             <View
               style={{

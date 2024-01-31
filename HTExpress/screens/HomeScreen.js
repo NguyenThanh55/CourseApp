@@ -1,5 +1,5 @@
-import { View, Text, Image, TouchableOpacity, TextInput, FlatList, Dimensions, Platform } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, Image, TouchableOpacity, TextInput, FlatList, Dimensions, Platform, Button } from 'react-native'
+import React, { useState, useContext, useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import {themeColors} from '../theme';
 import { StatusBar } from 'expo-status-bar';
@@ -8,11 +8,20 @@ import Carousel from 'react-native-snap-carousel';
 import CoffeeCard from '../components/coffeeCard';
 import { BellIcon, MagnifyingGlassIcon } from 'react-native-heroicons/outline'
 import { MapPinIcon } from 'react-native-heroicons/solid'
+import MyContext from "../configs/MyContext";
+
 
 const {width, height} = Dimensions.get('window');
 const ios = Platform.OS == 'ios';
 export default function HomeScreen() {
+  const [user, dispatch] = useContext(MyContext);
   const [activeCategory, setActiveCategory] = useState(1);
+
+
+
+
+
+console.log(user);
 
   return (
     <View className="flex-1 relative bg-white">
