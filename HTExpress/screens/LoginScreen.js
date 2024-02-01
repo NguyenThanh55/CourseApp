@@ -31,13 +31,10 @@ const Login = ({ navigation }) => {
 
   const [isPasswordShown, setIsPasswordShown] = useState(false);
 
-
   const login = async () => {
     setLoading(true);
 
     try {
-   
-
       let res = await API.post(
         endpoints["login"],
         {
@@ -50,7 +47,6 @@ const Login = ({ navigation }) => {
           },
         }
       );
-     
       await AsyncStorage.setItem("access-token", res.data.access_token);
       await AsyncStorage.setItem("refresh_token", res.data.refresh_token);
 
@@ -63,14 +59,11 @@ const Login = ({ navigation }) => {
         }
       );
 
-     
-
       dispatch({
         type: "login",
         payload: user.data,
       });
       navigation.navigate("Home");
-
     } catch (ex) {
       console.error(ex.message);
     } finally {
@@ -118,23 +111,25 @@ const Login = ({ navigation }) => {
               >
                 Tài khoản
               </Text>
-              <View style={{
-                width: "100%",
-                height: 48,
-                borderColor: COLORS.black,
-                borderWidth: 1,
-                borderRadius: 8,
-                alignItems: "center",
-                justifyContent: "center",
-                paddingLeft: 22
-              }}>
+              <View
+                style={{
+                  width: "100%",
+                  height: 48,
+                  borderColor: COLORS.black,
+                  borderWidth: 1,
+                  borderRadius: 8,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  paddingLeft: 22,
+                }}
+              >
                 <TextInput
-                  placeholder='Nhập tài khoản'
+                  placeholder="Nhập tài khoản"
                   placeholderTextColor={COLORS.black}
                   value={username}
                   onChangeText={(u) => setUsername(u)}
                   style={{
-                    width: "100%"
+                    width: "100%",
                   }}
                 />
               </View>
@@ -190,10 +185,8 @@ const Login = ({ navigation }) => {
               </View>
             </View>
 
-
-
-              
-              {!loading ? <Button
+            {!loading ? (
+              <Button
                 title="Đăng nhập"
                 filled
                 onPress={login}
@@ -202,7 +195,9 @@ const Login = ({ navigation }) => {
                   marginTop: 18,
                   marginBottom: 4,
                 }}
-              /> : <LoaddingButton
+              />
+            ) : (
+              <LoaddingButton
                 title="Đang đăng nhập"
                 filled
                 disabled={loading}
@@ -210,9 +205,8 @@ const Login = ({ navigation }) => {
                   marginTop: 18,
                   marginBottom: 4,
                 }}
-              />}
-            
-
+              />
+            )}
 
             <View
               style={{

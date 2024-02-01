@@ -29,6 +29,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class UserViewSet(viewsets.ViewSet,
                   generics.ListAPIView,
                   generics.RetrieveAPIView):
@@ -52,6 +53,7 @@ class UserViewSet(viewsets.ViewSet,
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response("Data is invalid", status=status.HTTP_400_BAD_REQUEST)
 
     @action(methods=['get'], url_name='my_orders', detail=False)
     def my_orders(self, request):
