@@ -4,7 +4,8 @@ export const endpoints = {
   login: "/o/token/",
   "current-user": "/user/current_user/",
   "register": "/user/create_user/",
-  "get-users": "/user/",
+  "get-orders": "/order/",
+  "all-order": "/order/"
 };
 
 export const authApi = (accessToken) =>

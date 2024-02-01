@@ -205,7 +205,6 @@ const Login = ({ navigation }) => {
               /> : <LoaddingButton
                 title="Đang đăng nhập"
                 filled
-                onPress={login}
                 disabled={loading}
                 style={{
                   marginTop: 18,

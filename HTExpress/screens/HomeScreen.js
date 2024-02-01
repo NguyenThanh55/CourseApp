@@ -1,7 +1,7 @@
 import { View, Text, Image, TouchableOpacity, TextInput, FlatList, Dimensions, Platform, Button } from 'react-native'
 import React, { useState, useContext, useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import {themeColors} from '../theme';
+import { themeColors } from '../theme';
 import { StatusBar } from 'expo-status-bar';
 import { categories, coffeeItems } from '../constants';
 import Carousel from 'react-native-snap-carousel';
@@ -9,98 +9,127 @@ import CoffeeCard from '../components/coffeeCard';
 import { BellIcon, MagnifyingGlassIcon } from 'react-native-heroicons/outline'
 import { MapPinIcon } from 'react-native-heroicons/solid'
 import MyContext from "../configs/MyContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import API, { authApi, endpoints } from "../configs/APIs";
 
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 const ios = Platform.OS == 'ios';
 export default function HomeScreen() {
   const [user, dispatch] = useContext(MyContext);
   const [activeCategory, setActiveCategory] = useState(1);
+  const [listOrder, setListOrder] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const accessToken = await AsyncStorage.getItem("access-token");
+      try {
+        const api = authApi(accessToken);
+
+        const res = await api.get(
+          endpoints["all-order"],
+          {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          }
+        );
+
+
+        setListOrder(res.data['results'])
+        console.log(listOrder);
+      } catch (error) {
+        // Handle errors
+        console.error('API Error:', error);
+      }
+    };
+
+    // Call the async function
+    fetchData();
+  }, []);
 
 
 
 
-
-console.log(user);
 
   return (
     <View className="flex-1 relative bg-white">
       <StatusBar />
 
-      <Image 
-        source={require('../assets/images/beansBackground1.png')} 
-        style={{height: height*0.2}} 
+      <Image
+        source={require('../assets/images/beansBackground1.png')}
+        style={{ height: height * 0.2 }}
         className="w-full absolute -top-5 opacity-10" />
-      <SafeAreaView className={ios? '-mb-8': ''}>
+      <SafeAreaView className={ios ? '-mb-8' : ''}>
         {/* avatar and bell icon */}
         <View className="mx-4 flex-row justify-between items-center">
-          <Image source={require('../assets/images/avatar.png')} 
+          <Image source={require('../assets/images/avatar.png')}
             className="h-9 w-9 rounded-full" />
-          
+
           <View className="flex-row items-center space-x-2">
             <MapPinIcon size="25" color={themeColors.bgLight} />
             <Text className="font-semibold text-base">
-              New York, NYC
+              Ho Chi Minh, HCM
             </Text>
           </View>
           <BellIcon size="27" color="black" />
         </View>
         {/* search bar */}
-        <View className="mx-5 shadow" style={{marginTop: height*0.06}}>
+        <View className="mx-5 shadow" style={{ marginTop: height * 0.06 }}>
           <View className="flex-row items-center rounded-full p-1 bg-[#e6e6e6]">
             <TextInput placeholder='Search' className="p-4 flex-1 font-semibold text-gray-700" />
-            <TouchableOpacity 
-              className="rounded-full p-2" 
-              style={{backgroundColor: themeColors.bgLight}}>
+            <TouchableOpacity
+              className="rounded-full p-2"
+              style={{ backgroundColor: themeColors.bgLight }}>
               <MagnifyingGlassIcon size="25" strokeWidth={2} color="white" />
             </TouchableOpacity>
           </View>
         </View>
         {/* categories */}
         <View className="px-5 mt-6">
-          <FlatList 
+          <FlatList
             horizontal
             showsHorizontalScrollIndicator={false}
             data={categories}
-            keyExtractor={item=> item.id}
+            keyExtractor={item => item.id}
             className="overflow-visible"
-            renderItem={({item})=>{
-              isActive = item.id==activeCategory;
-              let activeTextClass = isActive? 'text-white': 'text-gray-700';
+            renderItem={({ item }) => {
+              isActive = item.id == activeCategory;
+              let activeTextClass = isActive ? 'text-white' : 'text-gray-700';
               return (
-                <TouchableOpacity 
-                onPress={()=> setActiveCategory(item.id)}
-                style={{backgroundColor: isActive? themeColors.bgLight: 'rgba(0,0,0,0.07)'}} 
-                className="p-4 px-5 mr-2 rounded-full shadow">
+                <TouchableOpacity
+                  onPress={() => setActiveCategory(item.id)}
+                  style={{ backgroundColor: isActive ? themeColors.bgLight : 'rgba(0,0,0,0.07)' }}
+                  className="p-4 px-5 mr-2 rounded-full shadow">
                   <Text className={"font-semibold " + activeTextClass}>{item.title}</Text>
                 </TouchableOpacity>
               )
             }}
           />
         </View>
-          
+
       </SafeAreaView>
 
       {/* coffee cards */}
-      <View className={`overflow-visible flex justify-center flex-1 ${ios? 'mt-10':''}`}>
+      <View className={`overflow-visible flex justify-center flex-1 ${ios ? 'mt-10' : ''}`}>
         <View>
           <Carousel
-            containerCustomStyle={{overflow: 'visible'}}
+            containerCustomStyle={{ overflow: 'visible' }}
             data={coffeeItems}
-            renderItem={({item})=> <CoffeeCard item={item} />}
+            renderItem={({ item }) => <CoffeeCard item={item} />}
             firstItem={1}
             loop={true}
             inactiveSlideScale={0.75}
             inactiveSlideOpacity={0.75}
             sliderWidth={width}
-            itemWidth={width*0.63}
-            slideStyle={{display: 'flex', alignItems: 'center'}}
+            itemWidth={width * 0.63}
+            slideStyle={{ display: 'flex', alignItems: 'center' }}
           />
         </View>
-        
+
       </View>
-      
-      
+
+
     </View>
   )
 }
