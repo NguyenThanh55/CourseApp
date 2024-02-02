@@ -3,7 +3,6 @@ from .models import User, City, District, Order, Rating, Auction, Voucher, Order
 
 
 class UserDetailSerializer(ModelSerializer):
-    avatar = SerializerMethodField(method_name='get_avatar')
 
     class Meta:
         model = User
@@ -12,20 +11,14 @@ class UserDetailSerializer(ModelSerializer):
         extra_kwargs = {
             "password": {"write_only": "true"}
         }
-    # def to_representation(self, instance):
-    #     representation = super().to_representation(instance)
-    #
-    #     if representation.get('avatar'):
-    #         representation['avatar'] = "https://res.cloudinary.com/dohcsyfoi/" + representation['avatar']
-    #
-    #     return representation
 
-    def get_avatar(self, user):
-        base_url = 'https://res.cloudinary.com/dohcsyfoi/'
-        if user.avatar and base_url not in urljoin(base_url, user.avatar.url):
-            return user.avatar.url
-        return None
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
 
+        if representation.get('avatar'):
+            representation['avatar'] = "https://res.cloudinary.com/dohcsyfoi/" + representation['avatar']
+
+        return representation
 
     def create(self, validated_data):
         user = User(**validated_data)
@@ -42,12 +35,15 @@ class CitySerializer(ModelSerializer):
 
 
 class DistrictSerializer(ModelSerializer):
+    city = CitySerializer()
+
     class Meta:
         model = District
         fields = ['id', 'name', 'city']
 
 
 class WardSerializer(ModelSerializer):
+    district = DistrictSerializer()
     class Meta:
         model = Ward
         fields = ['id', 'name', 'district']
@@ -65,21 +61,13 @@ class OrderVoucherSerializer(ModelSerializer):
         fields = ['id', 'decreased_money', 'order', 'voucher', 'useDate']
 
 
-class OrderDetailSerializer(ModelSerializer):
-    fromWard = WardSerializer()
-    toWard = WardSerializer()
-    shipper = UserDetailSerializer()
-    customer = UserDetailSerializer()
-    order_voucher = OrderVoucher()
-    # order_rating = RatingSerializer(many=True)
-
+class OrderSerializer(ModelSerializer):
+    # order_voucher = OrderVoucher.
     class Meta:
         model = Order
         fields = ['id', 'title', 'content', 'image', 'shipper',
                   'customer', 'deliveryDate', 'fromWard', 'fromStreet', 'toWard',
-                  'toStreet'
-                  ]
-        # fields = '__all__'
+                  'toStreet']
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -90,13 +78,28 @@ class OrderDetailSerializer(ModelSerializer):
         return representation
 
 
-class OrderSerializer(ModelSerializer):
-    # order_voucher = OrderVoucher.
+class OrderDetailSerializer(OrderSerializer):
+    fromWard = WardSerializer()
+    toWard = WardSerializer()
+    shipper = UserDetailSerializer()
+    customer = UserDetailSerializer()
+    order_voucher = OrderVoucher()
+    # order_rating = RatingSerializer(many=True)
+    # fromAddres = SerializerMethodField(method_name=get_fromAddress)
+
     class Meta:
         model = Order
         fields = ['id', 'title', 'content', 'image', 'shipper',
                   'customer', 'deliveryDate', 'fromWard', 'fromStreet', 'toWard',
-                  'toStreet']
+                  'toStreet', 'status'
+                  ]
+
+    # def get_fromAddress(self, obj):
+    #     base_url = 'https://res.cloudinary.com/dstqvlt8d/'
+    #     if image.imageURL and base_url not in urljoin(base_url, image.imageURL.url):
+    #         return image.imageURL.url
+    #
+    # imageURL = serializers.SerializerMethodField(method_name='get_image_url')
 
 
 class AuctionDetailSerializer(ModelSerializer):

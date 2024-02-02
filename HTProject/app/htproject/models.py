@@ -50,8 +50,8 @@ class Ward(models.Model):
 class Order(BaseModel):
     title = models.CharField(max_length=255, default="Đơn hàng của ")
     content = RichTextField()
-    image = models.ImageField(upload_to='imageOrder/%Y/%m')
-    shipper = models.ForeignKey(User, related_name="shipper", on_delete=models.SET_DEFAULT, default="1")
+    image = CloudinaryField('image', null=True, blank=True)
+    shipper = models.ForeignKey(User, related_name="shipper", on_delete=models.SET_DEFAULT, default="1", null=True)
     customer = models.ForeignKey(User, related_name="customer", on_delete=models.SET_NULL, null=True)
     deliveryDate = models.DateField(auto_now=True, null=True)
     # fromCity = models.ForeignKey(City, related_name="fromCity", on_delete=models.SET_NULL, null=True)
