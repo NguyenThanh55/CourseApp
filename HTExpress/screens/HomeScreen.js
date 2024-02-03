@@ -19,6 +19,7 @@ export default function HomeScreen() {
   const [user, dispatch] = useContext(MyContext);
   const [activeCategory, setActiveCategory] = useState(1);
   const [listOrder, setListOrder] = useState();
+  const [filterOrder, setFilterOrder] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,18 +27,37 @@ export default function HomeScreen() {
       try {
         const api = authApi(accessToken);
 
-        const res = await api.get(
-          endpoints["all-order"],
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          }
-        );
+       
+        if(user['role'] === "SHIPPER") {
+          const res = await api.get(
+            endpoints["all-order"],
+            {
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+            }
+          );
+
+          setListOrder(res.data['results']);
+          setFilterOrder(res.data['results']);
+          console.log(listOrder);
+        } else {
+          const res = await api.get(
+            endpoints["my-order"],
+            {
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+            }
+          );
+          
+          setListOrder(res.data);
+          setFilterOrder(res.data);
+          console.log(listOrder);
+        }
 
 
-        setListOrder(res.data['results'])
-        console.log(listOrder);
+        
       } catch (error) {
         // Handle errors
         console.error('API Error:', error);
@@ -60,10 +80,14 @@ export default function HomeScreen() {
         source={require('../assets/images/beansBackground1.png')}
         style={{ height: height * 0.2 }}
         className="w-full absolute -top-5 opacity-10" />
+
+
       <SafeAreaView className={ios ? '-mb-8' : ''}>
+
+
         {/* avatar and bell icon */}
         <View className="mx-4 flex-row justify-between items-center">
-          <Image source={require('../assets/images/avatar.png')}
+          <Image source={{ uri: user.avatar }}
             className="h-9 w-9 rounded-full" />
 
           <View className="flex-row items-center space-x-2">
@@ -74,10 +98,12 @@ export default function HomeScreen() {
           </View>
           <BellIcon size="27" color="black" />
         </View>
+
+
         {/* search bar */}
         <View className="mx-5 shadow" style={{ marginTop: height * 0.06 }}>
           <View className="flex-row items-center rounded-full p-1 bg-[#e6e6e6]">
-            <TextInput placeholder='Search' className="p-4 flex-1 font-semibold text-gray-700" />
+            <TextInput placeholder='Lọc theo địa chỉ' className="p-4 flex-1 font-semibold text-gray-700" />
             <TouchableOpacity
               className="rounded-full p-2"
               style={{ backgroundColor: themeColors.bgLight }}>
@@ -85,6 +111,8 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
         </View>
+
+
         {/* categories */}
         <View className="px-5 mt-6">
           <FlatList
@@ -98,7 +126,15 @@ export default function HomeScreen() {
               let activeTextClass = isActive ? 'text-white' : 'text-gray-700';
               return (
                 <TouchableOpacity
-                  onPress={() => setActiveCategory(item.id)}
+                  onPress={() => {
+                    setActiveCategory(item.id)
+                    if(item.id == 1) {
+                      setFilterOrder(listOrder);
+                    } else {
+                      const filteredData = listOrder.filter(order => order.title === item.title);
+                      setFilterOrder(filteredData);
+                    }
+                  }}
                   style={{ backgroundColor: isActive ? themeColors.bgLight : 'rgba(0,0,0,0.07)' }}
                   className="p-4 px-5 mr-2 rounded-full shadow">
                   <Text className={"font-semibold " + activeTextClass}>{item.title}</Text>
@@ -111,18 +147,17 @@ export default function HomeScreen() {
       </SafeAreaView>
 
       {/* coffee cards */}
-      <View className={`overflow-visible flex justify-center flex-1 ${ios ? 'mt-10' : ''}`}>
+      <View className={`overflow-visible flex justify-center flex-1 ${ios ? 'mt-5' : ''}`}>
         <View>
           <Carousel
             containerCustomStyle={{ overflow: 'visible' }}
-            data={coffeeItems}
+            data={filterOrder}
             renderItem={({ item }) => <CoffeeCard item={item} />}
             firstItem={1}
-            loop={true}
             inactiveSlideScale={0.75}
             inactiveSlideOpacity={0.75}
             sliderWidth={width}
-            itemWidth={width * 0.63}
+            itemWidth={width * 0.7}
             slideStyle={{ display: 'flex', alignItems: 'center' }}
           />
         </View>

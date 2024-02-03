@@ -12,6 +12,7 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   Keyboard,
+  Alert,
 } from "react-native";
 import API, { authApi, endpoints } from "../configs/APIs";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -47,24 +48,31 @@ const Login = ({ navigation }) => {
           },
         }
       );
-      await AsyncStorage.setItem("access-token", res.data.access_token);
-      await AsyncStorage.setItem("refresh_token", res.data.refresh_token);
+      
+      if (res.status == 200) {
 
-      let user = await authApi(res.data.access_token).get(
-        endpoints["current-user"],
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        }
-      );
+        await AsyncStorage.setItem("access-token", res.data.access_token);
+        await AsyncStorage.setItem("refresh_token", res.data.refresh_token);
 
-      dispatch({
-        type: "login",
-        payload: user.data,
-      });
-      navigation.navigate("Home");
+        let user = await authApi(res.data.access_token).get(
+          endpoints["current-user"],
+          {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          }
+        );
+
+        dispatch({
+          type: "login",
+          payload: user.data,
+        });
+        navigation.navigate("Home");
+      } else {
+        Alert.alert('Lỗi', 'Tài khoản hoặc mật khẩu không chính xác')
+      }
     } catch (ex) {
+      Alert.alert('Lỗi', 'Tài khoản hoặc mật khẩu không chính xác')
       console.error(ex.message);
     } finally {
       setLoading(false);

@@ -5,24 +5,22 @@
 export const categories = [
   {
     id: 1,
-    title: "Cappuccino",
+    title: "Tất cả",
   },
   {
     id: 2,
-    title: "Latte",
+    title: "Hàng hóa",
   },
   {
     id: 3,
-    title: "Espresso",
+    title: "Đồ ăn",
   },
   {
     id: 4,
-    title: "Mocha",
+    title: "Cồng kềnh",
   },
-  {
-    id: 5,
-    title: "Americano",
-  },
+ 
+  
 ]
 
 export const coffeeItems = [

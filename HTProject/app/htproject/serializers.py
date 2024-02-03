@@ -3,7 +3,7 @@ from .models import User, City, District, Order, Rating, Auction, Voucher, Order
 
 
 class UserDetailSerializer(ModelSerializer):
-    avatar = SerializerMethodField(method_name='get_avatar')
+    # avatar = SerializerMethodField(method_name='get_avatar')
 
     class Meta:
         model = User
@@ -12,19 +12,19 @@ class UserDetailSerializer(ModelSerializer):
         extra_kwargs = {
             "password": {"write_only": "true"}
         }
-    # def to_representation(self, instance):
-    #     representation = super().to_representation(instance)
-    #
-    #     if representation.get('avatar'):
-    #         representation['avatar'] = "https://res.cloudinary.com/dohcsyfoi/" + representation['avatar']
-    #
-    #     return representation
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
 
-    def get_avatar(self, user):
-        base_url = 'https://res.cloudinary.com/dohcsyfoi/'
-        if user.avatar and base_url not in urljoin(base_url, user.avatar.url):
-            return user.avatar.url
-        return None
+        if representation.get('avatar'):
+            representation['avatar'] = "https://res.cloudinary.com/dohcsyfoi/" + representation['avatar']
+
+        return representation
+
+    # def get_avatar(self, user):
+    #     base_url = 'https://res.cloudinary.com/dohcsyfoi/'
+    #     if user.avatar and base_url not in urljoin(base_url, user.avatar.url):
+    #         return user.avatar.url
+    #     return None
 
 
     def create(self, validated_data):
@@ -85,9 +85,10 @@ class OrderDetailSerializer(ModelSerializer):
         representation = super().to_representation(instance)
 
         if representation.get('image'):
-            representation['image'] = "https://res.cloudinary.com/dohcsyfoi/" + representation['image']
+            representation['image'] = "https://res.cloudinary.com/dohcsyfoi" + representation['image']
 
         return representation
+
 
 
 class OrderSerializer(ModelSerializer):
@@ -97,6 +98,14 @@ class OrderSerializer(ModelSerializer):
         fields = ['id', 'title', 'content', 'image', 'shipper',
                   'customer', 'deliveryDate', 'fromWard', 'fromStreet', 'toWard',
                   'toStreet']
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        if representation.get('image'):
+            representation['image'] = "https://res.cloudinary.com/dohcsyfoi" + representation['image']
+
+        return representation
 
 
 class AuctionDetailSerializer(ModelSerializer):
