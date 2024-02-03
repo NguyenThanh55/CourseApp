@@ -3,7 +3,6 @@ from .models import User, City, District, Order, Rating, Auction, Voucher, Order
 
 
 class UserDetailSerializer(ModelSerializer):
-    # avatar = SerializerMethodField(method_name='get_avatar')
 
     class Meta:
         model = User
@@ -12,6 +11,8 @@ class UserDetailSerializer(ModelSerializer):
         extra_kwargs = {
             "password": {"write_only": "true"}
         }
+
+
     def to_representation(self, instance):
         representation = super().to_representation(instance)
 
@@ -19,13 +20,6 @@ class UserDetailSerializer(ModelSerializer):
             representation['avatar'] = "https://res.cloudinary.com/dohcsyfoi/" + representation['avatar']
 
         return representation
-
-    # def get_avatar(self, user):
-    #     base_url = 'https://res.cloudinary.com/dohcsyfoi/'
-    #     if user.avatar and base_url not in urljoin(base_url, user.avatar.url):
-    #         return user.avatar.url
-    #     return None
-
 
     def create(self, validated_data):
         user = User(**validated_data)
@@ -42,12 +36,15 @@ class CitySerializer(ModelSerializer):
 
 
 class DistrictSerializer(ModelSerializer):
+    city = CitySerializer()
+
     class Meta:
         model = District
         fields = ['id', 'name', 'city']
 
 
 class WardSerializer(ModelSerializer):
+    district = DistrictSerializer()
     class Meta:
         model = Ward
         fields = ['id', 'name', 'district']
@@ -65,32 +62,6 @@ class OrderVoucherSerializer(ModelSerializer):
         fields = ['id', 'decreased_money', 'order', 'voucher', 'useDate']
 
 
-class OrderDetailSerializer(ModelSerializer):
-    fromWard = WardSerializer()
-    toWard = WardSerializer()
-    shipper = UserDetailSerializer()
-    customer = UserDetailSerializer()
-    order_voucher = OrderVoucher()
-    # order_rating = RatingSerializer(many=True)
-
-    class Meta:
-        model = Order
-        fields = ['id', 'title', 'content', 'image', 'shipper',
-                  'customer', 'deliveryDate', 'fromWard', 'fromStreet', 'toWard',
-                  'toStreet'
-                  ]
-        # fields = '__all__'
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-
-        if representation.get('image'):
-            representation['image'] = "https://res.cloudinary.com/dohcsyfoi" + representation['image']
-
-        return representation
-
-
-
 class OrderSerializer(ModelSerializer):
     # order_voucher = OrderVoucher.
     class Meta:
@@ -103,9 +74,44 @@ class OrderSerializer(ModelSerializer):
         representation = super().to_representation(instance)
 
         if representation.get('image'):
-            representation['image'] = "https://res.cloudinary.com/dohcsyfoi" + representation['image']
+            representation['image'] = "https://res.cloudinary.com/dohcsyfoi/" + representation['image']
 
         return representation
+
+
+
+class OrderDetailSerializer(OrderSerializer):
+    fromWard = WardSerializer()
+    toWard = WardSerializer()
+    shipper = UserDetailSerializer()
+    customer = UserDetailSerializer()
+    order_voucher = OrderVoucher()
+    # order_rating = RatingSerializer(many=True)
+    # fromAddres = SerializerMethodField(method_name=get_fromAddress)
+    class Meta:
+        model = Order
+        fields = ['id', 'title', 'content', 'image', 'shipper',
+                  'customer', 'deliveryDate', 'fromWard', 'fromStreet', 'toWard',
+                  'toStreet', 'status'
+                  ]
+
+    def to_representation(self, instance):
+        representation = super(OrderDetailSerializer, self).to_representation(instance)
+
+        # Add full address information to the representation
+        representation['from_address'] = self.get_full_address(instance.fromWard, instance.fromStreet)
+        representation['to_address'] = self.get_full_address(instance.toWard, instance.toStreet)
+
+        return representation
+
+    def get_full_address(self, ward, street):
+        ward_info = WardSerializer(ward).data
+        district_info = DistrictSerializer(ward_info['district']).data
+        city_info = CitySerializer(district_info['city']).data
+
+        full_address = f"{street}, {ward_info['name']}, {district_info['name']}, {city_info['name']}"
+
+        return full_address
 
 
 class AuctionDetailSerializer(ModelSerializer):

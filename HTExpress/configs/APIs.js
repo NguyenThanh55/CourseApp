@@ -5,7 +5,7 @@ export const endpoints = {
   "current-user": "/user/current_user/",
   "register": "/user/create_user/",
   
-  "all-order": "/order/",
+  "all-order-for-shipper": "/order/no_shipper/",
   "my-order": "/user/my_orders/"
 };
 

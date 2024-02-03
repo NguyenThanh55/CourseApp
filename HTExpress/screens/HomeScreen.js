@@ -5,7 +5,7 @@ import { themeColors } from '../theme';
 import { StatusBar } from 'expo-status-bar';
 import { categories, coffeeItems } from '../constants';
 import Carousel from 'react-native-snap-carousel';
-import CoffeeCard from '../components/coffeeCard';
+import OrderCard from '../components/OrderCard';
 import { BellIcon, MagnifyingGlassIcon } from 'react-native-heroicons/outline'
 import { MapPinIcon } from 'react-native-heroicons/solid'
 import MyContext from "../configs/MyContext";
@@ -30,7 +30,7 @@ export default function HomeScreen() {
        
         if(user['role'] === "SHIPPER") {
           const res = await api.get(
-            endpoints["all-order"],
+            endpoints["all-order-for-shipper"],
             {
               headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -38,9 +38,8 @@ export default function HomeScreen() {
             }
           );
 
-          setListOrder(res.data['results']);
-          setFilterOrder(res.data['results']);
-          console.log(listOrder);
+          setListOrder(res.data);
+          setFilterOrder(res.data);
         } else {
           const res = await api.get(
             endpoints["my-order"],
@@ -50,10 +49,10 @@ export default function HomeScreen() {
               },
             }
           );
-          
+          console.log(res.data);
           setListOrder(res.data);
           setFilterOrder(res.data);
-          console.log(listOrder);
+         
         }
 
 
@@ -67,7 +66,6 @@ export default function HomeScreen() {
     // Call the async function
     fetchData();
   }, []);
-
 
 
 
@@ -152,7 +150,7 @@ export default function HomeScreen() {
           <Carousel
             containerCustomStyle={{ overflow: 'visible' }}
             data={filterOrder}
-            renderItem={({ item }) => <CoffeeCard item={item} />}
+            renderItem={({ item }) => <OrderCard item={item} />}
             firstItem={1}
             inactiveSlideScale={0.75}
             inactiveSlideOpacity={0.75}

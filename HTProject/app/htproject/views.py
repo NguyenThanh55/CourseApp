@@ -112,19 +112,48 @@ class WardViewSet(viewsets.ModelViewSet):
 
 
 class OrderViewSet(viewsets.ViewSet,
-                   generics.ListAPIView,
+                   # generics.ListAPIView,
                    generics.CreateAPIView,
                    generics.RetrieveAPIView,
                    generics.UpdateAPIView,
                    generics.DestroyAPIView):
-    queryset = Order.objects.all()
-    serializer_class = serializers.OrderSerializer # get/post/detail/put/delete
+    queryset = Order.objects.filter(active=True).all()
+    serializer_class = serializers.OrderDetailSerializer # get/post/detail/put/delete
     pagination_class = paginators.DistrictPaginator
+    # def get_queryset(self):
+    #     queries = self.queryset
+    #
+    #     q = self.request.query_params.get("q")
+    #     if q:
+    #         queries = queries.filter(subject__icontains=q)
+    #
+    #     return queries
 
     def get_permissions(self):
         if self.action == 'partial_update' or self.action == 'put' or self.action == 'destroy':
             return [perms.OrderAuthenticated]
         return [permissions.IsAuthenticated()]
+
+    # @action(methods=['get'], detail=True)
+    # def retrieve(self, request, pk):
+    #     try:
+    #         order = Order.objects.get(id=pk)
+    #     except Order.DoesNotExist:
+    #         return Response(status=status.HTTP_404_NOT_FOUND)
+    #
+    #     serializer = OrderDetailSerializer(order)
+    #     return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # @action(detail=True, methods=['get'])
+    # def retrieve(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     serializer = self.get_serializer(instance)
+    #     return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=['get'],url_path='no_shipper' ,url_name='no_shipper', detail=False)
+    def no_shipper(self, request):
+        orders = Order.objects.filter(shipper__isnull=True)
+        return Response(serializers.OrderDetailSerializer(orders, many=True).data, status=status.HTTP_200_OK)
 
     @action(methods=['get'], url_name='auctions', detail=True)
     def auctions(self, request, pk):

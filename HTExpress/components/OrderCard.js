@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity, TouchableWithoutFeedback, Dimensions, Platform } from 'react-native'
+import { View, Text, Image, TouchableOpacity, TouchableWithoutFeedback, Dimensions, Platform, Animated } from 'react-native'
 import React from 'react'
 import { themeColors } from '../theme'
 import { useNavigation } from '@react-navigation/native'
@@ -9,11 +9,13 @@ import moment from 'moment';
 
 const { width, height } = Dimensions.get('window');
 const ios = Platform.OS == 'ios';
-export default function CoffeeCard({ item }) {
+export default function OrderCard({ item }) {
   const navigation = useNavigation();
+  
   return (
 
-    <View
+    <TouchableOpacity
+    onPress={() => navigation.navigate('Product', { ...item })}
       style={{
         borderRadius: 40,
         backgroundColor: themeColors.bgDark,
@@ -30,12 +32,13 @@ export default function CoffeeCard({ item }) {
           marginTop: ios ? -(height * 0.08) : 15,
         }}
         className="flex-row justify-center">
+        
         <Image
           source={{ uri: item.image }}
           className="h-40 w-40"
         />
       </View>
-      <View className={`px-5 flex-1 justify-between ${ios ? 'mt-5' : ''}`}>
+      <View className={`mr-3 px-5 flex-1 justify-between ${ios ? 'mt-5' : ''}`}>
         <View className="space-y-3 mt-3">
           <Text className="text-xxl text-white font-semibold z-10">
             {item.title}
@@ -56,13 +59,13 @@ export default function CoffeeCard({ item }) {
             <Text className="text-xxl text-white font-semibold opacity-60">
               Từ:
             </Text>
-            <Text className="text-xxl text-white font-semibold"> {item.fromStreet}</Text>
+            <Text className="text-xxl text-white font-semibold "> {item.from_address}</Text>
           </View>
           <View className="flex-row space-x-1 z-10">
             <Text className="text-xxl text-white font-semibold opacity-60">
               Đến:
             </Text>
-            <Text className="text-xxl text-white font-semibold"> {item.toStreet}</Text>
+            <Text className="text-sm text-white font-semibold"> {item.to_address}</Text>
           </View>
 
         </View>
@@ -91,7 +94,7 @@ export default function CoffeeCard({ item }) {
 
       </View>
 
-    </View>
+    </TouchableOpacity>
 
   )
 }
