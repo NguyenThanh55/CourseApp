@@ -12,7 +12,7 @@ class User(AbstractUser):
     identityCard = models.CharField(max_length=12, null=True)
     isApproved = models.BooleanField(default=False, null=True)
     role = models.CharField(max_length=100, null=False)
-    phone = models.TextField(default=0, null=False)
+    phone = models.CharField(max_length=10, default=0, null=False)
 
 
 class BaseModel(models.Model):
@@ -79,8 +79,8 @@ class Bill(BaseModel):
 class Rating(BaseModel):
     content = models.CharField(max_length=255, null=False)
     score = models.CharField(max_length=2, null=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="order")
 
     def __str__(self):
         return self.content
@@ -92,10 +92,10 @@ class Auction(BaseModel):
     money = models.DecimalField(max_digits=12, decimal_places=3, null=True)
     shipper = models.ForeignKey(User, on_delete=models.CASCADE, related_name="auction_shipper")
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="auction_order")
-    status = models.BooleanField(default=False)
+    status = models.BooleanField(default=False, null=True)
 
     def __str__(self):
-        return self.title + " " +  self.shipper.last_name + " " +  self.shipper.first_name
+        return self.title + " " + self.shipper.last_name + " " + self.shipper.first_name
 
 
 class Voucher(BaseModel):

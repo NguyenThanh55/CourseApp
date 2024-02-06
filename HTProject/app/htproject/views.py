@@ -175,10 +175,14 @@ class OrderViewSet(viewsets.ViewSet,
 
     @action(methods=['post'], url_name='rating', detail=True)
     def rating(self, request, pk):
-        serializer = serializers.UserDetailSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # serializer = serializers.UserDetailSerializer(data=request.data)
+        # if serializer.is_valid():
+        #     serializer.save()
+        a = Rating.objects.create(content=request.data.get('content'),
+                                  score=request.data.get('score'),
+                                  user=request.user,
+                                  order=self.get_object())
+        return Response(serializers.RatingSerializer(a).data, status=status.HTTP_201_CREATED)
 
     @action(methods=['post'], url_name="send_email", detail=True)
     def send_email(self, request, pk):

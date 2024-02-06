@@ -12,7 +12,6 @@ class UserDetailSerializer(ModelSerializer):
             "password": {"write_only": "true"}
         }
 
-
     def to_representation(self, instance):
         representation = super().to_representation(instance)
 
@@ -45,6 +44,7 @@ class DistrictSerializer(ModelSerializer):
 
 class WardSerializer(ModelSerializer):
     district = DistrictSerializer()
+
     class Meta:
         model = Ward
         fields = ['id', 'name', 'district']
@@ -79,7 +79,6 @@ class OrderSerializer(ModelSerializer):
         return representation
 
 
-
 class OrderDetailSerializer(OrderSerializer):
     fromWard = WardSerializer()
     toWard = WardSerializer()
@@ -88,6 +87,7 @@ class OrderDetailSerializer(OrderSerializer):
     order_voucher = OrderVoucher()
     # order_rating = RatingSerializer(many=True)
     # fromAddres = SerializerMethodField(method_name=get_fromAddress)
+
     class Meta:
         model = Order
         fields = ['id', 'title', 'content', 'image', 'shipper',
