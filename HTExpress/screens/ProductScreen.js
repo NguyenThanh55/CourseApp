@@ -79,43 +79,25 @@ export default function FavouriteScreen(props) {
     fetchData();
   }, []);
 
+
   const updateOrder = async () => {
-    // setLoading(true);
-    // try {
-    //   let res = await API.post(
-    //     endpoints["login"],
-    //     {
-    //       username: username,
-    //       password: password,
-    //     },
-    //     {
-    //       headers: {
-    //         "Content-Type": "application/x-www-form-urlencoded",
-    //       },
-    //     }
-    //   );
-    //   if (res.status == 200) {
-    //     await AsyncStorage.setItem("access-token", res.data.access_token);
-    //     await AsyncStorage.setItem("refresh_token", res.data.refresh_token);
-    //     let user = await authApi(res.data.access_token).get(
-    //       endpoints["current-user"],
-    //       {
-    //         headers: {
-    //           "Content-Type": "application/x-www-form-urlencoded",
-    //         },
-    //       }
-    //     );
-    //     navigation.navigate("Home");
-    //   } else {
-    //     Alert.alert('Lỗi', 'Tài khoản hoặc mật khẩu không chính xác')
-    //   }
-    // } catch (ex) {
-    //   Alert.alert('Lỗi', 'Tài khoản hoặc mật khẩu không chính xác')
-    //   console.error(ex.message);
-    // } finally {
-    //   setLoading(false);
-    // }
-  };
+    const accessToken = await AsyncStorage.getItem("access-token");
+      try {
+        const api = authApi(accessToken);
+
+        
+        const order_id = item.id;
+        
+        console.log(`/order/${order_id}/update_shipper_for_order/`);
+        const response = await api.patch(`/order/${order_id}/update_shipper_for_order/`, {
+          "shipper": selectedItem.id
+        });
+        
+      }  catch (error) {
+        // Handle errors
+        console.error("API Error:", error);
+      } 
+  }
 
   const handleSelectItem = (item) => {
     setSelectedItem(item);
@@ -350,7 +332,7 @@ export default function FavouriteScreen(props) {
             />
           ) : (
             <LoaddingButton
-              title="Đang đăng nhập"
+              title="Đang cập nhật"
               filled
               disabled={loading}
               style={{

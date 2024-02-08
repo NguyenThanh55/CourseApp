@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from rest_framework.serializers import ModelSerializer, SerializerMethodField, DateField
 from .models import User, City, District, Order, Rating, Auction, Voucher, OrderVoucher, Ward, Bill
 
 
@@ -64,6 +64,8 @@ class OrderVoucherSerializer(ModelSerializer):
 
 class OrderSerializer(ModelSerializer):
     # order_voucher = OrderVoucher.
+    deliveryDate = DateField(format="%Y-%d-%m")
+
     class Meta:
         model = Order
         fields = ['id', 'title', 'content', 'image', 'shipper',
@@ -72,11 +74,15 @@ class OrderSerializer(ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-
         if representation.get('image'):
             representation['image'] = "https://res.cloudinary.com/dohcsyfoi/" + representation['image']
 
         return representation
+
+    def create(self, validated_data):
+        delivery_date = validated_data.pop('deliveryDate')
+        order = Order.objects.create(deliveryDate=delivery_date, **validated_data)
+        return order
 
 
 class OrderDetailSerializer(OrderSerializer):
@@ -92,7 +98,7 @@ class OrderDetailSerializer(OrderSerializer):
         model = Order
         fields = ['id', 'title', 'content', 'image', 'shipper',
                   'customer', 'deliveryDate', 'fromWard', 'fromStreet', 'toWard',
-                  'toStreet', 'status'
+                  'toStreet', 'status',
                   ]
 
     def to_representation(self, instance):
@@ -101,7 +107,6 @@ class OrderDetailSerializer(OrderSerializer):
         # Add full address information to the representation
         representation['from_address'] = self.get_full_address(instance.fromWard, instance.fromStreet)
         representation['to_address'] = self.get_full_address(instance.toWard, instance.toStreet)
-
         return representation
 
     def get_full_address(self, ward, street):
