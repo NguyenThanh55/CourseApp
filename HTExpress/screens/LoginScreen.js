@@ -44,7 +44,7 @@ const Login = ({ navigation }) => {
         },
         {
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
+            "Content-Type": "application/x-www-form-urlencoded", 
           },
         }
       );
@@ -96,7 +96,7 @@ const Login = ({ navigation }) => {
                   color: COLORS.black,
                 }}
               >
-                Xin chào ! 👋
+                Xin chào! 👋
               </Text>
 
               <Text

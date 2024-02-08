@@ -120,14 +120,13 @@ class AuctionDetailSerializer(ModelSerializer):
 
     class Meta:
         model = Auction
-        fields = ['id', 'title', 'content', 'shipper', 'order', 'status']
+        fields = ['id', 'title', 'content', 'shipper', 'order', 'status', 'money']
 
 
 class AuctionSerializer(ModelSerializer):
     class Meta:
         model = Auction
         fields = ['id', 'title', 'content', 'shipper', 'order', 'status']
-
 
 class RatingSerializer(ModelSerializer):
     user = UserDetailSerializer()

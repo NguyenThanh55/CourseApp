@@ -8,8 +8,8 @@ import ProfileScreen from '../screens/ProfileScreen';
 import LoginScreen from '../screens/LoginScreen';
 import { themeColors } from '../theme';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { HomeIcon as HomeOutline, HeartIcon as HeartOutline, UserIcon as UserOutline } from 'react-native-heroicons/outline';
-import { HomeIcon as HomeSolid, HeartIcon as HeartSolid, ShoppingBagIcon as BagSolid } from 'react-native-heroicons/solid';
+import { HomeIcon as HomeOutline, ClipboardIcon as ClipboardOutline, UserIcon as UserOutline } from 'react-native-heroicons/outline';
+import { HomeIcon as HomeSolid, ClipboardIcon as ClipboardSolid, UserIcon as UserSolid } from 'react-native-heroicons/solid';
 import MyUserReducer from '../reducers/MyUserReducer';
 import MyContext from "../configs/MyContext";
 import Signup from '../screens/SingUpScreen';
@@ -102,9 +102,9 @@ const menuIcons = (route, focused) => {
   if (route.name === 'home') {
     icon = focused ? <HomeSolid size="30" color={themeColors.bgDark} /> : <HomeOutline size="30" strokeWidth={2} color="white" />
   } else if (route.name === 'favourite') {
-    icon = focused ? <HeartSolid size="30" color={themeColors.bgDark} /> : <HeartOutline size="30" strokeWidth={2} color="white" />
+    icon = focused ? <ClipboardSolid size="30" color={themeColors.bgDark} /> : <ClipboardOutline size="30" strokeWidth={2} color="white" />
   } else if (route.name === 'profile') {
-    icon = focused ? <BagSolid size="30" color={themeColors.bgDark} /> : <UserOutline size="30" strokeWidth={2} color="white" />
+    icon = focused ? <UserSolid size="30" color={themeColors.bgDark} /> : <UserOutline size="30" strokeWidth={2} color="white" />
   }
 
 
