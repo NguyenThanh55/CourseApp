@@ -53,7 +53,7 @@ class Order(BaseModel):
     image = CloudinaryField('image', null=True, blank=True)
     shipper = models.ForeignKey(User, related_name="shipper", on_delete=models.SET_NULL, null=True)
     customer = models.ForeignKey(User, related_name="customer", on_delete=models.SET_NULL, null=True)
-    deliveryDate = models.DateField(auto_now=True, null=True)
+    deliveryDate = models.DateField(null=False, default="2024-08-02")
     # fromCity = models.ForeignKey(City, related_name="fromCity", on_delete=models.SET_NULL, null=True)
     # fromDistrict = models.ForeignKey(District, related_name="fromDistrict", on_delete=models.SET_NULL, null=True)
     fromWard = models.ForeignKey(Ward, related_name="fromWard", on_delete=models.SET_NULL, null=True)

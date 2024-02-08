@@ -169,8 +169,8 @@ class OrderViewSet(viewsets.ViewSet,
             )
         }
     )
-    @action(methods=['patch'], url_path='update_order', detail=True)
-    def update_order(self, request, pk):
+    @action(methods=['patch'], url_path='update_shipper_for_order', detail=True)
+    def update_shipper_for_order(self, request, pk):
         shipper_id = request.data.get('shipper')
         status_order = request.data.get('status')
         try:
@@ -190,6 +190,70 @@ class OrderViewSet(viewsets.ViewSet,
 
         order.shipper = shipper
         order.status = status_order
+        order.save()
+        return Response("Change value order successfully.", status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_description="Update detail order",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'title': openapi.Schema(type=openapi.TYPE_STRING, description='Title of the order'),
+                'content': openapi.Schema(type=openapi.TYPE_STRING, description='Content of the order'),
+                'image': openapi.Schema(type=openapi.TYPE_STRING, description='Image URL for the order'),
+                'deliveryDate': openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_DATE,
+                                               description='Delivery date of the order'),
+                'fromStreet': openapi.Schema(type=openapi.TYPE_STRING,
+                                             description='Street address of the source location'),
+                'fromWard': openapi.Schema(type=openapi.TYPE_INTEGER,
+                                           description='ID of the ward for the source location'),
+                'toStreet': openapi.Schema(type=openapi.TYPE_STRING,
+                                           description='Street address of the destination location'),
+                'toWard': openapi.Schema(type=openapi.TYPE_INTEGER,
+                                         description='ID of the ward for the destination location'),
+            }
+        ),
+        responses={
+            200: openapi.Response(
+                description="Successfully",
+            ),
+            400: openapi.Response(
+                description="Bad request",
+            ),
+            404: openapi.Response(
+                description="Not exist"
+            )
+        }
+    )
+    @action(methods=['patch'], url_path='update_detail_for_order', detail=True)
+    def update_detail_for_order(self, request, pk):
+        title = request.data.get('title')
+        content = request.data.get('content')
+        image = request.data.get('image')
+        delivery_date = request.data.get('deliveryDate')
+        from_street = request.data.get('fromStreet')
+        from_ward_id = request.data.get('fromWard')
+        to_street = request.data.get('toStreet')
+        to_ward_id = request.data.get('toWard')
+
+        try:
+            order = self.queryset.get(id=pk)
+
+        except Order.DoesNotExist:
+            return Response("This order does not exist.", status=status.HTTP_404_NOT_FOUND)
+
+        if order.active == 0:
+            return Response("The order has been deleted", status=status.HTTP_404_NOT_FOUND)
+
+        order.title = title if title is not None else order.title
+        order.content = content if content is not None else order.content
+        order.image = image if image is not None else order.image
+        order.deliveryDate = delivery_date if delivery_date is not None else order.deliveryDate
+        order.fromStreet = from_street if from_street is not None else order.fromStreet
+        order.fromWard_id = from_ward_id if from_ward_id is not None else order.fromWard
+        order.toStreet = to_street if to_street is not None else order.toStreet
+        order.toWard_id = to_ward_id if to_ward_id is not None else order.toWard
+
         order.save()
         return Response("Change value order successfully.", status=status.HTTP_200_OK)
 
