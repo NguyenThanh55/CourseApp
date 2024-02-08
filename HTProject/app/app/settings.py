@@ -168,7 +168,7 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': 'Thanh@123',
         # 'PASSWORD': '12345678',
-        'HOST': ''  # mặc định localhost
+        'HOST': ''  # mặc định lofcalhost
     }
 }
 

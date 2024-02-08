@@ -72,11 +72,16 @@ class OrderSerializer(ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-
         if representation.get('image'):
             representation['image'] = "https://res.cloudinary.com/dohcsyfoi/" + representation['image']
 
         return representation
+
+    def create_order(self, validated_data):
+        order = Order.objects.create(**validated_data)
+        order.save()
+
+        return order
 
 
 class OrderDetailSerializer(OrderSerializer):

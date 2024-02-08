@@ -25,6 +25,8 @@ from . import paginators, serializers, perms
 from .models import User, City, District, Ward, Order, Rating, Auction, Voucher, Bill
 from django.views.decorators.csrf import csrf_exempt
 import logging
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
 
 logger = logging.getLogger(__name__)
@@ -113,13 +115,15 @@ class WardViewSet(viewsets.ModelViewSet):
 
 class OrderViewSet(viewsets.ViewSet,
                    # generics.ListAPIView,
-                   generics.CreateAPIView,
+                   # generics.CreateAPIView,
                    generics.RetrieveAPIView,
-                   generics.UpdateAPIView,
+                   # generics.UpdateAPIView,
                    generics.DestroyAPIView):
     queryset = Order.objects.filter(active=True).all()
-    serializer_class = serializers.OrderDetailSerializer # get/post/detail/put/delete
+    serializer_class = serializers.OrderSerializer # get/post/detail/put/delete
     pagination_class = paginators.DistrictPaginator
+    # parser_classes = [MultiPartParser, ]
+
     # def get_queryset(self):
     #     queries = self.queryset
     #
@@ -134,23 +138,62 @@ class OrderViewSet(viewsets.ViewSet,
             return [perms.OrderAuthenticated]
         return [permissions.IsAuthenticated()]
 
-    # @action(methods=['get'], detail=True)
-    # def retrieve(self, request, pk):
-    #     try:
-    #         order = Order.objects.get(id=pk)
-    #     except Order.DoesNotExist:
-    #         return Response(status=status.HTTP_404_NOT_FOUND)
-    #
-    #     serializer = OrderDetailSerializer(order)
-    #     return Response(serializer.data, status=status.HTTP_200_OK)
+    @action(methods=['post'], url_name='create_order', detail=False)
+    def create_order(self, request):
+        serializer = serializers.OrderSerializer(data=request.data)
+        if serializer.is_valid():
+            # breakpoint()
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response("Data is invalid", status=status.HTTP_400_BAD_REQUEST)
 
-    # @action(detail=True, methods=['get'])
-    # def retrieve(self, request, *args, **kwargs):
-    #     instance = self.get_object()
-    #     serializer = self.get_serializer(instance)
-    #     return Response(serializer.data, status=status.HTTP_200_OK)
+    @swagger_auto_schema(
+        operation_description="Update order with shipper and status",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'shipper': openapi.Schema(type=openapi.TYPE_INTEGER, description='ID of the shipper User'),
+                'status': openapi.Schema(type=openapi.TYPE_STRING, description='Status for Order'),
+            },
+            required=['shipper', 'status'],
+        ),
+        responses={
+            200: openapi.Response(
+                description="Successfully",
+            ),
+            400: openapi.Response(
+                description="Bad request",
+            ),
+            404: openapi.Response(
+                description="Not exist"
+            )
+        }
+    )
+    @action(methods=['patch'], url_path='update_order', detail=True)
+    def update_order(self, request, pk):
+        shipper_id = request.data.get('shipper')
+        status_order = request.data.get('status')
+        try:
+            order = self.queryset.get(id=pk)
 
-    @action(methods=['get'],url_path='no_shipper' ,url_name='no_shipper', detail=False)
+        except Order.DoesNotExist:
+            return Response("This order does not exist.", status=status.HTTP_404_NOT_FOUND)
+
+        if order.active == 0:
+            return Response("The order has been deleted", status=status.HTTP_404_NOT_FOUND)
+
+        # Lấy đối tượng User từ shipper_id
+        try:
+            shipper = User.objects.get(id=shipper_id)
+        except User.DoesNotExist:
+            return Response("The shipper User does not exist.", status=status.HTTP_400_BAD_REQUEST)
+
+        order.shipper = shipper
+        order.status = status_order
+        order.save()
+        return Response("Change value order successfully.", status=status.HTTP_200_OK)
+
+    @action(methods=['get'], url_path='no_shipper', url_name='no_shipper', detail=False)
     def no_shipper(self, request):
         orders = Order.objects.filter(shipper__isnull=True)
         return Response(serializers.OrderDetailSerializer(orders, many=True).data, status=status.HTTP_200_OK)
@@ -243,75 +286,6 @@ class OrderViewSet(viewsets.ViewSet,
                    path('<int:pk>/post_pay/', self.post_pay)
                ] + super().get_urls()
 
-    # @action(methods=['get'], url_name="get_pay", detail=True)
-    # def get_pay(self, request, pk):
-    #     money = self.get_object().bill_set.first().total_money
-    #     context = {
-    #         'money': money,
-    #         'pk': pk,
-    #     }
-    #     return TemplateResponse(request, 'admin/checkout.html', context)
-    #
-    # def success(self, request):
-    #
-    #     # Lấy Payment ID từ session
-    #     payment_id = session.get('payment_id')
-    #
-    #     # Xác nhận thanh toán với PayPal
-    #     payment = paypalrestsdk.Payment.find(payment_id)
-    #     if payment.execute({"payer_id": payment.payer.payer_info.payer_id}):
-    #
-    #         # Thanh toán thành công, hiển thị trang hoàn tất thanh toán
-    #
-    #         return reverse('/admin')
-    #     else:
-    #         return "Lỗi trong quá trình xác nhận thanh toán"
-    #
-    # @action(methods=['post'], url_name="post_pay", detail=True)
-    # def post_pay(self, request, pk):
-    #     if request.method.__eq__('POST'):
-    #         # total_money = self.get_object().bill_set.first().total_money
-    #         money = request.data['money']
-    #         breakpoint()
-    #         payment = paypalrestsdk.Payment({
-    #             "intent": "sale",
-    #             "payer": {
-    #                 "payment_method": "paypal"
-    #             },
-    #             "transactions": [{
-    #                 "amount": {
-    #                     "total": money,
-    #                     "currency": "USD"
-    #                 },
-    #                 "description": "Mua hàng trên Flask Shop"
-    #             }],
-    #             # "redirect_urls": {
-    #             #     "return_url": Response(self.success),
-    #             #     "cancel_url": return TemplateResponse(request=request,'admin/stats_view.html')
-    #             # }
-    #             "redirect_urls": {
-    #                 "return_url": reverse('success'),  # Replace 'success' with your success URL name or path
-    #                 "cancel_url": reverse('stats_view')  # Replace 'stats_view' with your cancel URL name or path
-    #             }
-    #         })
-    #
-    #         # Lưu thông tin Payment
-    #         if payment.create():
-    #             # Lưu Payment ID vào session
-    #             session['payment_id'] = payment.id
-    #             # Redirect user đến trang thanh toán của PayPal
-    #             for link in payment.links:
-    #                 if link.method == 'REDIRECT':
-    #                     redirect_url = str(link.href)
-    #                     try:
-    #                         Bill.objects.create(total_money=Decimal(money), order=self.get_object())
-    #                         msg = 'Thanh cong'
-    #                     except:
-    #                         msg = 'Khong thanh cong'
-    #                     return redirect(redirect_url)
-    #         else:
-    #                     return Response("Lỗi trong quá trình tạo Payment")
-
     @action(methods=['get'], url_name='checkout', detail=True)
     def checkout(self, request, pk):
 
@@ -390,67 +364,4 @@ class VoucherViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             return [permissions.AllowAny()]
         return [permissions.IsAuthenticated()]
-
-
-# class Payment(viewsets.ViewSet):
-    # def list(self, request, pk):
-    #     context = {
-    #         'money': 1,
-    #         'description': 'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh'
-    #     }
-    #
-    #     return render(request, 'paypal/pay.html', context)
-    #
-    # def success(self, request):
-    #
-    #     # Lấy Payment ID từ session
-    #     payment_id = session.get('payment_id')
-    #
-    #     # Xác nhận thanh toán với PayPal
-    #     payment = paypalrestsdk.Payment.find(payment_id)
-    #     if payment.execute({"payer_id": payment.payer.payer_info.payer_id}):
-    #
-    #         # Thanh toán thành công, hiển thị trang hoàn tất thanh toán
-    #
-    #         return True
-    #     else:
-    #         return "Lỗi trong quá trình xác nhận thanh toán"
-    #
-    # def create(self, request, pk):
-    #     payment = paypalrestsdk.Payment({
-    #         "intent": "sale",
-    #         "payer": {
-    #             "payment_method": "paypal"
-    #         },
-    #         "transactions": [{
-    #             "amount": {
-    #                 "total": session['money'],
-    #                 "currency": "USD"
-    #             },
-    #             "description": "Mua hàng trên Flask Shop"
-    #         }],
-    #         "redirect_urls": {
-    #             "return_url": Response(self.success),
-    #             "cancel_url": render('admin/stats_view.html')
-    #         }
-    #     })
-    #
-    #     # Lưu thông tin Payment
-    #     if payment.create():
-    #         # Lưu Payment ID vào session
-    #         session['payment_id'] = payment.id
-    #         # Redirect user đến trang thanh toán của PayPal
-    #         for link in payment.links:
-    #             if link.method == 'REDIRECT':
-    #                 redirect_url = str(link.href)
-    #                 try:
-    #                     Order.objects.partial_update(
-    #                                    total_money=session['price'])
-    #
-    #                     msg = 'Thanh cong'
-    #                 except:
-    #                     msg = 'Khong thanh cong'
-    #                 return redirect(redirect_url)
-    #     else:
-    #         return "Lỗi trong quá trình tạo Payment"
 
