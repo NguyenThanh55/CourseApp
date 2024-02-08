@@ -59,15 +59,13 @@ export default function FavouriteScreen(props) {
         setListAuction(response.data);
 
         if (user.role === "SHIPPER") {
-          
-            // Check if listAuction is not undefined or null
-            console.log(response.data)
-            const filteredAuctions = response.data.filter(
-              (auction) => auction.shipper.id === user.id
-            );
-            await setMyAuction(filteredAuctions);
-            console.log(myAuction);
-          
+          // Check if listAuction is not undefined or null
+          console.log(response.data);
+          const filteredAuctions = response.data.filter(
+            (auction) => auction.shipper.id === user.id
+          );
+          await setMyAuction(filteredAuctions);
+          console.log(myAuction);
         }
       } catch (error) {
         // Handle errors
@@ -79,25 +77,27 @@ export default function FavouriteScreen(props) {
     fetchData();
   }, []);
 
-
   const updateOrder = async () => {
     const accessToken = await AsyncStorage.getItem("access-token");
-      try {
-        const api = authApi(accessToken);
+    try {
+      const api = authApi(accessToken);
 
-        
-        const order_id = item.id;
-        
-        console.log(`/order/${order_id}/update_shipper_for_order/`);
-        const response = await api.patch(`/order/${order_id}/update_shipper_for_order/`, {
-          "shipper": selectedItem.id
-        });
-        
-      }  catch (error) {
-        // Handle errors
-        console.error("API Error:", error);
-      } 
-  }
+      const order_id = item.id;
+
+      console.log(`/order/${order_id}/update_shipper_for_order/`);
+      console.log(selectedItem.shipper.id);
+      // const response = await api.patch(
+      //   `/order/${order_id}/update_shipper_for_order/`,
+      //   {
+      //     shipper: selectedItem.id,
+      //     status: "Pending",
+      //   }
+      // );
+    } catch (error) {
+      // Handle errors
+      console.error("API Error:", error);
+    }
+  };
 
   const handleSelectItem = (item) => {
     setSelectedItem(item);
