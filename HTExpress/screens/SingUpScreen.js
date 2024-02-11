@@ -22,13 +22,11 @@ import MyContext from "../configs/MyContext";
 import DropDownPicker from "react-native-dropdown-picker";
 import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from "expo-media-library";
-import { Dropdown } from 'react-native-element-dropdown';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import { Dropdown } from "react-native-element-dropdown";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import LoaddingButton from "../components/LoaddingButton";
 
-
 const Signup = ({ navigation }) => {
-
   const [isUsernameValid, setIsUsernameValid] = useState(true);
   const [passwordConfirm, setPasswordConfirm] = useState();
   const [phoneInput, setPhoneInput] = useState();
@@ -36,18 +34,16 @@ const Signup = ({ navigation }) => {
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [emailInput, setEmailInput] = useState();
 
-
-
   const [user, setUser] = useState({
-    "first_name": "",
-    "last_name": "",
-    "username": "",
-    "password": "",
-    "email": "",
-    "avatar": "",
-    "role": "CUSTOMER",
-    "identityCard": null,
-    "phone": ""
+    first_name: "",
+    last_name: "",
+    username: "",
+    password: "",
+    email: "",
+    avatar: "",
+    role: "CUSTOMER",
+    identityCard: null,
+    phone: "",
   });
 
   //Util
@@ -57,17 +53,13 @@ const Signup = ({ navigation }) => {
   const [isFocus, setIsFocus] = useState(false); // Dropdown
   const [open, setOpen] = useState(false); // Dropdown
 
-
-
   const [isPasswordShown, setIsPasswordShown] = useState(false); // Show password
   const [isPasswordConfirmShown, setIsPasswordConfirmShown] = useState(false); // Show confirm password
-
 
   const [items, setItems] = useState([
     { label: "Khách hàng", value: "CUSTOMER" },
     { label: "Tài xế", value: "SHIPPER" },
   ]);
-
 
   const requestCameraRollPermission = async () => {
     const { status } = await MediaLibrary.requestPermissionsAsync();
@@ -90,7 +82,7 @@ const Signup = ({ navigation }) => {
       if (result.assets && result.assets.length > 0) {
         console.log(result.assets[0]);
         // setAvatarUri(result.assets[0].uri);
-        change("avatar", result.assets[0])
+        change("avatar", result.assets[0]);
       } else {
         console.log("No assets found");
       }
@@ -98,11 +90,10 @@ const Signup = ({ navigation }) => {
   };
 
   const change = (field, value) => {
-    setUser(current => {
-      return { ...current, [field]: value }
-    })
-  }
-
+    setUser((current) => {
+      return { ...current, [field]: value };
+    });
+  };
 
   //Check username
   const validateUsername = (inputUsername) => {
@@ -111,7 +102,7 @@ const Signup = ({ navigation }) => {
   };
 
   const handleUsernameChange = (u) => {
-    setusernameInput(u)
+    setusernameInput(u);
     setIsUsernameValid(true); // Reset validation when the username changes
   };
 
@@ -119,7 +110,6 @@ const Signup = ({ navigation }) => {
     const isUsernameValid = validateUsername(usernameInput);
     console.log(isUsernameValid);
     if (!isUsernameValid) {
-      
       setIsUsernameValid(false);
     } else {
       change("username", usernameInput);
@@ -127,7 +117,7 @@ const Signup = ({ navigation }) => {
     }
   };
 
-  //Check email 
+  //Check email
   const validateEmail = (inputEmail) => {
     // Regular expression for a valid email address
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -136,7 +126,7 @@ const Signup = ({ navigation }) => {
   };
 
   const handleEmailChange = (u) => {
-    setEmailInput(u)
+    setEmailInput(u);
     setIsEmailValid(true); // Reset validation when the username changes
   };
 
@@ -144,7 +134,6 @@ const Signup = ({ navigation }) => {
     const isEmailValid = validateEmail(emailInput);
     console.log(isEmailValid);
     if (!isEmailValid) {
-      
       setIsEmailValid(false);
     } else {
       change("email", emailInput);
@@ -166,12 +155,11 @@ const Signup = ({ navigation }) => {
     }
   };
 
-
-
   //Check phone number
   const validatePhoneNumber = (inputPhoneNumber) => {
     // Regular expression for a valid Vietnam phone number
-    const phoneNumberRegex = /^(?:\+84|0)(?:3[2-9]|5[6-9]|7[0|6-9]|8[1-5]|9\d)\d{7}$/;
+    const phoneNumberRegex =
+      /^(?:\+84|0)(?:3[2-9]|5[6-9]|7[0|6-9]|8[1-5]|9\d)\d{7}$/;
 
     return phoneNumberRegex.test(inputPhoneNumber);
   };
@@ -181,18 +169,15 @@ const Signup = ({ navigation }) => {
   };
 
   const onBlurPhoneNumber = () => {
-
     const isPhoneNumberValid = validatePhoneNumber(`0` + phoneInput);
 
     if (!isPhoneNumberValid) {
-      
       setIsPhoneNumberValid(false);
     } else {
-      change('phone', `0` + phoneInput)
+      change("phone", `0` + phoneInput);
       setIsPhoneNumberValid(true);
     }
   };
-
 
   // Check empty
   const areFieldsEmpty = () => {
@@ -217,72 +202,69 @@ const Signup = ({ navigation }) => {
     return false;
   };
 
-
   const register = async () => {
-
-
     const isAnyFieldEmpty = areFieldsEmpty();
 
     if (isAnyFieldEmpty) {
-      Alert.alert(title = "Thông báo", message = 'Vui lòng điền đầy đủ thông tin !!!')
+      Alert.alert(
+        (title = "Thông báo"),
+        (message = "Vui lòng điền đầy đủ thông tin !!!")
+      );
     } else {
-
       if (user.role === "SHIPPER" && !user.identityCard) {
-        Alert.alert(title = "Thông báo", message = 'Vui lòng nhập căn cước công dân !!!')
+        Alert.alert(
+          (title = "Thông báo"),
+          (message = "Vui lòng nhập căn cước công dân !!!")
+        );
       } else {
-
         setLoading(true);
 
         const form = new FormData();
         for (let key in user)
-          if (key === 'avatar') {
-            console.log(user[key].fileName);
+          if (key === "avatar") {
+            console.log("Name: " + user[key].name);
+            console.log("File: " + user[key].uri);
             form.append(key, {
+              // uri: user[key].uri,
+              // name: "avatar.jpg",
+              // type: "image/jpeg",
               uri: user[key].uri,
               name: user[key].fileName,
-              type: user[key].type
-            })
-          } else
-            form.append(key, user[key]);
-
-
+              type: user[key].type,
+            });
+            console.log("Type" + user[key].type);
+          } else form.append(key, user[key]);
 
         try {
-
           console.log(form);
-          let res = await API.post(
-            endpoints["register"], form,
-            {
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-              },
-            }
-          );
+          let res = await API.post(endpoints["register"], form, {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          });
 
-          console.log(res.status)
+          console.log(res.status);
 
           if (res.status == 201) {
             navigation.navigate("Login");
-          } 
-          else {
-            Alert.alert(title = "Thông báo", message = 'Hệ thống đang có lỗi vui lòng thử lại sau !!!')
+          } else {
+            Alert.alert(
+              (title = "Thông báo"),
+              (message = "Hệ thống đang có lỗi vui lòng thử lại sau !!!")
+            );
           }
-
-          
-
         } catch (ex) {
-          Alert.alert(title = "Thông báo", message = 'Hệ thống đang có lỗi vui lòng thử lại sau !!!')
-          console.error(ex.message);
+          Alert.alert(
+            (title = "Thông báo"),
+            (message = "Hệ thống đang có lỗi vui lòng thử lại sau !!!")
+          );
+          console.error("Error" + ex.message);
         } finally {
           setLoading(false);
         }
       }
-
     }
-
-
   };
-
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
@@ -318,7 +300,10 @@ const Signup = ({ navigation }) => {
               <TouchableOpacity onPress={() => pickImage()}>
                 <View style={styles.avatarContainer}>
                   {user.avatar ? (
-                    <Image source={{ uri: user.avatar.uri }} style={styles.avatarImage} />
+                    <Image
+                      source={{ uri: user.avatar.uri }}
+                      style={styles.avatarImage}
+                    />
                   ) : (
                     <Text style={styles.avatarText}>Chọn Avatar</Text>
                   )}
@@ -327,9 +312,6 @@ const Signup = ({ navigation }) => {
             </View>
 
             <View style={{ marginBottom: 12 }}>
-
-
-
               <Text
                 style={{
                   fontSize: 16,
@@ -340,9 +322,11 @@ const Signup = ({ navigation }) => {
                 Loại tài khoản
               </Text>
 
-
               <Dropdown
-                style={[styles.dropdown, isFocus && { borderColor: COLORS.secondary }]}
+                style={[
+                  styles.dropdown,
+                  isFocus && { borderColor: COLORS.secondary },
+                ]}
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={styles.selectedTextStyle}
                 inputSearchStyle={styles.inputSearchStyle}
@@ -351,25 +335,24 @@ const Signup = ({ navigation }) => {
                 maxHeight={300}
                 labelField="label"
                 valueField="value"
-                placeholder={!isFocus ? 'Select item' : '...'}
+                placeholder={!isFocus ? "Select item" : "..."}
                 searchPlaceholder="Search..."
                 value={user.role}
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
-                onChange={item => {
-                  change("role", item.value)
+                onChange={(item) => {
+                  change("role", item.value);
                   setIsFocus(false);
                 }}
                 renderLeftIcon={() => (
                   <AntDesign
                     style={styles.icon}
-                    color={isFocus ? COLORS.secondary : 'black'}
+                    color={isFocus ? COLORS.secondary : "black"}
                     name="user"
                     size={20}
                   />
                 )}
               />
-
 
               {user.role === "CUSTOMER" && (
                 <View style={{ marginBottom: 12 }} />
@@ -407,20 +390,17 @@ const Signup = ({ navigation }) => {
                       style={{
                         width: "100%",
                       }}
-
                     />
                   </View>
                 </View>
               )}
 
-
-
-              <View style={{ flexDirection: 'row', marginBottom: 12 }}>
+              <View style={{ flexDirection: "row", marginBottom: 12 }}>
                 <View style={{ flex: 1, marginRight: 8 }}>
                   <Text
                     style={{
                       fontSize: 16,
-                      fontWeight: '400',
+                      fontWeight: "400",
                       marginBottom: 8,
                     }}
                   >
@@ -428,13 +408,13 @@ const Signup = ({ navigation }) => {
                   </Text>
                   <View
                     style={{
-                      width: '100%',
+                      width: "100%",
                       height: 48,
-                      borderColor: 'black', // Assuming COLORS.black is equivalent to 'black'
+                      borderColor: "black", // Assuming COLORS.black is equivalent to 'black'
                       borderWidth: 1,
                       borderRadius: 8,
-                      alignItems: 'center',
-                      justifyContent: 'center',
+                      alignItems: "center",
+                      justifyContent: "center",
                       paddingLeft: 22,
                     }}
                   >
@@ -444,7 +424,7 @@ const Signup = ({ navigation }) => {
                       value={user.first_name}
                       onChangeText={(text) => change("first_name", text)}
                       style={{
-                        width: '100%',
+                        width: "100%",
                       }}
                     />
                   </View>
@@ -454,7 +434,7 @@ const Signup = ({ navigation }) => {
                   <Text
                     style={{
                       fontSize: 16,
-                      fontWeight: '400',
+                      fontWeight: "400",
                       marginBottom: 8,
                     }}
                   >
@@ -462,13 +442,13 @@ const Signup = ({ navigation }) => {
                   </Text>
                   <View
                     style={{
-                      width: '100%',
+                      width: "100%",
                       height: 48,
-                      borderColor: 'black', // Assuming COLORS.black is equivalent to 'black'
+                      borderColor: "black", // Assuming COLORS.black is equivalent to 'black'
                       borderWidth: 1,
                       borderRadius: 8,
-                      alignItems: 'center',
-                      justifyContent: 'center',
+                      alignItems: "center",
+                      justifyContent: "center",
                       paddingLeft: 22,
                     }}
                   >
@@ -478,17 +458,17 @@ const Signup = ({ navigation }) => {
                       value={user.last_name}
                       onChangeText={(text) => change("last_name", text)}
                       style={{
-                        width: '100%',
+                        width: "100%",
                       }}
                     />
                   </View>
                 </View>
               </View>
 
-
-
               <View style={{ marginBottom: 12 }}>
-                <Text style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}>
+                <Text
+                  style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}
+                >
                   Tên tài khoản
                 </Text>
 
@@ -523,7 +503,9 @@ const Signup = ({ navigation }) => {
               </View>
 
               <View style={{ marginBottom: 12 }}>
-                <Text style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}>
+                <Text
+                  style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}
+                >
                   Email
                 </Text>
 
@@ -559,7 +541,9 @@ const Signup = ({ navigation }) => {
               </View>
 
               <View style={{ marginBottom: 12 }}>
-                <Text style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}>
+                <Text
+                  style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}
+                >
                   Số điện thoại
                 </Text>
 
@@ -606,7 +590,6 @@ const Signup = ({ navigation }) => {
                   </Text>
                 )}
               </View>
-
 
               <View style={{ marginBottom: 12 }}>
                 <Text
@@ -659,7 +642,9 @@ const Signup = ({ navigation }) => {
               </View>
 
               <View style={{ marginBottom: 12 }}>
-                <Text style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}>
+                <Text
+                  style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}
+                >
                   Xác nhận mật khẩu
                 </Text>
 
@@ -686,7 +671,9 @@ const Signup = ({ navigation }) => {
                   />
 
                   <TouchableOpacity
-                    onPress={() => setIsPasswordConfirmShown(!isPasswordConfirmShown)}
+                    onPress={() =>
+                      setIsPasswordConfirmShown(!isPasswordConfirmShown)
+                    }
                     style={{ position: "absolute", right: 12 }}
                   >
                     {isPasswordConfirmShown == true ? (
@@ -697,12 +684,15 @@ const Signup = ({ navigation }) => {
                   </TouchableOpacity>
                 </View>
                 {passwordError !== "" && (
-                  <Text style={{ color: "red", marginTop: 4 }}>{passwordError}</Text>
+                  <Text style={{ color: "red", marginTop: 4 }}>
+                    {passwordError}
+                  </Text>
                 )}
               </View>
             </View>
 
-            {!loading ? <Button
+            {!loading ? (
+              <Button
                 title="Đăng ký"
                 filled
                 onPress={register}
@@ -711,7 +701,9 @@ const Signup = ({ navigation }) => {
                   marginTop: 18,
                   marginBottom: 4,
                 }}
-              /> : <LoaddingButton
+              />
+            ) : (
+              <LoaddingButton
                 title="Đang đăng ký"
                 filled
                 disabled={loading}
@@ -719,7 +711,8 @@ const Signup = ({ navigation }) => {
                   marginTop: 18,
                   marginBottom: 4,
                 }}
-              />}
+              />
+            )}
 
             <View
               style={{
@@ -841,7 +834,6 @@ const Signup = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-
   //Avatar
   container: {
     flex: 1,
@@ -864,7 +856,6 @@ const styles = StyleSheet.create({
     borderRadius: 60,
   },
 
-
   //Dropdown
   dropdown: {
     height: 50,
@@ -879,8 +870,8 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   label: {
-    position: 'absolute',
-    backgroundColor: 'white',
+    position: "absolute",
+    backgroundColor: "white",
     left: 22,
     top: 8,
     zIndex: 999,
