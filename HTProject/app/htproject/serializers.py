@@ -1,4 +1,5 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField, DateField
+from cloudinary.models import CloudinaryField
 from .models import User, City, District, Order, Rating, Auction, Voucher, OrderVoucher, Ward, Bill
 
 
@@ -132,6 +133,7 @@ class AuctionSerializer(ModelSerializer):
     class Meta:
         model = Auction
         fields = ['id', 'title', 'content', 'shipper', 'order', 'status']
+
 
 class RatingSerializer(ModelSerializer):
     user = UserDetailSerializer()

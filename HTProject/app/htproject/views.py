@@ -55,7 +55,7 @@ class UserViewSet(viewsets.ViewSet,
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response("Data is invalid", status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(methods=['get'], url_name='my_orders', detail=False)
     def my_orders(self, request):
@@ -142,10 +142,10 @@ class OrderViewSet(viewsets.ViewSet,
     def create_order(self, request):
         serializer = serializers.OrderSerializer(data=request.data)
         if serializer.is_valid():
-            # breakpoint()
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response("Data is invalid", status=status.HTTP_400_BAD_REQUEST)
+        # return Response("Data is invalid", status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(
         operation_description="Update order with shipper and status",
