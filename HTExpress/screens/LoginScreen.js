@@ -56,7 +56,7 @@ const Login = ({ navigation }) => {
 
         let user = await authApi(res.data.access_token).get(
           endpoints["current-user"],
-          {
+          { 
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
             },

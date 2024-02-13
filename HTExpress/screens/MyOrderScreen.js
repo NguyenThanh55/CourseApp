@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity, TextInput, FlatList, Dimensions, Platform, Button } from 'react-native'
+import { View, Text, Image, TouchableOpacity, TextInput, FlatList, Dimensions, Platform, Button, RefreshControl  } from 'react-native'
 import React, { useState, useContext, useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { themeColors } from '../theme';
@@ -15,11 +15,20 @@ import API, { authApi, endpoints } from "../configs/APIs";
 
 const { width, height } = Dimensions.get('window');
 const ios = Platform.OS == 'ios';
-export default function HomeScreen() {
+export default function MyOrderScreen() {
   const [user, dispatch] = useContext(MyContext);
   const [activeCategory, setActiveCategory] = useState(1);
   const [listOrder, setListOrder] = useState();
   const [filterOrder, setFilterOrder] = useState();
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    // Perform your refresh logic here, e.g., refetching data
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000); // Example setTimeout to simulate async operation
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,7 +39,7 @@ export default function HomeScreen() {
        
         if(user['role'] === "SHIPPER") {
           const res = await api.get(
-            endpoints["all-order-for-shipper"],
+            endpoints["my-order"],
             {
               headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -51,10 +60,10 @@ export default function HomeScreen() {
             }
           );
          
-          setListOrder(res.data.filter(order => order.shipper === null));
-          
-          setFilterOrder(res.data.filter(order => order.shipper === null));
-
+          console.log(res.data);
+          setListOrder(res.data.filter(order => order.shipper !== null));
+          setFilterOrder(res.data.filter(order => order.shipper !== null));
+          console.log(filterOrder);
          
         }
 
@@ -99,6 +108,8 @@ export default function HomeScreen() {
           </View>
           <BellIcon size="27" color="black" />
         </View>
+
+        
 
 
         {/* search bar */}
@@ -146,6 +157,7 @@ export default function HomeScreen() {
         </View>
 
       </SafeAreaView>
+      
 
       {/* coffee cards */}
       <View className={`overflow-visible flex justify-center flex-1 ${ios ? 'mt-5' : ''}`}>
@@ -165,6 +177,18 @@ export default function HomeScreen() {
 
       </View>
 
+      <ScrollView
+    refreshControl={
+      <RefreshControl
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+        colors={['#0000ff']} // Customize refresh indicator color
+        tintColor={'#0000ff'} // Customize refresh indicator color
+      />
+    }
+  >
+    {/* Your existing content */}
+  </ScrollView>
 
     </View>
   )
