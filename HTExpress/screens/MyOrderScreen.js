@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity, TextInput, FlatList, Dimensions, Platform, Button, RefreshControl  } from 'react-native'
+import { View, Text, Image, TouchableOpacity, TextInput, FlatList, Dimensions, Platform, Button, RefreshControl, ScrollView  } from 'react-native'
 import React, { useState, useContext, useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { themeColors } from '../theme';
@@ -61,7 +61,7 @@ export default function MyOrderScreen() {
           );
          
           console.log(res.data);
-          setListOrder(res.data.filter(order => order.shipper !== null));
+          setListOrder(res.data.filter(order => order.shipper != null));
           setFilterOrder(res.data.filter(order => order.shipper !== null));
           console.log(filterOrder);
          
@@ -101,9 +101,9 @@ export default function MyOrderScreen() {
             className="h-9 w-9 rounded-full" />
 
           <View className="flex-row items-center space-x-2">
-            <MapPinIcon size="25" color={themeColors.bgLight} />
+            
             <Text className="font-semibold text-base">
-              Ho Chi Minh, HCM
+              Đơn hàng của bạn
             </Text>
           </View>
           <BellIcon size="27" color="black" />
@@ -176,19 +176,6 @@ export default function MyOrderScreen() {
         </View>
 
       </View>
-
-      <ScrollView
-    refreshControl={
-      <RefreshControl
-        refreshing={refreshing}
-        onRefresh={onRefresh}
-        colors={['#0000ff']} // Customize refresh indicator color
-        tintColor={'#0000ff'} // Customize refresh indicator color
-      />
-    }
-  >
-    {/* Your existing content */}
-  </ScrollView>
 
     </View>
   )

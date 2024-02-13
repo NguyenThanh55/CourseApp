@@ -13,6 +13,7 @@ import { HomeIcon as HomeSolid, ClipboardIcon as ClipboardSolid, UserIcon as Use
 import MyUserReducer from '../reducers/MyUserReducer';
 import MyContext from "../configs/MyContext";
 import Signup from '../screens/SingUpScreen';
+import MyOrderScreen from './../screens/MyOrderScreen';
 
 
 
@@ -54,7 +55,8 @@ export default function AppNavigation() {
             {/* <Stack.Screen name="Login" options={{ headerShown: false }} component={LoginScreen} />
               <Stack.Screen name="Signup" component={Signup} options={{ headerShown: false}}  />
               <Stack.Screen name="Home" options={{ headerShown: false }} component={HomeTabs} />
-              <Stack.Screen name="Product" options={{ headerShown: false }} component={ProductScreen} /> */}
+              <Stack.Screen name="Product" options={{ headerShown: false }} component={ProductScreen} />
+              <Stack.Screen name="Profile" options={{ headerShown: false }} component={ProfileScreen} /> */}
 
 
         </Stack.Navigator>
@@ -89,7 +91,7 @@ function HomeTabs() {
 
     >
       <Tab.Screen name="home" component={HomeScreen} />
-      <Tab.Screen name="favourite" component={HomeScreen} />
+      <Tab.Screen name="order" component={MyOrderScreen} />
       <Tab.Screen name="profile" component={ProfileScreen} />
     </Tab.Navigator>
   )
@@ -101,7 +103,7 @@ const menuIcons = (route, focused) => {
 
   if (route.name === 'home') {
     icon = focused ? <HomeSolid size="30" color={themeColors.bgDark} /> : <HomeOutline size="30" strokeWidth={2} color="white" />
-  } else if (route.name === 'favourite') {
+  } else if (route.name === 'order') {
     icon = focused ? <ClipboardSolid size="30" color={themeColors.bgDark} /> : <ClipboardOutline size="30" strokeWidth={2} color="white" />
   } else if (route.name === 'profile') {
     icon = focused ? <UserSolid size="30" color={themeColors.bgDark} /> : <UserOutline size="30" strokeWidth={2} color="white" />

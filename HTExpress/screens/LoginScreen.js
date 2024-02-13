@@ -44,35 +44,47 @@ const Login = ({ navigation }) => {
         },
         {
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded", 
+            "Content-Type": "application/x-www-form-urlencoded",
           },
         }
       );
-      
-      if (res.status == 200) {
 
+      if (res.status == 200) {
         await AsyncStorage.setItem("access-token", res.data.access_token);
         await AsyncStorage.setItem("refresh_token", res.data.refresh_token);
 
         let user = await authApi(res.data.access_token).get(
           endpoints["current-user"],
-          { 
+          {
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
             },
           }
         );
 
-        dispatch({
-          type: "login",
-          payload: user.data,
-        });
-        navigation.navigate("Home");
+        console.log(user.data);
+        if (user.data.role === "CUSTOMER") {
+          dispatch({
+            type: "login",
+            payload: user.data,
+          });
+          navigation.navigate("Home");
+        } else {
+          if(user.data.isApproved == true) {
+            dispatch({
+              type: "login",
+              payload: user.data,
+            });
+            navigation.navigate("Home");
+          } else {
+            Alert.alert("Lỗi", "Tài khoản của bạn chưa được cấp phép");
+          }
+        }
       } else {
-        Alert.alert('Lỗi', 'Tài khoản hoặc mật khẩu không chính xác')
+        Alert.alert("Lỗi", "Tài khoản hoặc mật khẩu không chính xác");
       }
     } catch (ex) {
-      Alert.alert('Lỗi', 'Tài khoản hoặc mật khẩu không chính xác')
+      Alert.alert("Lỗi", "Tài khoản hoặc mật khẩu không chính xác");
       console.error(ex.message);
     } finally {
       setLoading(false);
