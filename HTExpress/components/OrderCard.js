@@ -11,6 +11,7 @@ const { width, height } = Dimensions.get('window');
 const ios = Platform.OS == 'ios';
 export default function OrderCard({ item }) {
   const navigation = useNavigation();
+
   
   return (
 
@@ -78,7 +79,7 @@ export default function OrderCard({ item }) {
           shadowOffset: { width: 0, height: 40 },
           shadowOpacity: 0.8,
         }} className="flex-row justify-between items-center mb-5">
-          <Text className="text-white font-bold text-lg">{moment(item.deliveryDate, 'YYYY-MM-DD').format('DD/MM/YYYY')}</Text>
+          <Text className="text-white font-bold text-lg">{moment(item.deliveryDate, 'YYYY-DD-MM').format('DD/MM/YYYY')}</Text>
           <TouchableOpacity
             onPress={() => navigation.navigate('Product', { ...item })}
             style={{

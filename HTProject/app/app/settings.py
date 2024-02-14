@@ -103,6 +103,7 @@ paypalrestsdk.configure({
     "client_secret": "EFAzCkUOVhiUVErho_a3_EfnZiNeF3JmVFEjdtQBMIx7IRftjf58iYaYcT_hFZBYsMKUGvej9mwh5ncs"
 })
 
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -121,6 +122,7 @@ LOGGING = {
         },
     },
 }
+
 
 REST_FRAMEWORK = {
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
