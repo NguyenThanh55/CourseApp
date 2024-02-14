@@ -44,13 +44,12 @@ const Login = ({ navigation }) => {
         },
         {
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded", 
+            "Content-Type": "multipart/form-data",
           },
         }
       );
-      
-      if (res.status == 200) {
 
+      if (res.status == 200) {
         await AsyncStorage.setItem("access-token", res.data.access_token);
         await AsyncStorage.setItem("refresh_token", res.data.refresh_token);
 
@@ -58,7 +57,7 @@ const Login = ({ navigation }) => {
           endpoints["current-user"],
           {
             headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
+              "Content-Type": "multipart/form-data",
             },
           }
         );
@@ -71,7 +70,7 @@ const Login = ({ navigation }) => {
           });
           navigation.navigate("Home");
         } else {
-          if(user.data.isApproved == true) {
+          if (user.data.isApproved == true) {
             dispatch({
               type: "login",
               payload: user.data,
@@ -82,10 +81,10 @@ const Login = ({ navigation }) => {
           }
         }
       } else {
-        Alert.alert('Lỗi', 'Tài khoản hoặc mật khẩu không chính xác')
+        Alert.alert("Lỗi", "Tài khoản hoặc mật khẩu không chính xác");
       }
     } catch (ex) {
-      Alert.alert('Lỗi', 'Tài khoản hoặc mật khẩu không chính xác')
+      Alert.alert("Lỗi", "Tài khoản hoặc mật khẩu không chính xác");
       console.error(ex.message);
     } finally {
       setLoading(false);

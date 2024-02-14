@@ -239,7 +239,7 @@ const Signup = ({ navigation }) => {
           console.log(form);
           let res = await API.post(endpoints["register"], form, {
             headers: {
-              "Content-Type": "multipart/form-data",
+              "Content-Type": "application/x-www-form-urlencoded",
             },
           });
 

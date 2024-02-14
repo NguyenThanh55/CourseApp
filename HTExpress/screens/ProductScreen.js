@@ -90,7 +90,7 @@ export default function FavouriteScreen(props) {
       const order_id = item.id;
 
       const response = await api.patch(
-        `/order/${order_id}/update_shipper_for_order/`,
+        `/order/${order_id}/update-shipper-for-order/`,
         {
           shipper: selectedItem.shipper.id,
           status: "Pending",
@@ -115,18 +115,16 @@ export default function FavouriteScreen(props) {
 
   const getStatusLabel = (status) => {
     switch (status) {
-      case 'New':
-        return 'Khởi tạo';
-      case 'Pending':
-        return 'Đang vận chuyển';
-      case 'Complete':
-        return 'Hoàn thành';
+      case "New":
+        return "Khởi tạo";
+      case "Pending":
+        return "Đang vận chuyển";
+      case "Complete":
+        return "Hoàn thành";
       default:
         return status; // Return original status if no mapping is defined
     }
   };
-
-
 
   const PhoneCallButton = ({ phoneNumber }) => {
     const handlePhoneCall = () => {
@@ -227,7 +225,7 @@ export default function FavouriteScreen(props) {
                 Trạng thái đơn hàng:
               </Text>
               <Text className="text-base text-gray-700 font-medium">
-              {getStatusLabel(item.status)}
+                {getStatusLabel(item.status)}
               </Text>
             </View>
 

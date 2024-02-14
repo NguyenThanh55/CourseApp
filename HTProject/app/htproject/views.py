@@ -46,9 +46,7 @@ class UserViewSet(viewsets.ViewSet,
 
     @action(methods=['get'], url_path='current-user', url_name='current-user', detail=False)
     def current_user(self, request):
-        if not request.user:
-            return Response(serializers.UserDetailSerializer(request.user).data, status=status.HTTP_200_OK)
-        return Response(serializers.UserDetailSerializer(request.user).errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializers.UserDetailSerializer(request.user).data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
         operation_description="Create a new user",
