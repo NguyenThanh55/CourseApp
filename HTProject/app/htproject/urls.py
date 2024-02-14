@@ -1,4 +1,6 @@
 from django.urls import path, include
+from django.views.i18n import set_language
+
 from . import views, payment
 from rest_framework.routers import DefaultRouter
 from .admin import admin_site

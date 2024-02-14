@@ -89,7 +89,7 @@ class Rating(BaseModel):
 class Auction(BaseModel):
     title = models.CharField(max_length=255, default="Đấu giá của ")
     content = RichTextField()
-    money = models.DecimalField(max_digits=12, decimal_places=3, null=True)
+    money = models.DecimalField(max_digits=12, decimal_places=0, null=True)
     shipper = models.ForeignKey(User, on_delete=models.CASCADE, related_name="auction_shipper")
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="auction_order")
     status = models.BooleanField(default=False, null=True)
@@ -111,7 +111,7 @@ class Voucher(BaseModel):
 
 class OrderVoucher(BaseModel):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    decreased_money = models.DecimalField(max_digits=12, decimal_places=3, null=True)
+    decreased_money = models.DecimalField(max_digits=12, decimal_places=0, null=True)
     voucher = models.ForeignKey(Voucher, on_delete=models.CASCADE)
     useDate = models.DateField(auto_now_add=True, null=True)
 

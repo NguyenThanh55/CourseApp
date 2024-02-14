@@ -24,6 +24,8 @@ class UserDetailSerializer(ModelSerializer):
     def create(self, validated_data):
         user = User(**validated_data)
         user.set_password(validated_data["password"])
+        if user.role == "CUSTOMER":
+            user.isApproved = True
         user.save()
 
         return user
@@ -149,3 +151,16 @@ class BillSerializer(ModelSerializer):
     class Meta:
         model = Bill
         fields = ['id', 'total_money', 'order']
+
+
+class OrderVoucherSerializer(ModelSerializer):
+    user = UserDetailSerializer()
+    order = OrderDetailSerializer()
+
+    class Meta:
+        model = OrderVoucher
+        fields = ['id', 'order', 'decreased_money', 'voucher', 'useDate']
+
+    def create(self, validated_data):
+        orderVoucher = OrderVoucher.objects.create(**validated_data)
+        return orderVoucher

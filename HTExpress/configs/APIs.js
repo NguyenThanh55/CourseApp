@@ -2,11 +2,11 @@ import axios from "axios";
 
 export const endpoints = {
   login: "/o/token/",
-  "current-user": "/user/current_user/",
-  register: "/user/create_user/",
+  "current-user": "/user/current-user/",
+  register: "/user/create-user/",
 
-  "all-order-for-shipper": "/order/no_shipper/",
-  "my-order": "/user/my_orders/",
+  "all-order-for-shipper": "/order/no-shipper/",
+  "my-order": "/user/my-orders/",
 };
 
 export const authApi = (accessToken) =>

@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 import cloudinary
 import paypalrestsdk
@@ -31,7 +31,6 @@ PAYPAL_RECEIVER_EMAIL = 'sb-ptjap29441924@business.example.com'
 PAYPAL_TEST = True
 PAYPAL_BUY_BUTTON_IMAGE = 'https://res.cloudinary.com/the-proton-guy/image/upload/v1685882223/paypal-PhotoRoom_v9pay7.png'
 
-
 ALLOWED_HOSTS = ['*', '192.168.1.79', '192.168.1.104', '192.168.1.11']
 
 # Application definition
@@ -52,12 +51,14 @@ INSTALLED_APPS = [
     'corsheaders',
     'paypal.standard.ipn',
     'cloudinary',
+    'bootstrap4',
 ]
 
 MIDDLEWARE = [
     'htproject.middleware.OAuth2Middleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -102,7 +103,6 @@ paypalrestsdk.configure({
     "client_secret": "EFAzCkUOVhiUVErho_a3_EfnZiNeF3JmVFEjdtQBMIx7IRftjf58iYaYcT_hFZBYsMKUGvej9mwh5ncs"
 })
 
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -121,7 +121,6 @@ LOGGING = {
         },
     },
 }
-
 
 REST_FRAMEWORK = {
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -145,7 +144,8 @@ REST_FRAMEWORK = {
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        # 'DIRS': [os.path.join(str(BASE_DIR), 'htproject\\templates\\')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -153,6 +153,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n',
             ],
         },
     },
@@ -198,6 +199,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
+
+LANGUAGES = [
+    ('en', 'English'),
+    ('vi', 'Vietnamese'),
+]
 
 TIME_ZONE = 'UTC'
 

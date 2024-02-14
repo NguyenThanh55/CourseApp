@@ -1,0 +1,184 @@
+{% extends 'admin/base_site.html' %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+<link href="{% static 'sb-admin-2/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+      rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+      integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+      crossorigin="anonymous"></head>
+<!-- Custom styles for this template-->
+<link href="{% static 'sb-admin-2/css/sb-admin-2.min.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+{% block content %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+    /* Add custom styles here, if needed */
+    .my-bg {
+        background-color: white !important;
+    }
+    .nav-tabs > li {
+        list-style: none;
+        width: 100%;
+    }
+    .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+        color: var(--breadcrumbs-bg) !important;
+        font-weight: bold !important;
+    }
+
+    .col-sm-2.my-bg {
+        padding-right: 0px !important;
+        padding-left: 0px !important;
+    }
+    .avatar-container {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .avatar-image {
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+    }
+    .table thead th {
+        background-color: var(--breadcrumbs-bg);
+        font-weight: bold;
+        font-size: 15px;
+    }
+    .approve-button {
+      background-color: #8efcc6;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .approve-button:hover {
+      background-color: #0adb75;
+      font-weight: bold;
+    }
+
+    .reject-button {
+      background-color: #e65959;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .reject-button:hover {
+      background-color: #e20d0d;
+      font-weight: bold;
+    }
+
+
+
+
+
+</style>
+{% endblock %}
+
+
+{% load bootstrap4 %}
+
+<!-- Các thành phần Bootstrap -->
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<!-- Nội dung template -->
+<!-- ... -->
+
+<div class="container mt-3">
+    <h1 style="text-align: center; font-weight: bold; font-size: 30px;">Duyệt tài khoản</h1>
+    <input class="form-control" id="myInput" type="text" placeholder="Search..">
+    <br>
+    <div class="table-responsive">
+        <table class="table table-striped"
+               style="width: 100%; text-align: center; vertical-align: middle; margin-left: auto; margin-right: auto;">
+            <thead>
+            <tr>
+                <th>STT</th>
+                <th colspan="2">Họ và tên</th>
+                <th>Vị trí</th>
+                <th>Trạng thái</th>
+                <th colspan="2">Xử lý</th>
+            </tr>
+            </thead>
+            <tbody id="myTable">
+            {% for u in list_user %}
+            <tr>
+                <td style="vertical-align: middle;">{{ u.id }}</td>
+                <td style="text-align: end; width:25%; vertical-align: middle;">
+                    {% if u.avatar %}
+                    <img src="{{ u.avatar.url }}" style="width: 50px" class="rounded-circle" alt="{{ u.username }}"/>
+                    {% endif %}
+                </td>
+                <td style="text-align: start; vertical-align: middle; width:25%;">
+                    {{ u.last_name }} {{ u.first_name }}
+                </td>
+                <td style="vertical-align: middle;">Shipper</td>
+                {% if u.isApproved == False and u.is_active == True %}
+                <td style="vertical-align: middle;">
+                    Chưa xử lý
+                </td>
+                {% else %}
+                <td style="vertical-align: middle;">
+                    Từ chối
+                </td>
+                {% endif %}
+                {% if u.isApproved == False and u.is_active == True %}
+                <td style="vertical-align: middle;">
+                    <form class="review-form" method="post" action="{% url 'admin:approve' u.id %}">
+                        {% csrf_token %}
+                        <button class="approve-button" type="submit">Duyệt</button>
+                    </form>
+                </td>
+                <td style="vertical-align: middle;">
+                    <form class="review-form" method="post" action="{% url 'admin:reject' u.id %}">
+                        {% csrf_token %}
+                        <button class="reject-button" type="submit">Từ chối</button>
+                    </form>
+                </td>
+                {% else %}
+                <td colspan="2" style="vertical-align: middle;">
+                    Đã xử lý
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#myInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+    </script>
+
+<!--  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">-->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+{% endblock %}
+
+
+{% endblock %}
