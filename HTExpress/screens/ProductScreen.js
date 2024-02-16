@@ -55,9 +55,10 @@ export default function FavouriteScreen(props) {
         const api = authApi(accessToken);
         // Assuming you have an order_id, replace 'your_order_id_here' with your actual order_id
         const order_id = item.id;
-
+       
         const response = await api.get(`/order/` + order_id + `/auctions/`);
 
+        
         setListAuction(response.data);
 
         if (user.role === "SHIPPER") {
@@ -79,8 +80,6 @@ export default function FavouriteScreen(props) {
     fetchData();
   }, []);
 
-  console.log(listAuction);
-  console.log(myAuction);
 
   const updateOrder = async () => {
     const accessToken = await AsyncStorage.getItem("access-token");
@@ -304,30 +303,36 @@ export default function FavouriteScreen(props) {
             </View>
           ) : (
             <View className="px-4 space-y-2">
-              <Text
-                style={{ color: themeColors.text }}
-                className="text-lg font-bold"
-              >
-                Tài xế:
-              </Text>
-              <Text className="text-gray-600">{item.desc}</Text>
-              <View style={styles.profileContainer}>
-                <Image
-                  source={{ uri: item.shipper.avatar }}
-                  style={styles.avatar}
-                />
-              </View>
-              <View style={{ marginHorizontal: 22 }}>
-                <Text style={styles.text}>
-                  Tên: {item.shipper.first_name} {item.shipper.last_name}
-                </Text>
-                <Text style={styles.text}>Email: {item.shipper.email}</Text>
-                <Text style={styles.text}>
-                  Số điện thoại: {item.shipper.phone}
-                </Text>
-                <PhoneCallButton phoneNumber={item.shipper.phone} />
-              </View>
-            </View>
+      <Text
+        style={{ color: themeColors.text }}
+        className="text-lg font-bold"
+      >
+        Tài xế:
+      </Text>
+      <Text className="text-gray-600">{item.desc}</Text>
+      {item.shipper && ( // Check if item.shipper is not null
+        <View style={styles.profileContainer}>
+          <Image
+            source={{ uri: item.shipper.avatar }}
+            style={styles.avatar}
+          />
+        </View>
+      )}
+      <View style={{ marginHorizontal: 22 }}>
+        {item.shipper && ( // Check if item.shipper is not null
+          <>
+            <Text style={styles.text}>
+              Tên: {item.shipper.first_name} {item.shipper.last_name}
+            </Text>
+            <Text style={styles.text}>Email: {item.shipper.email}</Text>
+            <Text style={styles.text}>
+              Số điện thoại: {item.shipper.phone}
+            </Text>
+            <PhoneCallButton phoneNumber={item.shipper.phone} />
+          </>
+        )}
+      </View>
+    </View>
           )
         ) : (
           myAuction !== null &&

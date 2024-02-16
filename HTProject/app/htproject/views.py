@@ -109,7 +109,7 @@ class CityViewSet(viewsets.ModelViewSet):
 class DistrictViewSet(viewsets.ModelViewSet):
     queryset = District.objects.all()
     serializer_class = serializers.DistrictSerializer  # get/post/detail/put/delete
-    pagination_class = paginators.DistrictPaginator
+    # pagination_class = paginators.DistrictPaginator
 
     def get_permissions(self):
         if self.action == 'list':
@@ -120,7 +120,7 @@ class DistrictViewSet(viewsets.ModelViewSet):
 class WardViewSet(viewsets.ModelViewSet):
     queryset = Ward.objects.all()
     serializer_class = serializers.WardSerializer # get/post/detail/put/delete
-    pagination_class = paginators.DistrictPaginator
+    # pagination_class = paginators.DistrictPaginator
 
     def get_permissions(self):
         if self.action == 'list':

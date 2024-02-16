@@ -14,6 +14,7 @@ import MyUserReducer from '../reducers/MyUserReducer';
 import MyContext from "../configs/MyContext";
 import Signup from '../screens/SingUpScreen';
 import MyOrderScreen from './../screens/MyOrderScreen';
+import CreateOrderScreen from '../screens/CreateOrderScreen';
 
 
 
@@ -50,6 +51,7 @@ export default function AppNavigation() {
             <>
               <Stack.Screen name="Home" options={{ headerShown: false }} component={HomeTabs} />
               <Stack.Screen name="Product" options={{ headerShown: false }} component={ProductScreen} />
+              <Stack.Screen name="Create" options={{ headerShown: false }} component={CreateOrderScreen} />
             </>}
 
             {/* <Stack.Screen name="Login" options={{ headerShown: false }} component={LoginScreen} />

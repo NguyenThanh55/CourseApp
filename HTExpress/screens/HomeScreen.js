@@ -8,6 +8,7 @@ import {
   Dimensions,
   Platform,
   Button,
+  StyleSheet 
 } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -21,10 +22,11 @@ import { MapPinIcon } from "react-native-heroicons/solid";
 import MyContext from "../configs/MyContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import API, { authApi, endpoints } from "../configs/APIs";
+import COLORS from "../constants/colors";
 
 const { width, height } = Dimensions.get("window");
 const ios = Platform.OS == "ios";
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   const [user, dispatch] = useContext(MyContext);
   const [activeCategory, setActiveCategory] = useState(1);
   const [listOrder, setListOrder] = useState();
@@ -67,6 +69,11 @@ export default function HomeScreen() {
     fetchData();
   }, []);
 
+
+  const goToCreateOrderScreen = () => {
+    navigation.navigate("Create");
+  }
+
   return (
     <View className="flex-1 relative bg-white">
       <StatusBar />
@@ -97,8 +104,12 @@ export default function HomeScreen() {
           <BellIcon size="27" color="black" />
         </View>
 
+        <TouchableOpacity style={styles.button} onPress={goToCreateOrderScreen}>
+      <Text style={styles.buttonText}>Tạo đơn hàng</Text>
+    </TouchableOpacity>
+
         {/* search bar */}
-        <View className="mx-5 shadow" style={{ marginTop: height * 0.06 }}>
+        <View className="mx-5 shadow" style={{ marginTop: 10 }}>
           <View className="flex-row items-center rounded-full p-1 bg-[#e6e6e6]">
             <TextInput
               placeholder="Lọc theo địa chỉ"
@@ -177,3 +188,20 @@ export default function HomeScreen() {
     </View>
   );
 }
+
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: themeColors.bgDark,
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
