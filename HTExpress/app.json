@@ -11,6 +11,8 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "platforms": ["ios", "android"],
+    "permissions": ["INTERNET"],
     "assetBundlePatterns": [
       "**/*"
     ],

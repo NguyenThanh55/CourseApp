@@ -10,6 +10,7 @@ import {
   Modal,
   StyleSheet,
   Linking,
+  TextInput
 } from "react-native";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -37,7 +38,7 @@ import { MapPinIcon as MapPinOutline } from "react-native-heroicons/outline";
 const { width, height } = Dimensions.get("window");
 const ios = Platform.OS == "ios";
 
-export default function FavouriteScreen(props) {
+export default function ProductScreen(props) {
   const [user, dispatch] = useContext(MyContext);
   const item = props.route.params;
   const [size, setSize] = useState("small");
@@ -48,6 +49,20 @@ export default function FavouriteScreen(props) {
   const [loading, setLoading] = useState(false);
   const [myAuction, setMyAuction] = useState(null);
 
+  const [auction, setAuction] = useState({
+    title: `Đấu giá của ` + user.first_name + ' ' + user.last_name,
+    content: "",
+    money: "",
+    order: item.id,
+    shipper: user.id,
+  });
+
+  const change = (field, value) => {
+    setAuction((current) => {
+      return { ...current, [field]: value };
+    });
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const accessToken = await AsyncStorage.getItem("access-token");
@@ -55,10 +70,8 @@ export default function FavouriteScreen(props) {
         const api = authApi(accessToken);
         // Assuming you have an order_id, replace 'your_order_id_here' with your actual order_id
         const order_id = item.id;
-       
+        console.log(`/order/` + order_id + `/auctions/`);
         const response = await api.get(`/order/` + order_id + `/auctions/`);
-
-        
         setListAuction(response.data);
 
         if (user.role === "SHIPPER") {
@@ -67,7 +80,7 @@ export default function FavouriteScreen(props) {
           const filteredAuctions = response.data.filter(
             (auction) => auction.shipper.id === user.id
           );
-          await setMyAuction(filteredAuctions);
+          setMyAuction(filteredAuctions);
           console.log(myAuction);
         }
       } catch (error) {
@@ -79,6 +92,8 @@ export default function FavouriteScreen(props) {
     // Call the async function
     fetchData();
   }, []);
+
+  console.log(item);
 
 
   const updateOrder = async () => {
@@ -274,7 +289,7 @@ export default function FavouriteScreen(props) {
                 Ngày vận chuyển:
               </Text>
               <Text className="text-base text-gray-700 font-medium">
-                {moment(item.deliveryDate, "YYYY-MM-DD").format("DD/MM/YYYY")}
+                {moment(item.deliveryDate, "YYYY-DD-MM").format("DD/MM/YYYY")}
               </Text>
             </View>
           </View>
@@ -303,40 +318,40 @@ export default function FavouriteScreen(props) {
             </View>
           ) : (
             <View className="px-4 space-y-2">
-      <Text
-        style={{ color: themeColors.text }}
-        className="text-lg font-bold"
-      >
-        Tài xế:
-      </Text>
-      <Text className="text-gray-600">{item.desc}</Text>
-      {item.shipper && ( // Check if item.shipper is not null
-        <View style={styles.profileContainer}>
-          <Image
-            source={{ uri: item.shipper.avatar }}
-            style={styles.avatar}
-          />
-        </View>
-      )}
-      <View style={{ marginHorizontal: 22 }}>
-        {item.shipper && ( // Check if item.shipper is not null
-          <>
-            <Text style={styles.text}>
-              Tên: {item.shipper.first_name} {item.shipper.last_name}
-            </Text>
-            <Text style={styles.text}>Email: {item.shipper.email}</Text>
-            <Text style={styles.text}>
-              Số điện thoại: {item.shipper.phone}
-            </Text>
-            <PhoneCallButton phoneNumber={item.shipper.phone} />
-          </>
-        )}
-      </View>
-    </View>
+              <Text
+                style={{ color: themeColors.text }}
+                className="text-lg font-bold"
+              >
+                Tài xế:
+              </Text>
+              <Text className="text-gray-600">{item.desc}</Text>
+              {item.shipper && ( // Check if item.shipper is not null
+                <View style={styles.profileContainer}>
+                  <Image
+                    source={{ uri: item.shipper.avatar }}
+                    style={styles.avatar}
+                  />
+                </View>
+              )}
+              <View style={{ marginHorizontal: 22 }}>
+                {item.shipper && ( // Check if item.shipper is not null
+                  <>
+                    <Text style={styles.text}>
+                      Tên: {item.shipper.first_name} {item.shipper.last_name}
+                    </Text>
+                    <Text style={styles.text}>Email: {item.shipper.email}</Text>
+                    <Text style={styles.text}>
+                      Số điện thoại: {item.shipper.phone}
+                    </Text>
+                    <PhoneCallButton phoneNumber={item.shipper.phone} />
+                  </>
+                )}
+              </View>
+            </View>
           )
         ) : (
           myAuction !== null &&
-          myAuction.length !== 0 && (
+            myAuction.length !== 0 ? (
             <View className="px-4 space-y-2">
               <Text
                 style={{ color: themeColors.text }}
@@ -366,6 +381,77 @@ export default function FavouriteScreen(props) {
                 </View>
               </View>
             </View>
+          ) : (
+            <View className="px-4 space-y-2">
+              <Text
+                style={{ color: themeColors.text }}
+                className="text-lg font-bold"
+              >
+                Đáu giá của tôi
+              </Text>
+              <View style={{ marginBottom: 12 }}>
+                <Text
+                  style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}
+                >
+                  Tiêu đề đấu giá
+                </Text>
+
+                <View
+                  style={{
+                    width: "100%",
+                    height: 48,
+                    borderColor: COLORS.black,
+                    borderWidth: 1,
+                    borderRadius: 8,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    paddingLeft: 22,
+                  }}
+                >
+                  <TextInput
+                    placeholder="Nhập nội dung hàng hóa..."
+                    placeholderTextColor={COLORS.black}
+                    value={auction.title}
+                    onChangeText={content => change("title", title)}
+                    style={{
+                      width: "100%",
+                    }}
+                  />
+                </View>
+              </View>
+
+              <View style={{ marginBottom: 12 }}>
+                <Text
+                  style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}
+                >
+                  Nội dung đấu giá
+                </Text>
+
+                <View
+                  style={{
+                    width: "100%",
+                    height: 48,
+                    borderColor: COLORS.black,
+                    borderWidth: 1,
+                    borderRadius: 8,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    paddingLeft: 22,
+                  }}
+                >
+                  <TextInput
+                    placeholder="Nhập nội dung hàng hóa..."
+                    placeholderTextColor={COLORS.black}
+                    value={auction.content}
+                    onChangeText={content => change("content", content)}
+                    style={{
+                      width: "100%",
+                    }}
+                  />
+                </View>
+              </View>
+            </View>
+
           )
         )}
       </SafeAreaView>

@@ -32,6 +32,7 @@ import { StatusBar } from "expo-status-bar";
 
 const CreateOrderScreen = ({ navigation }) => {
 
+    const [user, dispatch] = useContext(MyContext);
     const [listLocation, setListLocation] = useState();
 
     const [cities, setCities] = useState([]);
@@ -51,6 +52,14 @@ const CreateOrderScreen = ({ navigation }) => {
 
     const [cameraPermission, setCameraPermission] = useState(null);
 
+
+    const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Thêm số 0 phía trước nếu cần
+        const day = String(date.getDate()).padStart(2, '0'); // Thêm số 0 phía trước nếu cần
+        return `${year}-${month}-${day}`;
+    };
+
     const [order, setOrder] = useState({
         title: "",
         content: "",
@@ -59,6 +68,8 @@ const CreateOrderScreen = ({ navigation }) => {
         image: "",
         fromWard: "",
         toWard: "",
+        deliveryDate: formatDate(new Date),
+        customer: user.id,
     });
 
     //Util
@@ -206,10 +217,13 @@ const CreateOrderScreen = ({ navigation }) => {
             if (!result.cancelled) {
                 // Check if assets array is present and not empty
                 if (result.assets && result.assets.length > 0) {
-                    console.log(result.assets[0]);
+                    const uriComponents = result.uri.split('/');
+                    const fileName = uriComponents[uriComponents.length - 1];
+
+                    const updatedResult = { ...result, fileName };
                     // setAvatarUri(result.assets[0].uri);
                     // Assuming 'change' is a function passed as props
-                    change("image", result.assets[0]);
+                    change("image", updatedResult.assets[0]);
                 } else {
                     console.log("No assets found");
                 }
@@ -263,22 +277,16 @@ const CreateOrderScreen = ({ navigation }) => {
                 (message = "Vui lòng điền đầy đủ thông tin !!!")
             );
         } else {
-            
-
             setLoading(true);
 
             const form = new FormData();
             for (let key in order)
                 if (key === "image") {
-
-                    console.log("Name: " + order[key].name);
-                    console.log("File: " + order[key].uri);
                     form.append(key, {
                         uri: order[key].uri,
-                        name: order[key].fileName,
+                        name: 'image',
                         type: order[key].type,
                     });
-                    console.log("Type" + order[key].type);
 
                 } else form.append(key, order[key]);
 
@@ -295,7 +303,7 @@ const CreateOrderScreen = ({ navigation }) => {
 
                 if (res.status == 201) {
 
-                    console.log("Create order succesfull")
+                    navigation.navigate("Home");
                 } else {
                     Alert.alert(
                         (title = "Thông báo"),
@@ -317,20 +325,20 @@ const CreateOrderScreen = ({ navigation }) => {
 
     const handleGoBack = () => {
         navigation.goBack();
-      };
+    };
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
-            
+
             <ScrollView
                 contentContainerStyle={{ flexGrow: 1 }}
                 keyboardShouldPersistTaps="handled"
             >
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <View style={{ flex: 1, marginHorizontal: 22 }}>
-                    <View>
-      <Button title="Go Back" onPress={handleGoBack} />
-    </View>
+                        <View>
+                            <Button title="Go Back" onPress={handleGoBack} />
+                        </View>
                         <View style={{ marginVertical: 22 }}>
                             <Text
                                 style={{
@@ -583,35 +591,35 @@ const CreateOrderScreen = ({ navigation }) => {
                         </View>
 
                         <View style={{ marginBottom: 12 }}>
-                                <Text
-                                    style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}
-                                >
-                                    Số nhà, tên đường
-                                </Text>
+                            <Text
+                                style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}
+                            >
+                                Số nhà, tên đường
+                            </Text>
 
-                                <View
+                            <View
+                                style={{
+                                    width: "100%",
+                                    height: 48,
+                                    borderColor: COLORS.black,
+                                    borderWidth: 1,
+                                    borderRadius: 8,
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    paddingLeft: 22,
+                                }}
+                            >
+                                <TextInput
+                                    placeholder="Nhập số nhà, tên đường"
+                                    placeholderTextColor={COLORS.black}
+                                    value={order.fromStreet}
+                                    onChangeText={content => change("fromStreet", content)}
                                     style={{
                                         width: "100%",
-                                        height: 48,
-                                        borderColor: COLORS.black,
-                                        borderWidth: 1,
-                                        borderRadius: 8,
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        paddingLeft: 22,
                                     }}
-                                >
-                                    <TextInput
-                                        placeholder="Nhập số nhà, tên đường"
-                                        placeholderTextColor={COLORS.black}
-                                        value={order.fromStreet}
-                                        onChangeText={content => change("fromStreet", content)}
-                                        style={{
-                                            width: "100%",
-                                        }}
-                                    />
-                                </View>
+                                />
                             </View>
+                        </View>
 
 
 
@@ -756,35 +764,35 @@ const CreateOrderScreen = ({ navigation }) => {
                         </View>
 
                         <View style={{ marginBottom: 12 }}>
-                                <Text
-                                    style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}
-                                >
-                                    Số nhà, tên đường
-                                </Text>
+                            <Text
+                                style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}
+                            >
+                                Số nhà, tên đường
+                            </Text>
 
-                                <View
+                            <View
+                                style={{
+                                    width: "100%",
+                                    height: 48,
+                                    borderColor: COLORS.black,
+                                    borderWidth: 1,
+                                    borderRadius: 8,
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    paddingLeft: 22,
+                                }}
+                            >
+                                <TextInput
+                                    placeholder="Nhập số nhà, tên đường"
+                                    placeholderTextColor={COLORS.black}
+                                    value={order.toStreet}
+                                    onChangeText={content => change("toStreet", content)}
                                     style={{
                                         width: "100%",
-                                        height: 48,
-                                        borderColor: COLORS.black,
-                                        borderWidth: 1,
-                                        borderRadius: 8,
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        paddingLeft: 22,
                                     }}
-                                >
-                                    <TextInput
-                                        placeholder="Nhập số nhà, tên đường"
-                                        placeholderTextColor={COLORS.black}
-                                        value={order.toStreet}
-                                        onChangeText={content => change("toStreet", content)}
-                                        style={{
-                                            width: "100%",
-                                        }}
-                                    />
-                                </View>
+                                />
                             </View>
+                        </View>
 
 
 

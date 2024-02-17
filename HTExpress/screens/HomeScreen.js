@@ -8,7 +8,7 @@ import {
   Dimensions,
   Platform,
   Button,
-  StyleSheet 
+  StyleSheet
 } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -23,51 +23,101 @@ import MyContext from "../configs/MyContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import API, { authApi, endpoints } from "../configs/APIs";
 import COLORS from "../constants/colors";
+import { useFocusEffect } from '@react-navigation/native';
+
+
 
 const { width, height } = Dimensions.get("window");
 const ios = Platform.OS == "ios";
+
+
 export default function HomeScreen({ navigation }) {
   const [user, dispatch] = useContext(MyContext);
   const [activeCategory, setActiveCategory] = useState(1);
   const [listOrder, setListOrder] = useState();
   const [filterOrder, setFilterOrder] = useState();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const accessToken = await AsyncStorage.getItem("access-token");
-      try {
-        const api = authApi(accessToken);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const accessToken = await AsyncStorage.getItem("access-token");
+  //     try {
+  //       const api = authApi(accessToken);
 
-        if (user["role"] === "SHIPPER") {
-          const res = await api.get(endpoints["all-order-for-shipper"], {
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-          });
+  //       if (user["role"] === "SHIPPER") {
+  //         const res = await api.get(endpoints["all-order-for-shipper"], {
+  //           headers: {
+  //             "Content-Type": "application/x-www-form-urlencoded",
+  //           },
+  //         });
 
-          setListOrder(res.data);
-          setFilterOrder(res.data);
-          console.log(filterOrder);
-        } else {
-          const res = await api.get(endpoints["my-order"], {
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-          });
+  //         setListOrder(res.data);
+  //         setFilterOrder(res.data);
+  //         console.log(filterOrder);
+  //       } else {
+  //         const res = await api.get(endpoints["my-order"], {
+  //           headers: {
+  //             "Content-Type": "application/x-www-form-urlencoded",
+  //           },
+  //         });
 
-          setListOrder(res.data.filter((order) => order.shipper === null));
+  //         setListOrder(res.data.filter((order) => order.shipper === null));
 
-          setFilterOrder(res.data.filter((order) => order.shipper === null));
-        }
-      } catch (error) {
-        // Handle errors
-        console.error("API Error:", error);
+  //         setFilterOrder(res.data.filter((order) => order.shipper === null));
+  //       }
+  //     } catch (error) {
+  //       // Handle errors
+  //       console.error("API Error:", error);
+  //     }
+  //   };
+
+  //   // Call the async function
+  //   fetchData();
+  // }, []);
+
+  const fetchData = async () => {
+    const accessToken = await AsyncStorage.getItem("access-token");
+    try {
+      const api = authApi(accessToken);
+
+      if (user["role"] === "SHIPPER") {
+        const res = await api.get(endpoints["all-order-for-shipper"], {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        });
+
+        setListOrder(res.data);
+        setFilterOrder(res.data);
+        console.log(filterOrder);
+      } else {
+        const res = await api.get(endpoints["my-order"], {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        });
+
+        setListOrder(res.data.filter((order) => order.shipper === null));
+
+        setFilterOrder(res.data.filter((order) => order.shipper === null));
       }
-    };
+    } catch (error) {
+      // Handle errors
+      console.error("API Error:", error);
+    }
+  };
 
+  useEffect(() => {
     // Call the async function
     fetchData();
   }, []);
+
+  // This will be triggered whenever the screen gains focus
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchData();
+    }, [])
+  );
+
 
 
   const goToCreateOrderScreen = () => {
@@ -104,9 +154,11 @@ export default function HomeScreen({ navigation }) {
           <BellIcon size="27" color="black" />
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={goToCreateOrderScreen}>
-      <Text style={styles.buttonText}>Tạo đơn hàng</Text>
-    </TouchableOpacity>
+        {user.role === "CUSTOMER" && (
+          <TouchableOpacity style={styles.button} onPress={goToCreateOrderScreen}>
+            <Text style={styles.buttonText}>Tạo đơn hàng</Text>
+          </TouchableOpacity>
+        )}
 
         {/* search bar */}
         <View className="mx-5 shadow" style={{ marginTop: 10 }}>
@@ -167,9 +219,8 @@ export default function HomeScreen({ navigation }) {
 
       {/* coffee cards */}
       <View
-        className={`overflow-visible flex justify-center flex-1 ${
-          ios ? "mt-5" : ""
-        }`}
+        className={`overflow-visible flex justify-center flex-1 ${ios ? "mt-5" : ""
+          }`}
       >
         <View>
           <Carousel

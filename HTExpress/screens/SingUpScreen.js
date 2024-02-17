@@ -51,7 +51,7 @@ const Signup = ({ navigation }) => {
   const [passwordError, setPasswordError] = useState("");
   const [loading, setLoading] = useState(false); // Button
   const [isFocus, setIsFocus] = useState(false); // Dropdown
-  const [open, setOpen] = useState(false); // Dropdown
+
 
   const [isPasswordShown, setIsPasswordShown] = useState(false); // Show password
   const [isPasswordConfirmShown, setIsPasswordConfirmShown] = useState(false); // Show confirm password
