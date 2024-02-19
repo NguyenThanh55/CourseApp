@@ -337,7 +337,9 @@ const CreateOrderScreen = ({ navigation }) => {
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <View style={{ flex: 1, marginHorizontal: 22 }}>
                         <View>
-                            <Button title="Go Back" onPress={handleGoBack} />
+                        <TouchableOpacity onPress={handleGoBack}>
+                            <Text style={{ color: COLORS.primary, marginRight: 10, fontSize: 16 }}>Quay lại</Text>
+                          </TouchableOpacity>
                         </View>
                         <View style={{ marginVertical: 22 }}>
                             <Text

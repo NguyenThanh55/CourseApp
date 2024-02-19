@@ -37,43 +37,6 @@ export default function HomeScreen({ navigation }) {
   const [listOrder, setListOrder] = useState();
   const [filterOrder, setFilterOrder] = useState();
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const accessToken = await AsyncStorage.getItem("access-token");
-  //     try {
-  //       const api = authApi(accessToken);
-
-  //       if (user["role"] === "SHIPPER") {
-  //         const res = await api.get(endpoints["all-order-for-shipper"], {
-  //           headers: {
-  //             "Content-Type": "application/x-www-form-urlencoded",
-  //           },
-  //         });
-
-  //         setListOrder(res.data);
-  //         setFilterOrder(res.data);
-  //         console.log(filterOrder);
-  //       } else {
-  //         const res = await api.get(endpoints["my-order"], {
-  //           headers: {
-  //             "Content-Type": "application/x-www-form-urlencoded",
-  //           },
-  //         });
-
-  //         setListOrder(res.data.filter((order) => order.shipper === null));
-
-  //         setFilterOrder(res.data.filter((order) => order.shipper === null));
-  //       }
-  //     } catch (error) {
-  //       // Handle errors
-  //       console.error("API Error:", error);
-  //     }
-  //   };
-
-  //   // Call the async function
-  //   fetchData();
-  // }, []);
-
   const fetchData = async () => {
     const accessToken = await AsyncStorage.getItem("access-token");
     try {
