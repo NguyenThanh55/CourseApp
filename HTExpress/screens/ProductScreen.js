@@ -69,16 +69,14 @@ export default function ProductScreen(props) {
   };
 
 
+  const onChangeText = (field) => (value) => {
+    console.log(field, value);
+    change(field, value);
+    console.log(auction.title);
+  };
+
 
   const [keyboardOpen, setKeyboardOpen] = useState(false);
-
-  const handleKeyboardDidShow = () => {
-    setKeyboardOpen(true);
-  };
-
-  const handleKeyboardDidHide = () => {
-    setKeyboardOpen(false);
-  };
 
 
   useEffect(() => {
@@ -97,10 +95,9 @@ export default function ProductScreen(props) {
       if (user.role === "SHIPPER") {
         const response = await api.get(`/user/` + user.id + `/auctions/`);
         // Check if listAuction is not undefined or null
-        console.log(response.data.filter(auction => auction.order.id === order_id));
         const filteredAuctions = response.data.filter(auction => auction.order.id === order_id);
         setMyAuction(filteredAuctions);
-
+        console.log(myAuction);
       } else {
         const response = await api.get(`/order/` + order_id + `/auctions/`);
         setListAuction(response.data);
@@ -157,7 +154,6 @@ export default function ProductScreen(props) {
     } finally {
       setloadingCreateAuction(false);
     }
-
   }
 
   const updateAuction = async () => {
@@ -165,10 +161,9 @@ export default function ProductScreen(props) {
     setloadingUpdateAuction(true);
     try {
       const api = authApi(accessToken);
-
-
+      console.log(`/aution/${myAuction.id}/`);
       const response = await api.patch(`/aution/${myAuction.id}/`, auction);
-
+      
       if (response.status == 200) {
         fetchData();
       } else {
@@ -234,7 +229,7 @@ export default function ProductScreen(props) {
             </Text>
             <Text>{item.content}</Text>
             <Text style={{ marginTop: 5, fontWeight: "600", color: 'red' }}>
-              {formatMoney(item.money)} 
+              {formatMoney(item.money)}
             </Text>
           </View>
         </View>
@@ -421,17 +416,17 @@ export default function ProductScreen(props) {
                   </Text>
                   <Text className="text-gray-600">{item.desc}</Text>
 
-                  
-                    <FlatList
-                      data={listAuction}
-                      renderItem={({ item }) => (
-                        <ActionListItem item={item} onPress={handleSelectItem} />
-                      )}
-                      keyExtractor={(item, index) => index.toString()}
-                    />
-                 
 
-                  
+                  <FlatList
+                    data={listAuction}
+                    renderItem={({ item }) => (
+                      <ActionListItem item={item} onPress={handleSelectItem} />
+                    )}
+                    keyExtractor={(item, index) => index.toString()}
+                  />
+
+
+
                 </View>
               ) : (
                 <View className="px-4 space-y-2">
@@ -493,10 +488,9 @@ export default function ProductScreen(props) {
                           </Text>
                           <View style={{ width: "100%", height: 48, borderColor: COLORS.black, borderWidth: 1, borderRadius: 8, alignItems: "center", justifyContent: "center", paddingLeft: 22 }}>
                             <TextInput
-                              placeholder="Nhập nội dung hàng hóa..."
+                              placeholder={auction.title}
                               placeholderTextColor={COLORS.black}
-                              value={auction.title}
-                              onChangeText={title => change("title", title)}
+                              onChangeText={onChangeText("title")}
                               style={{ width: "100%" }}
                             />
                           </View>
@@ -507,10 +501,9 @@ export default function ProductScreen(props) {
                           </Text>
                           <View style={{ width: "100%", height: 48, borderColor: COLORS.black, borderWidth: 1, borderRadius: 8, alignItems: "center", justifyContent: "center", paddingLeft: 22 }}>
                             <TextInput
-                              placeholder="Nhập nội dung đấu giá"
+                              placeholder={auction.content}
                               placeholderTextColor={COLORS.black}
-                              value={auction.content}
-                              onChangeText={content => change("content", content)}
+                              onChangeText={onChangeText("content")}
                               style={{ width: "100%" }}
                             />
                           </View>
@@ -519,10 +512,9 @@ export default function ProductScreen(props) {
                           <Text style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}>Tiền</Text>
                           <View style={{ width: "100%", height: 48, borderColor: COLORS.black, borderWidth: 1, borderRadius: 8, alignItems: "center", justifyContent: "center", paddingLeft: 22 }}>
                             <TextInput
-                              placeholder="Nhập số tiền mong muốn"
+                              placeholder={auction.money}
                               placeholderTextColor="black"
-                              value={auction.money}
-                              onChangeText={money => change("money", money)}
+                              onChangeText={onChangeText("money")}
                               keyboardType="numeric"
                             />
                           </View>
@@ -604,7 +596,7 @@ export default function ProductScreen(props) {
                         placeholder="Nhập nội dung hàng hóa..."
                         placeholderTextColor={COLORS.black}
                         value={auction.title}
-                        onChangeText={content => change("title", title)}
+                        onChangeText={content => change("title", content)}
                         style={{
                           width: "100%",
                         }}
@@ -727,7 +719,7 @@ export default function ProductScreen(props) {
               </Text>
               <Text>{selectedItem.content}</Text>
               <Text style={{ marginTop: 5, fontWeight: "600", color: 'red' }}>
-                {formatMoney(selectedItem.money)} 
+                {formatMoney(selectedItem.money)}
               </Text>
             </View>
           </View>
