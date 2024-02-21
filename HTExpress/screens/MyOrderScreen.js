@@ -11,6 +11,7 @@ import { MapPinIcon } from 'react-native-heroicons/solid'
 import MyContext from "../configs/MyContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import API, { authApi, endpoints } from "../configs/APIs";
+import { useFocusEffect } from '@react-navigation/native';
 
 
 const { width, height } = Dimensions.get('window');
@@ -26,6 +27,13 @@ export default function MyOrderScreen() {
     // Call the async function
     fetchData();
   }, []);
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchData();
+    }, [])
+  );
 
 
   const fetchData = async () => {

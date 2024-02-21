@@ -39,6 +39,7 @@ import LoaddingButton from "../components/LoaddingButton";
 import MyContext from "../configs/MyContext";
 import { MapPinIcon as MapPinOutline } from "react-native-heroicons/outline";
 
+
 const { width, height } = Dimensions.get("window");
 const ios = Platform.OS == "ios";
 
@@ -62,6 +63,12 @@ export default function ProductScreen(props) {
     money: "",
   });
 
+  const [newAuction, setNewAuction] = useState({
+    title: "",
+    content: "",
+    money: "",
+  });
+
   const change = (field, value) => {
     setAuction((current) => {
       return { ...current, [field]: value };
@@ -70,9 +77,10 @@ export default function ProductScreen(props) {
 
 
   const onChangeText = (field) => (value) => {
-    console.log(field, value);
-    change(field, value);
-    console.log(auction.title);
+    setNewAuction((current) => {
+      return { ...current, [field]: value };
+    });
+
   };
 
 
@@ -83,6 +91,7 @@ export default function ProductScreen(props) {
     // Call the async function
     fetchData();
   }, []);
+
 
 
   const fetchData = async () => {
@@ -97,7 +106,6 @@ export default function ProductScreen(props) {
         // Check if listAuction is not undefined or null
         const filteredAuctions = response.data.filter(auction => auction.order.id === order_id);
         setMyAuction(filteredAuctions);
-        console.log(myAuction);
       } else {
         const response = await api.get(`/order/` + order_id + `/auctions/`);
         setListAuction(response.data);
@@ -159,13 +167,16 @@ export default function ProductScreen(props) {
   const updateAuction = async () => {
     const accessToken = await AsyncStorage.getItem("access-token");
     setloadingUpdateAuction(true);
+    console.log(myAuction);
+    const id = myAuction[0].id;
     try {
       const api = authApi(accessToken);
-      console.log(`/aution/${myAuction.id}/`);
-      const response = await api.patch(`/aution/${myAuction.id}/`, auction);
-      
+      console.log(`/aution/${id}/`);
+      const response = await api.patch(`/auction/${id}/`, newAuction);
+
       if (response.status == 200) {
         fetchData();
+        handleEdit();
       } else {
         Alert("Lỗi", "Hệ thống đã xảy ra lỗi vui lòng thử lại sau")
       }
@@ -175,7 +186,6 @@ export default function ProductScreen(props) {
     } finally {
       setloadingUpdateAuction(false);
     }
-
   }
 
 
@@ -194,7 +204,7 @@ export default function ProductScreen(props) {
         return "Khởi tạo";
       case "Pending":
         return "Đang vận chuyển";
-      case "Complete":
+      case "Completed":
         return "Hoàn thành";
       default:
         return status; // Return original status if no mapping is defined
@@ -253,10 +263,61 @@ export default function ProductScreen(props) {
         },
         {
           text: 'Xóa',
-          onPress: () => {
+          onPress: async () => {
+            try {
+              const accessToken = await AsyncStorage.getItem("access-token");
+              const api = authApi(accessToken);
+              const id = myAuction[0].id;
 
+              const response = await api.delete(`/auction/${id}/`);
+
+              if (response.status == 204) {
+                fetchData();
+              } else {
+                Alert("Lỗi", "Hệ thống đã xảy ra lỗi vui lòng thử lại sau")
+              }
+            } catch (error) {
+              console.error("API Error: ", error);
+            }
           },
           style: 'destructive',
+        },
+      ]
+    );
+  };
+
+
+  const confirm = () => {
+    Alert.alert(
+      'Xác nhận',
+      'Bạn chắc chắn đã giao xong đơn hàng?',
+      [
+        {
+          text: 'Hủy',
+          style: 'cancel',
+        },
+        {
+          text: 'Xác nhận',
+          onPress: async () => {
+            try {
+              const accessToken = await AsyncStorage.getItem("access-token");
+              const api = authApi(accessToken);
+              const id = item.id;
+              
+              const response = await api.patch(`/order/${id}/update-shipper-for-order/`, {
+                shipper: item.shipper.id,
+                status: "Completed",
+              });
+              console.log(response);
+              if (response.status == 200) {
+                navigation.navigate("order");
+              } else {
+                Alert("Lỗi", "Hệ thống đã xảy ra lỗi vui lòng thử lại sau")
+              }
+            } catch (error) {
+              console.error("API Error: ", error);
+            }
+          },
         },
       ]
     );
@@ -462,235 +523,257 @@ export default function ProductScreen(props) {
                 </View>
               )
             ) : (
-              myAuction !== null &&
-                myAuction.length !== 0 ? (
-                <View className="px-4 space-y-2">
-                  <Text
-                    style={{ color: themeColors.text }}
-                    className="text-lg font-bold"
-                  >
-                    Đấu giá của tôi
-                  </Text>
-                  {myAuction.map((auction, index) => (
-                    isEdit ? (
-                      <View key={index} className="px-4 space-y-2">
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <Text style={{ color: themeColors.text }} className="text-lg font-bold">
-                            Đấu giá
-                          </Text>
-                          <TouchableOpacity onPress={handleEdit}>
-                            <Text style={{ color: 'blue', marginRight: 10 }}>Hủy</Text>
-                          </TouchableOpacity>
-                        </View>
-                        <View>
-                          <Text style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}>
-                            Tiêu đề đấu giá
-                          </Text>
-                          <View style={{ width: "100%", height: 48, borderColor: COLORS.black, borderWidth: 1, borderRadius: 8, alignItems: "center", justifyContent: "center", paddingLeft: 22 }}>
-                            <TextInput
-                              placeholder={auction.title}
-                              placeholderTextColor={COLORS.black}
-                              onChangeText={onChangeText("title")}
-                              style={{ width: "100%" }}
+
+              item.status === 'New' ? (
+                myAuction !== null &&
+                  myAuction.length !== 0 ? (
+                  <View className="px-4 space-y-2">
+                    <Text
+                      style={{ color: themeColors.text }}
+                      className="text-lg font-bold"
+                    >
+                      Đấu giá của tôi
+                    </Text>
+                    {myAuction.map((auction, index) => (
+                      isEdit ? (
+                        <View key={index} className="px-4 space-y-2">
+                          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Text style={{ color: themeColors.text }} className="text-lg font-bold">
+                              Đấu giá
+                            </Text>
+                            <TouchableOpacity onPress={handleEdit}>
+                              <Text style={{ color: 'blue', marginRight: 10 }}>Hủy</Text>
+                            </TouchableOpacity>
+                          </View>
+                          <View>
+                            <Text style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}>
+                              Tiêu đề đấu giá
+                            </Text>
+                            <View style={{ width: "100%", height: 48, borderColor: COLORS.black, borderWidth: 1, borderRadius: 8, alignItems: "center", justifyContent: "center", paddingLeft: 22 }}>
+                              <TextInput
+                                placeholder={newAuction.title}
+                                placeholderTextColor={COLORS.black}
+                                onChangeText={onChangeText("title")}
+                                style={{ width: "100%" }}
+                              />
+                            </View>
+                          </View>
+                          <View>
+                            <Text style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}>
+                              Nội dung đấu giá
+                            </Text>
+                            <View style={{ width: "100%", height: 48, borderColor: COLORS.black, borderWidth: 1, borderRadius: 8, alignItems: "center", justifyContent: "center", paddingLeft: 22 }}>
+                              <TextInput
+                                placeholder={newAuction.content}
+                                placeholderTextColor={COLORS.black}
+                                onChangeText={onChangeText("content")}
+                                style={{ width: "100%" }}
+                              />
+                            </View>
+                          </View>
+                          <View style={{ marginBottom: 24 }}>
+                            <Text style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}>Tiền</Text>
+                            <View style={{ width: "100%", height: 48, borderColor: COLORS.black, borderWidth: 1, borderRadius: 8, alignItems: "center", justifyContent: "center", paddingLeft: 22 }}>
+                              <TextInput
+                                placeholder={newAuction.money}
+                                placeholderTextColor="black"
+                                onChangeText={onChangeText("money")}
+                                keyboardType="numeric"
+                              />
+                            </View>
+                          </View>
+                          {!loadingUpdateAuction ? (
+                            <Button
+                              title="Cập nhật đấu giá"
+                              filled
+                              onPress={updateAuction}
+                              disabled={loadingUpdateAuction}
+                              style={{ marginTop: 18, marginBottom: 4 }}
                             />
+                          ) : (
+                            <Button
+                              title="Đang cập nhật"
+                              filled
+                              disabled={loadingUpdateAuction}
+                              style={{ marginTop: 18, marginBottom: 4 }}
+                            />
+                          )}
+                        </View>
+                      ) : (
+                        <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 10, paddingVertical: 5 }}>
+                          <View style={{ flexDirection: 'row' }}>
+                            <Image
+                              source={{ uri: auction.shipper.avatar }}
+                              style={{ width: 50, height: 50, borderRadius: 25 }}
+                            />
+                            <View style={{ marginLeft: 10 }}>
+                              <Text style={{ fontSize: 16, fontWeight: "600" }}>
+                                {auction.shipper.first_name} {auction.shipper.last_name}
+                              </Text>
+                              <Text>{auction.content}</Text>
+                              <Text style={{ marginTop: 5, fontWeight: "600", color: "red" }}>
+                                {formatMoney(auction.money)}
+                              </Text>
+                            </View>
+                          </View>
+                          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <TouchableOpacity onPress={handleEdit}>
+                              <Text style={{ color: 'blue', marginRight: 10 }}>Sửa</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={handleDelete}>
+                              <Text style={{ color: 'red' }}>Xóa</Text>
+                            </TouchableOpacity>
                           </View>
                         </View>
-                        <View>
-                          <Text style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}>
-                            Nội dung đấu giá
-                          </Text>
-                          <View style={{ width: "100%", height: 48, borderColor: COLORS.black, borderWidth: 1, borderRadius: 8, alignItems: "center", justifyContent: "center", paddingLeft: 22 }}>
-                            <TextInput
-                              placeholder={auction.content}
-                              placeholderTextColor={COLORS.black}
-                              onChangeText={onChangeText("content")}
-                              style={{ width: "100%" }}
-                            />
-                          </View>
-                        </View>
-                        <View style={{ marginBottom: 24 }}>
-                          <Text style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}>Tiền</Text>
-                          <View style={{ width: "100%", height: 48, borderColor: COLORS.black, borderWidth: 1, borderRadius: 8, alignItems: "center", justifyContent: "center", paddingLeft: 22 }}>
-                            <TextInput
-                              placeholder={auction.money}
-                              placeholderTextColor="black"
-                              onChangeText={onChangeText("money")}
-                              keyboardType="numeric"
-                            />
-                          </View>
-                        </View>
-                        {!loadingUpdateAuction ? (
-                          <Button
-                            title="Cập nhật đấu giá"
-                            filled
-                            onPress={updateAuction}
-                            disabled={loadingUpdateAuction}
-                            style={{ marginTop: 18, marginBottom: 4 }}
-                          />
-                        ) : (
-                          <Button
-                            title="Đang cập nhật"
-                            filled
-                            disabled={loadingUpdateAuction}
-                            style={{ marginTop: 18, marginBottom: 4 }}
-                          />
-                        )}
+                      )
+                    ))}
+                  </View>
+                ) : (
+                  <View className="px-4 space-y-2">
+                    <Text
+                      style={{ color: themeColors.text }}
+                      className="text-lg font-bold"
+                    >
+                      Đấu giá
+                    </Text>
+                    <View>
+                      <Text
+                        style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}
+                      >
+                        Tiêu đề đấu giá
+                      </Text>
+
+                      <View
+                        style={{
+                          width: "100%",
+                          height: 48,
+                          borderColor: COLORS.black,
+                          borderWidth: 1,
+                          borderRadius: 8,
+                          alignItems: "center",
+                          justifyContent: "center",
+                          paddingLeft: 22,
+                        }}
+                      >
+                        <TextInput
+                          placeholder="Nhập nội dung hàng hóa..."
+                          placeholderTextColor={COLORS.black}
+                          value={auction.title}
+                          onChangeText={content => change("title", content)}
+                          style={{
+                            width: "100%",
+                          }}
+                        />
                       </View>
+                    </View>
+
+                    <View>
+                      <Text
+                        style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}
+                      >
+                        Nội dung đấu giá
+                      </Text>
+
+                      <View
+                        style={{
+                          width: "100%",
+                          height: 48,
+                          borderColor: COLORS.black,
+                          borderWidth: 1,
+                          borderRadius: 8,
+                          alignItems: "center",
+                          justifyContent: "center",
+                          paddingLeft: 22,
+                        }}
+                      >
+                        <TextInput
+                          placeholder="Nhập nội dung đấu giá"
+                          placeholderTextColor={COLORS.black}
+                          value={auction.content}
+                          onChangeText={content => change("content", content)}
+                          style={{
+                            width: "100%",
+                          }}
+                        />
+                      </View>
+                    </View>
+
+
+                    <View style={{ marginBottom: 24 }}>
+                      <Text
+                        style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}
+                      >
+                        Tiền
+                      </Text>
+
+                      <View
+                        style={{
+                          width: "100%",
+                          height: 48,
+                          borderColor: COLORS.black,
+                          borderWidth: 1,
+                          borderRadius: 8,
+                          alignItems: "center",
+                          justifyContent: "center",
+                          paddingLeft: 22,
+                        }}
+                      >
+                        <TextInput
+                          placeholder="Nhập số tiền mong muốn"
+                          placeholderTextColor="black"
+                          value={auction.money}
+                          onChangeText={money => change("money", money)}
+                          keyboardType="numeric"
+                        />
+                      </View>
+                    </View>
+
+                    {!loadingCreateAuction ? (
+                      <Button
+                        title="Đấu giá"
+                        filled
+                        onPress={createAuction}
+                        disabled={loadingCreateAuction}
+                        style={{
+                          marginTop: 18,
+                          marginBottom: 4,
+                        }}
+                      />
                     ) : (
-                      <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 10, paddingVertical: 5 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                          <Image
-                            source={{ uri: auction.shipper.avatar }}
-                            style={{ width: 50, height: 50, borderRadius: 25 }}
-                          />
-                          <View style={{ marginLeft: 10 }}>
-                            <Text style={{ fontSize: 16, fontWeight: "600" }}>
-                              {auction.shipper.first_name} {auction.shipper.last_name}
-                            </Text>
-                            <Text>{auction.content}</Text>
-                            <Text style={{ marginTop: 5, fontWeight: "600", color: "red" }}>
-                              {formatMoney(auction.money)}
-                            </Text>
-                          </View>
-                        </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                          <TouchableOpacity onPress={handleEdit}>
-                            <Text style={{ color: 'blue', marginRight: 10 }}>Sửa</Text>
-                          </TouchableOpacity>
-                          <TouchableOpacity onPress={handleDelete}>
-                            <Text style={{ color: 'red' }}>Xóa</Text>
-                          </TouchableOpacity>
-                        </View>
-                      </View>
-                    )
-                  ))}
-                </View>
-              ) : (
+                      <LoaddingButton
+                        title="Đang tạo đấu giá"
+                        filled
+                        disabled={loadingCreateAuction}
+                        style={{
+                          marginTop: 18,
+                          marginBottom: 4,
+                        }}
+                      />
+                    )}
+
+                  </View>
+
+                )
+              ) :
+              (
+                item.status === "Pending" ? (
                 <View className="px-4 space-y-2">
-                  <Text
-                    style={{ color: themeColors.text }}
-                    className="text-lg font-bold"
-                  >
-                    Đấu giá
-                  </Text>
-                  <View>
-                    <Text
-                      style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}
-                    >
-                      Tiêu đề đấu giá
-                    </Text>
-
-                    <View
-                      style={{
-                        width: "100%",
-                        height: 48,
-                        borderColor: COLORS.black,
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        paddingLeft: 22,
-                      }}
-                    >
-                      <TextInput
-                        placeholder="Nhập nội dung hàng hóa..."
-                        placeholderTextColor={COLORS.black}
-                        value={auction.title}
-                        onChangeText={content => change("title", content)}
+                <Button
+                        title="Đã giao xong"
+                        filled
+                        onPress={confirm}
                         style={{
-                          width: "100%",
+                          marginTop: 18,
+                          marginBottom: 4,
                         }}
                       />
-                    </View>
-                  </View>
-
-                  <View>
-                    <Text
-                      style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}
-                    >
-                      Nội dung đấu giá
-                    </Text>
-
-                    <View
-                      style={{
-                        width: "100%",
-                        height: 48,
-                        borderColor: COLORS.black,
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        paddingLeft: 22,
-                      }}
-                    >
-                      <TextInput
-                        placeholder="Nhập nội dung đấu giá"
-                        placeholderTextColor={COLORS.black}
-                        value={auction.content}
-                        onChangeText={content => change("content", content)}
-                        style={{
-                          width: "100%",
-                        }}
-                      />
-                    </View>
-                  </View>
-
-
-                  <View style={{ marginBottom: 24 }}>
-                    <Text
-                      style={{ fontSize: 16, fontWeight: 400, marginVertical: 8 }}
-                    >
-                      Tiền
-                    </Text>
-
-                    <View
-                      style={{
-                        width: "100%",
-                        height: 48,
-                        borderColor: COLORS.black,
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        paddingLeft: 22,
-                      }}
-                    >
-                      <TextInput
-                        placeholder="Nhập số tiền mong muốn"
-                        placeholderTextColor="black"
-                        value={auction.money}
-                        onChangeText={money => change("money", money)}
-                        keyboardType="numeric"
-                      />
-                    </View>
-                  </View>
-
-                  {!loadingCreateAuction ? (
-                    <Button
-                      title="Đấu giá"
-                      filled
-                      onPress={createAuction}
-                      disabled={loadingCreateAuction}
-                      style={{
-                        marginTop: 18,
-                        marginBottom: 4,
-                      }}
-                    />
-                  ) : (
-                    <LoaddingButton
-                      title="Đang tạo đấu giá"
-                      filled
-                      disabled={loadingCreateAuction}
-                      style={{
-                        marginTop: 18,
-                        marginBottom: 4,
-                      }}
-                    />
-                  )}
-
                 </View>
-
+                
+              ) : (
+                <View></View>
               )
+              )
+
             )}
           </ScrollView>
         </KeyboardAvoidingView>
