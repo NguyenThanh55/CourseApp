@@ -1,4 +1,4 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.template.response import TemplateResponse
 from django.urls import path
 from django import forms
@@ -42,21 +42,30 @@ class HTProjectAdminSite(admin.AdminSite):
                ] + super().get_urls()
 
     def stats_view(self, request):
-        return TemplateResponse(request, 'admin/stats.html', {
-                                'order_count': dao.count_order_by_shipper(),
-                                'total_orders': dao.total_order()
-                                })
+        rate = dao.rate()
+        adjusted_rate = rate / 5 * 100
+
+        context = {
+            'adjusted_rate': adjusted_rate,
+            'count_user': dao.count_user(),
+            'total_orders': dao.total_order(),
+            'rate': rate,
+        }
+
+        return render(request, 'admin/stats.html', context)
 
     def approved_account_view(self, request):
         return TemplateResponse(request, 'admin/approved-account.html', {
-                                'list_user': dao.load_user(params={})
+                                'user_approve': dao.load_user_approve(),
+                                'user_approved': dao.load_user_approved(),
                                 })
 
     def approve_account(self, request, id):
         if request.method == 'POST':
             dao.approve_user(id)
             return TemplateResponse(request, 'admin/approved-account.html', {
-                                'list_user': dao.load_user(params={})
+                                'user_approve': dao.load_user_approve(),
+                                'user_approved': dao.load_user_approved(),
                                 })  # Chuyển hướng đến trang approved_account_view
 
         return TemplateResponse(request, 'admin/base.html')
@@ -65,7 +74,8 @@ class HTProjectAdminSite(admin.AdminSite):
         if request.method == 'POST':
             dao.reject_user(id)
             return TemplateResponse(request, 'admin/approved-account.html', {
-                                'list_user': dao.load_user(params={})
+                                'user_aprrove': dao.load_user_Approve(),
+                                'user_aprroved': dao.load_user_Approved(),
                                 })  # Chuyển hướng đến trang approved_account_view
 
         return TemplateResponse(request, 'admin/base.html')

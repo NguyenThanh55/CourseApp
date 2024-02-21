@@ -1,4 +1,4 @@
-from .models import Order, Voucher, User, OrderVoucher, Auction
+from .models import Order, Voucher, User, OrderVoucher, Auction, Rating
 from django.db.models import Count, Q
 from .serializers import UserDetailSerializer
 
@@ -21,14 +21,14 @@ def count_order_by_shipper():
     return User.objects.annotate(count=Count('id')).values("id", "first_name", "last_name", "avatar", "count").order_by('-count')
 
 
-def load_user(params={}):
+def load_user_approve():
     u = User.objects.filter(isApproved=False).all()
+    return u
 
-    kw = params.get('kw')
-    if kw:
-        u = u.filter(Q(first_name__icontains=kw) | Q(last_name__icontains=kw))
 
-    # u = UserDetailSerializer(u)
+def load_user_approved():
+    u = User.objects.filter(Q(isApproved=True) & Q(role="SHIPPER")).all()
+
     return u
 
 
@@ -54,16 +54,32 @@ def total_order():
     orders = Order.objects.all()
 
     for o in orders:
-        auction = Auction.objects.filter(Q(order=o) & Q(shipper=o.shipper)).all()
-        voucher = OrderVoucher.objects.filter(order=o).all()
-        for a in auction:
-            if voucher.count() > 0:
-                for v in voucher:
-                    if o.id == v.order:
-                        total += a.money - v.decreased_money
-                        print("Total" + str(total))
+        auctions = Auction.objects.filter(Q(order=o) & Q(shipper=o.shipper))
+        for auction in auctions:
+            vouchers = OrderVoucher.objects.filter(order=o)
+            if vouchers.count() > 0:
+                for voucher in vouchers:
+                    if o == voucher.order:
+                        total += auction.money - voucher.decreased_money
             else:
-                total += a.money
+                total += auction.money
 
-            print("Total" + str(total))
     return total
+
+
+def rate():
+    rate = 0
+    rates = Rating.objects.all()
+
+    if rates.count() > 0:
+        for r in rates:
+            rate += r.score
+        rate = rate / rates.count()
+        return round(rate, 1)
+    else:
+        return 0
+
+
+def count_user():
+    return User.objects.filter(is_superuser=False).count()
+

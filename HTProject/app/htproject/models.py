@@ -78,7 +78,7 @@ class Bill(BaseModel):
 
 class Rating(BaseModel):
     content = models.CharField(max_length=255, null=False)
-    score = models.CharField(max_length=2, null=False)
+    score = models.IntegerField(null=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="order")
 

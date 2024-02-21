@@ -12,6 +12,9 @@
 <!-- Custom styles for this template-->
 <link href="{% static 'sb-admin-2/css/sb-admin-2.min.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+<!-- Add this in the <head> section of your HTML -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 {% block content %}
 
 {% block extrahead %}
@@ -23,7 +26,6 @@
     }
     .nav-tabs > li {
         list-style: none;
-        width: 100%;
     }
     .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
         color: var(--breadcrumbs-bg) !important;
@@ -34,6 +36,7 @@
         padding-right: 0px !important;
         padding-left: 0px !important;
     }
+
     .avatar-container {
       width: 40px;
       height: 40px;
@@ -81,9 +84,6 @@
     }
 
 
-
-
-
 </style>
 {% endblock %}
 
@@ -98,71 +98,127 @@
 
 <div class="container mt-3">
     <h1 style="text-align: center; font-weight: bold; font-size: 30px;">Duyệt tài khoản</h1>
-    <input class="form-control" id="myInput" type="text" placeholder="Search..">
-    <br>
-    <div class="table-responsive">
-        <table class="table table-striped"
-               style="width: 100%; text-align: center; vertical-align: middle; margin-left: auto; margin-right: auto;">
-            <thead>
-            <tr>
-                <th>STT</th>
-                <th colspan="2">Họ và tên</th>
-                <th>Vị trí</th>
-                <th>Trạng thái</th>
-                <th colspan="2">Xử lý</th>
-            </tr>
-            </thead>
-            <tbody id="myTable">
-            {% for u in list_user %}
-            <tr>
-                <td style="vertical-align: middle;">{{ u.id }}</td>
-                <td style="text-align: end; width:25%; vertical-align: middle;">
-                    {% if u.avatar %}
-                    <img src="{{ u.avatar.url }}" style="width: 50px" class="rounded-circle" alt="{{ u.username }}"/>
-                    {% endif %}
-                </td>
-                <td style="text-align: start; vertical-align: middle; width:25%;">
-                    {{ u.last_name }} {{ u.first_name }}
-                </td>
-                <td style="vertical-align: middle;">Shipper</td>
-                {% if u.isApproved == False and u.is_active == True %}
-                <td style="vertical-align: middle;">
-                    Chưa xử lý
-                </td>
-                {% else %}
-                <td style="vertical-align: middle;">
-                    Từ chối
-                </td>
-                {% endif %}
-                {% if u.isApproved == False and u.is_active == True %}
-                <td style="vertical-align: middle;">
-                    <form class="review-form" method="post" action="{% url 'admin:approve' u.id %}">
-                        {% csrf_token %}
-                        <button class="approve-button" type="submit">Duyệt</button>
-                    </form>
-                </td>
-                <td style="vertical-align: middle;">
-                    <form class="review-form" method="post" action="{% url 'admin:reject' u.id %}">
-                        {% csrf_token %}
-                        <button class="reject-button" type="submit">Từ chối</button>
-                    </form>
-                </td>
-                {% else %}
-                <td colspan="2" style="vertical-align: middle;">
-                    Đã xử lý
-                </td>
-                {% endif %}
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#menu1">Chờ duyệt</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#menu2">Đã duyệt</a>
+        </li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div id="menu1" class="container tab-pane active"><br>
+            <input class="form-control" id="myInput" type="text" placeholder="Search..">
+            <br>
+            <div class="table-responsive">
+                <table class="table table-striped"
+                       style="width: 100%; text-align: center; vertical-align: middle; margin-left: auto; margin-right: auto;">
+                    <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th colspan="2">Họ và tên</th>
+                        <th>Vị trí</th>
+                        <th>Trạng thái</th>
+                        <th colspan="2">Xử lý</th>
+                    </tr>
+                    </thead>
+                    <tbody id="myTable">
+                    {% for u in user_approve %}
+                    <tr>
+                        <td style="vertical-align: middle;">{{ u.id }}</td>
+                        <td style="text-align: end; width:25%; vertical-align: middle;">
+                            {% if u.avatar %}
+                            <img src="{{ u.avatar.url }}" style="width: 50px" class="rounded-circle"
+                                 alt="{{ u.username }}"/>
+                            {% endif %}
+                        </td>
+                        <td style="text-align: start; vertical-align: middle; width:25%;">
+                            {{ u.last_name }} {{ u.first_name }}
+                        </td>
+                        <td style="vertical-align: middle;">Shipper</td>
+                        {% if u.isApproved == False and u.is_active == True %}
+                        <td style="vertical-align: middle;">
+                            Chưa xử lý
+                        </td>
+                        {% else %}
+                        <td style="vertical-align: middle;">
+                            Từ chối
+                        </td>
+                        {% endif %}
+                        {% if u.isApproved == False and u.is_active == True %}
+                        <td style="vertical-align: middle;">
+                            <form class="review-form" method="post" action="{% url 'admin:approve' u.id %}">
+                                {% csrf_token %}
+                                <button id="show-toast-btn" class="approve-button" type="submit">Duyệt</button>
+                            </form>
+                        </td>
+                        <td style="vertical-align: middle;">
+                            <form class="review-form" method="post" action="{% url 'admin:reject' u.id %}">
+                                {% csrf_token %}
+                                <button class="reject-button" type="submit">Từ chối</button>
+                            </form>
+                        </td>
+                        {% else %}
+                        <td colspan="2" style="vertical-align: middle;">
+                            Đã xử lý
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="menu2" class="container tab-pane fade"><br>
+            <input class="form-control" id="myInput2" type="text" placeholder="Search..">
+            <br>
+            <div class="table-responsive">
+                <table class="table table-striped"
+                       style="width: 100%; text-align: center; vertical-align: middle; margin-left: auto; margin-right: auto;">
+                    <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th colspan="2">Họ và tên</th>
+                        <th>Vị trí</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                    </thead>
+                    <tbody id="myTable2">
+                    {% for u in user_approved %}
+                    <tr>
+                        <td style="vertical-align: middle;">{{ u.id }}</td>
+                        <td style="text-align: end; width:25%; vertical-align: middle;">
+                            {% if u.avatar %}
+                            <img src="{{ u.avatar.url }}" style="width: 50px" class="rounded-circle"
+                                 alt="{{ u.username }}"/>
+                            {% endif %}
+                        </td>
+                        <td style="text-align: start; vertical-align: middle; width:25%;">
+                            {{ u.last_name }} {{ u.first_name }}
+                        </td>
+                        <td style="vertical-align: middle;">Shipper</td>
+                        {% if u.isApproved == True and u.is_active == True %}
+                        <td style="vertical-align: middle;">
+                            Đã xử lý
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+
 </div>
 
 
 {% block scripts %}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
         $(document).ready(function(){
             $("#myInput").on("keyup", function() {
                 var value = $(this).val().toLowerCase();
@@ -171,7 +227,19 @@
                 });
             });
         });
-    </script>
+        $(document).ready(function(){
+            $("#myInput2").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTable2 tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+        document.getElementById('show-toast-btn').addEventListener('click', function() {
+            toastr.success('Approved successfully!');
+        });
+</script>
+
 
 <!--  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">-->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
@@ -179,6 +247,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
 {% endblock %}
-
+<!-- Add this before the closing </body> tag of your HTML -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 {% endblock %}
