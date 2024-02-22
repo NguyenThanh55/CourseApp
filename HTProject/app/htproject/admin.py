@@ -45,13 +45,23 @@ class HTProjectAdminSite(admin.AdminSite):
         rate = dao.rate()
         adjusted_rate = rate / 5 * 100
 
+        data_arr = [
+            ['Canis Major Dwarf', 8000, 23.3],
+            ['Sagittarius Dwarf', 24000, 4.5],
+            ['Ursa Major II Dwarf', 30000, 14.3],
+            ['Lg. Magellanic Cloud', 50000, 0.9],
+            ['Bootes I', 60000, 13.1]
+        ]
+
         context = {
             'adjusted_rate': adjusted_rate,
             'count_user': dao.count_user(),
             'total_orders': dao.total_order(),
             'rate': rate,
+            'data_arr': data_arr,
+            'result_date': dao.search_shipper_for_date(request.GET),
         }
-
+        print(request.GET.get('selected_date', ''))
         return render(request, 'admin/stats.html', context)
 
     def approved_account_view(self, request):

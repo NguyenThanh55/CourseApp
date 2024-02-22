@@ -220,7 +220,66 @@ class OrderViewSet(viewsets.ViewSet,
         order.shipper = shipper
         order.status = status_order
         order.save()
-        return Response("Change value order successfully.", status=status.HTTP_200_OK)
+        if status_order == "Pending":
+            host = request.user
+            email_auctions = Auction.objects.filter(order__customer=host, order__id=pk).all()
+
+            for auction in email_auctions:
+                print(auction.shipper.email)
+                if auction.shipper.email != self.get_object().shipper.email:
+                    subject = str(host.first_name + " " + host.last_name) + " có tin buồn !!!"  # title email
+                    # a = Auction.objects.filter(shipper__email=auction).values('shipper')
+                    # reciever_username = a.shipper.first_name + a.shipper.last_name
+                    order_name = self.get_object().title
+                    order_username = self.get_object().customer.first_name + self.get_object().customer.last_name
+                    linkbaiviet = 'nhap'
+                    html_content_fail = f"""
+                                       <p>Xin chào <Strong>Thanh</Strong>,</p>
+                                       <p>Chúng tôi rất tiếc phải thông báo rằng bạn đã đấu giá thất bại đơn hàng <Strong>{order_name}</Strong> của <Strong>{order_username}</Strong>.</p>
+                                       <p>Xin chân thành cảm ơn bạn đã đến và tham gia đấu giá vào đơn hàng của tôi.</p>
+                                       <p>Chúc bạn một ngày tốt lành!</p>
+                                       <img src='https://res.cloudinary.com/dstqvlt8d/image/upload/v1704609698/ASSS-avatar/a0lpq48qktdfsozlba97.jpg'/>
+                                       """
+                    msg = myemail.send_email(subject, html_content_fail, auction.shipper.email)
+            subject = str(host.first_name + " " + host.last_name) + " có tin mới !!!"  # title email
+            reciever_username = self.get_object().shipper.first_name + self.get_object().shipper.last_name
+            order_name = self.get_object().title
+            order_username = self.get_object().customer.first_name + self.get_object().customer.last_name
+            address = self.get_object().fromStreet + ", phường " + self.get_object().fromWard.name + ", " + \
+                      self.get_object().fromWard.district.name + " , Thành phố " + self.get_object().fromWard.district.city.name
+            linkbaiviet = 'nhap'
+            html_content_success = f"""
+                       <p>Xin chào <Strong>{reciever_username}</Strong>,</p>
+                       <p>Chúng tôi xin thông báo rằng bạn đã đấu giá thành công đơn hàng <Strong>{order_name}</Strong> của <Strong>{order_username}</Strong>.</p>
+                       <p>Bạn vui lòng đến địa chỉ này để lấy hàng: <Strong>{address}</Strong></p>
+                       <p>Xin chân thành cảm ơn.</p>
+                       <p>Chúc bạn một ngày tốt lành!</p>
+                       <img src='https://res.cloudinary.com/dstqvlt8d/image/upload/v1704609698/ASSS-avatar/a0lpq48qktdfsozlba97.jpg'/>
+                       """
+            msg = myemail.send_email(subject, html_content_success, self.get_object().shipper.email)
+            print(self.get_object().shipper.email)
+            if msg.__eq__(1):
+                return Response({'message': 'Email sent successfully.'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'message': 'Failed to send email.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            # return Response("Change value order successfully.", status=status.HTTP_200_OK)
+        if status_order == "Completed":
+
+            subject = str(shipper.first_name + " " + shipper.last_name) + " đã hoàn tất vận chuyển đơn hàng của bạn !!!"  # title email
+            reciever_username = self.get_object().customer.first_name + self.get_object().customer.last_name
+            linkbaiviet = 'nhap'
+            html_content_success = f"""
+                                   <p>Cảm ơn bạn <Strong>{reciever_username}</Strong> đã sử dụng app HT Express của chúng tôi,</p>
+                                   <p>Rất mong bạn sẽ quay lại và tiếp tục sử dụng app của chúng tôi.</p>
+                                   <p>Xin chân thành cảm ơn.</p>
+                                   <p>Chúc bạn một ngày tốt lành!</p>
+                                   """
+            msg = myemail.send_email(subject, html_content_success, self.get_object().customer.email)
+            print(self.get_object().customer.email)
+            if msg.__eq__(1):
+                return Response({'message': 'Email to customer sent successfully.'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'message': 'Failed to send email.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @swagger_auto_schema(
         operation_description="Update detail order",
@@ -290,7 +349,7 @@ class OrderViewSet(viewsets.ViewSet,
     def no_shipper(self, request):
         orders = Order.objects.filter(shipper__isnull=True)
         if not orders:
-            return Response("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
+            return Response("No data", status=status.HTTP_200_OK)
         else:
             return Response(serializers.OrderDetailSerializer(orders, many=True).data, status=status.HTTP_200_OK)
 
@@ -298,7 +357,7 @@ class OrderViewSet(viewsets.ViewSet,
     def auctions(self, request, pk):
         auctions = Auction.objects.filter(order=pk)
         if not auctions:
-            return Response("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
+            return Response("No data", status=status.HTTP_200_OK)
         else:
             return Response(serializers.AuctionDetailSerializer(auctions, many=True).data, status=status.HTTP_200_OK)
 
@@ -306,18 +365,30 @@ class OrderViewSet(viewsets.ViewSet,
     def ratings(self, request, pk):
         ratings = Rating.objects.filter(order=pk)
         if not ratings:
-            return Response("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
+            return Response("No data", status=status.HTTP_200_OK)
         else:
             return Response(serializers.RatingSerializer(ratings, many=True).data, status=status.HTTP_200_OK)
 
-    @action(methods=['get'], url_name='vouchers', detail=True)
-    def vouchers(self, request, pk):
-        orderVouchers = OrderVoucher.objects.filter(order=pk)
-        if not orderVouchers:
-            return Response("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
-        else:
-            return Response(serializers.OrderVoucherSerializer(orderVouchers, many=True).data, status=status.HTTP_200_OK)
-
+    @swagger_auto_schema(
+        operation_description="Create a new auction",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'title': openapi.Schema(type=openapi.TYPE_STRING, description='Title of the auction'),
+                'content': openapi.Schema(type=openapi.TYPE_STRING, description='Content of the auction'),
+                'money': openapi.Schema(type=openapi.FORMAT_DECIMAL, description='Content of the auction'),
+            }
+        ),
+        responses={
+            201: openapi.Response(
+                description="Successfully",
+                schema=serializers.OrderSerializer
+            ),
+            400: openapi.Response(
+                description="Bad request"
+            )
+        }
+    )
     @action(methods=['post'], url_name='auction', detail=True)
     def auction(self, request, pk):
         a = Auction.objects.create(title=request.data.get('title'), content=request.data.get('content'),
@@ -328,11 +399,27 @@ class OrderViewSet(viewsets.ViewSet,
         else:
             return Response(serializers.AuctionSerializer(a).data, status=status.HTTP_201_CREATED)
 
+    @swagger_auto_schema(
+        operation_description="Create a new rating",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'title': openapi.Schema(type=openapi.TYPE_STRING, description='Title of the rating'),
+                'score': openapi.Schema(type=openapi.TYPE_INTEGER, description='Content of the rating'),
+            }
+        ),
+        responses={
+            201: openapi.Response(
+                description="Successfully",
+                schema=serializers.OrderSerializer
+            ),
+            400: openapi.Response(
+                description="Bad request"
+            )
+        }
+    )
     @action(methods=['post'], url_name='rating', detail=True)
     def rating(self, request, pk):
-        # serializer = serializers.UserDetailSerializer(data=request.data)
-        # if serializer.is_valid():
-        #     serializer.save()
         a = Rating.objects.create(content=request.data.get('content'),
                                   score=request.data.get('score'),
                                   user=request.user,
@@ -342,15 +429,44 @@ class OrderViewSet(viewsets.ViewSet,
         else:
             return Response(serializers.RatingSerializer(a).data, status=status.HTTP_201_CREATED)
 
-    @action(methods=['post'], url_path='send-email', url_name="send-email", detail=True)
+    @swagger_auto_schema(
+        operation_description="Create a new voucher",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'decreased_money': openapi.Schema(type=openapi.FORMAT_DECIMAL,
+                                                  description='Decreased money of the voucher'),
+                'voucher': openapi.Schema(type=openapi.TYPE_INTEGER, description='Id of the voucher'),
+            }
+        ),
+        responses={
+            201: openapi.Response(
+                description="Successfully",
+                schema=serializers.OrderVoucherSerializer
+            ),
+            400: openapi.Response(
+                description="Bad request"
+            )
+        }
+    )
+    @action(methods=['post'], url_name='vouchers', detail=True)
+    def vouchers(self, request, pk):
+        voucher = Voucher.objects.get(pk=request.data.get('voucher'))
+        orderVoucher = OrderVoucher.objects.create(order=self.get_object(),
+                                                   decreased_money=request.data.get('decreased_money'),
+                                                   voucher=voucher)
+        if not orderVoucher:
+            return Response("Bad request", status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializers.OrderVoucherSerializer(orderVoucher).data,
+                            status=status.HTTP_201_CREATED)
+
+    # @action(methods=['post'], url_path='send-email', url_name="send-email", detail=True)
     def send_email(self, request, pk):
         host = request.user
         email_auctions = Auction.objects.filter(order__customer=host, order__id=pk).all()
-        # breakpoint()
-        # success_count = Order.objects.get(pk=pk)
-        connection = mail.get_connection()
+
         for auction in email_auctions:
-            # breakpoint()
             if auction.shipper.email != self.get_object().shipper.email:
                 subject = str(host.first_name + " " + host.last_name) + " có tin buồn !!!"  # title email
                 # a = Auction.objects.filter(shipper__email=auction).values('shipper')
@@ -366,12 +482,6 @@ class OrderViewSet(viewsets.ViewSet,
                             <img src='https://res.cloudinary.com/dstqvlt8d/image/upload/v1704609698/ASSS-avatar/a0lpq48qktdfsozlba97.jpg'/>
                             """
                 msg = myemail.send_email(subject, html_content_fail, auction.shipper.email)
-                # breakpoint()
-                # if msg.__eq__(1):
-                #     return Response({'message': 'Successfully.'}, status=status.HTTP_200_OK)
-                # else:
-                #     return Response({'message': 'Failed.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-                # breakpoint()
         subject = str(host.first_name + " " + host.last_name) + " có tin mới !!!"  # title email
         reciever_username = self.get_object().shipper.first_name + self.get_object().shipper.last_name
         order_name = self.get_object().title
@@ -474,7 +584,6 @@ class VoucherViewSet(viewsets.ModelViewSet,
                      generics.ListAPIView):
     queryset = Voucher.objects.filter(active=True)
     serializer_class = serializers.VoucherSerializer # get/post/detail/put/delete
-    pagination_class = paginators.DistrictPaginator
 
     def get_permissions(self):
         if self.action == 'list':

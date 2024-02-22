@@ -56,7 +56,7 @@ class WardSerializer(ModelSerializer):
 class VoucherSerializer(ModelSerializer):
     class Meta:
         model = Voucher
-        fields = ['id', 'title', 'discount', 'startDate', 'endDate', 'orderVoucher']
+        fields = ['id', 'title', 'discount', 'startDate', 'endDate']
 
 
 class OrderVoucherSerializer(ModelSerializer):
@@ -154,8 +154,6 @@ class BillSerializer(ModelSerializer):
 
 
 class OrderVoucherSerializer(ModelSerializer):
-    user = UserDetailSerializer()
-    order = OrderDetailSerializer()
 
     class Meta:
         model = OrderVoucher

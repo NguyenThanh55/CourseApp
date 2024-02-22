@@ -83,3 +83,13 @@ def rate():
 def count_user():
     return User.objects.filter(is_superuser=False).count()
 
+
+def search_shipper_for_date(params={}):
+
+    selected_date = params.get('selected_date')
+    u = User.objects.filter(role="SHIPPER")
+
+    if selected_date:
+        print(selected_date)
+
+    return u

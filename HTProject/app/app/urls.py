@@ -21,6 +21,8 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+from htproject.admin import admin_site
+
 schema_view = get_schema_view(
     openapi.Info(
         title="Course API",
@@ -35,7 +37,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('', include('htproject.urls')),
-    # path('admin/', admin_site.urls),
+    path('admin/', admin_site.urls),
     path('i18n/', set_language, name='set_language'),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     re_path(r'^ckeditor/', include('ckeditor_uploader.urls')),
@@ -48,4 +50,7 @@ urlpatterns = [
     re_path(r'^redoc/$',
             schema_view.with_ui('redoc', cache_timeout=0),
             name='schema-redoc')
+]
+urlpatterns += [
+    path('admin/stats/', admin_site.stats_view, name='stats_view'),
 ]
