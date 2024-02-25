@@ -43,12 +43,14 @@
     {% csrf_token %}
     <label class="language-label" for="language">
         {% if LANGUAGE_CODE == 'vi' %}
+            <a href="list-orders/">{% translate 'Danh sách đơn hàng' %}</a> /
             <a href="approved-accounts/">{% translate 'Duyệt tài khoản' %}</a> /
             <a href="stats/">{% translate 'Thống kê' %}</a> /
             {% translate 'Ngôn ngữ:' %}
         {% else %}
+            <a href="list-orders/">{% translate 'List Orders' %}</a> /
             <a href="approved-accounts/">{% translate 'Approved accounts' %}</a> /
-            <a href="stats/">{% translate 'Count' %}</a> /
+            <a href="stats/">{% translate 'Stats' %}</a> /
             {% translate 'Lang:' %}
         {% endif %}
     </label>

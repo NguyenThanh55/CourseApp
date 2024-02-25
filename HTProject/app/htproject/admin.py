@@ -1,13 +1,24 @@
+import json
+from io import BytesIO
+import io
+
 from django.shortcuts import redirect, render
+from django.template import Context
 from django.template.response import TemplateResponse
 from django.urls import path
 from django import forms
 from django.contrib import admin
 from django.utils.safestring import mark_safe
+from xhtml2pdf import pisa
+from django.conf import settings
 
 from .models import User, Voucher, City, District, Ward, Order, Rating, Auction
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from htproject import dao
+
+import pdfkit
+from django.template.loader import render_to_string, get_template
+from django.http import HttpResponse
 
 
 class VoucherAdmin(admin.ModelAdmin):
@@ -35,34 +46,54 @@ class HTProjectAdminSite(admin.AdminSite):
 
     def get_urls(self):
         return [
-                   path('stats/', self.stats_view),
+                   path('stats/', self.stats_view, name="stats"),
+                   path('list-orders/', self.list_orders),
+                   path('order/<int:id>/', self.info_order, name="info"),
                    path('approved-accounts/', self.approved_account_view),
                    path('approve/<int:id>/', self.approve_account, name="approve"),
                    path('reject/<int:id>/', self.reject_account, name="reject"),
+                   path('export_pdf/', self.export_pdf, name="export_pdf")
                ] + super().get_urls()
+
+    def list_orders(self, request):
+        return TemplateResponse(request, 'admin/list-orders.html', {
+                                        'order_no_shipper': dao.list_order_no_ship(),
+                                        'order_no_auction': dao.list_order_no_auction()
+                                    })
 
     def stats_view(self, request):
         rate = dao.rate()
         adjusted_rate = rate / 5 * 100
 
-        data_arr = [
-            ['Canis Major Dwarf', 8000, 23.3],
-            ['Sagittarius Dwarf', 24000, 4.5],
-            ['Ursa Major II Dwarf', 30000, 14.3],
-            ['Lg. Magellanic Cloud', 50000, 0.9],
-            ['Bootes I', 60000, 13.1]
-        ]
+        data = dao.search_shipper_for_date(request.GET)
+        data_order = dao.search_order_for_date(request.GET)
+        selected_date = request.GET.get('selected_date', '')
+        selected_username = request.GET.get('selected_username', '')
+        selected_order = request.GET.get('selected_order', '')
 
         context = {
             'adjusted_rate': adjusted_rate,
             'count_user': dao.count_user(),
             'total_orders': dao.total_order(),
             'rate': rate,
-            'data_arr': data_arr,
-            'result_date': dao.search_shipper_for_date(request.GET),
+            'selected_date': selected_date,
+            'selected_username': selected_username,
+            'selected_order': selected_order,
+            'data': json.dumps(data),
+            'data_order': data_order,
+            'order_status_new': dao.order_status_new(request.GET),
+            'order_status_pending': dao.order_status_pending(request.GET),
+            'order_status_completed': dao.order_status_completed(request.GET),
         }
         print(request.GET.get('selected_date', ''))
         return render(request, 'admin/stats.html', context)
+
+    def info_order(self, request, id):
+        return TemplateResponse(request, 'admin/info-order.html', {
+                                'order': dao.info_order(id),
+                                'auctions': dao.auction_for_order(id),
+                                'vouchers': dao.voucher_for_order(id)
+                                })
 
     def approved_account_view(self, request):
         return TemplateResponse(request, 'admin/approved-account.html', {
@@ -77,18 +108,55 @@ class HTProjectAdminSite(admin.AdminSite):
                                 'user_approve': dao.load_user_approve(),
                                 'user_approved': dao.load_user_approved(),
                                 })  # Chuyển hướng đến trang approved_account_view
-
         return TemplateResponse(request, 'admin/base.html')
 
     def reject_account(self, request, id):
         if request.method == 'POST':
             dao.reject_user(id)
             return TemplateResponse(request, 'admin/approved-account.html', {
-                                'user_aprrove': dao.load_user_Approve(),
-                                'user_aprroved': dao.load_user_Approved(),
+                                'user_aprrove': dao.load_user_approve(),
+                                'user_aprroved': dao.load_user_approved(),
                                 })  # Chuyển hướng đến trang approved_account_view
 
         return TemplateResponse(request, 'admin/base.html')
+
+    def export_pdf(self, request):
+        rate = dao.rate()
+        adjusted_rate = rate / 5 * 100
+
+        data = dao.search_shipper_for_date(request.GET)
+        data_order = dao.search_order_for_date(request.GET)
+        selected_date = request.GET.get('selected_date', '')
+        selected_username = request.GET.get('selected_username', '')
+        selected_order = request.GET.get('selected_order', '')
+
+        context = {
+            'adjusted_rate': adjusted_rate,
+            'count_user': dao.count_user(),
+            'total_orders': dao.total_order(),
+            'rate': rate,
+            'selected_date': selected_date,
+            'selected_username': selected_username,
+            'selected_order': selected_order,
+            'data': json.dumps(data),
+            'data_order': data_order,
+            'order_status_new': dao.order_status_new(request.GET),
+            'order_status_pending': dao.order_status_pending(request.GET),
+            'order_status_completed': dao.order_status_completed(request.GET),
+        }
+
+        pdf = dao.render_to_pdf('admin/stats.html', context)
+        # pdf = render_to_string('admin/stats.html', context)
+        pdf_data = io.BytesIO()
+
+        pisa.CreatePDF(pdf.encode('UTF-8', 'ignore'), dest=pdf_data, encoding='UTF-8')
+        pdf_data.seek(0)
+
+        response = HttpResponse(pdf_data, content_type='application/pdf')
+        filename = "Stats_%s.pdf" % ("1")
+        content = "attachment; filename='%s'" % (filename)
+        response['Content-Disposition'] = content
+        return response
 
 
 admin_site = HTProjectAdminSite('HTExpress')

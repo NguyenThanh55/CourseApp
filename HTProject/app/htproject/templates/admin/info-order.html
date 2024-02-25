@@ -1,0 +1,197 @@
+{% extends 'admin/stats.html' %}
+
+{% load static %}
+<link href="{% static 'sb-admin-2/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+      rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<!-- Custom styles for this template-->
+<link href="{% static 'sb-admin-2/css/sb-admin-2.min.css' %}" rel="stylesheet">
+
+{% block content %}
+
+{% block content_subtitle %}<h2>{{ block.super }}</h2>{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+    /* Add custom styles here, if needed */
+    .order-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .order-image {
+        width: 500px;
+        height: 500px;
+        margin-right: 20px;
+    }
+    .container-order {
+        margin-top: 50px !important;
+        margin: 0 auto;
+        width: 60%;
+    }
+
+
+
+
+
+
+</style>
+{% endblock %}
+{% load bootstrap4 %}
+
+<!-- Các thành phần Bootstrap -->
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<a href="{% url 'admin:stats' %}" style="padding-left: 50px"><i class="fa fa-arrow-rotate-left"></i>Return Statistical
+    Management</a><h2 style="text-align: center; font-weight: bold;">Detail Order</h2>
+
+<div class="container-order">
+    <div class="row">
+        <div class="col-xl-7 col-lg-7">
+            <div class="order-container">
+                <div>
+                    <p><strong>ID:</strong> {{ order.id }}</p>
+                    <p><strong>Title:</strong> {{ order.title }} </p>
+                    <p><strong>From Address:</strong>
+                        {{ order.fromStreet }}, {{ order.fromWard.name }},
+                        {{ order.fromWard.district.name }}, {{ order.fromWard.district.city.name }}
+                    </p>
+                    <p><strong>To Address :</strong>
+                        {{ order.toStreet }}, {{ order.toWard.name }},
+                        {{ order.toWard.district.name }}, {{ order.toWard.district.city.name }}
+                    </p>
+                    <!-- Add more order details as needed -->
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-5 col-lg-5">
+            <div class="order-container">
+                <div>
+                    <p><strong>Content:</strong> {{ order.content }}</p>
+                    <p><strong>Status:</strong> {{ order.status }}</p>
+                    <p><strong>Customer: </strong> {{ order.customer.first_name }} {{ order.customer.last_name }} </p>
+                    <p><strong>Shipper: </strong>
+                        {% if order.shipper is not None %}
+                        {{ order.shipper.first_name }} {{ order.shipper.last_name }}
+                        {% else %}
+                        Waiting for auction to choose shipper
+                        {% endif %}
+                    </p>
+                    <!-- Add more order details as needed -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-xl-12 col-lg-12">
+            <p><strong>Image:</strong></p>
+            <img src="https://res.cloudinary.com/dohcsyfoi/image/upload/{{ order.image }}" alt="{{ order.title }}"
+                 style="width:100%" class="order-image">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-12 col-lg-12">
+            <strong>Auctions:</strong>
+            {% if auctions.count > 0 %}
+            <table class="table table-striped"
+                   style="width: 100%; text-align: center; vertical-align: middle; margin-left: auto; margin-right: auto;">
+                <thead>
+                <tr>
+                    <th><p><strong>Title</strong></p></th>
+                    <th><p><strong>Content</strong></p></th>
+                    <th><p><strong>Money</strong></p></th>
+                    <th><p><strong>Shipper's name</strong></p></th>
+                </tr>
+                </thead>
+                <tbody id="myTable3">
+                {% for a in auctions %}
+                <tr>
+                    <td style="vertical-align: middle;">{{ a.title }}</td>
+                    <td style="text-align: end; width:25%; vertical-align: middle;">{{ a.content }}</td>
+                    <td style="vertical-align: middle;">{{ a.money }}</td>
+                    <td style="text-align: start; vertical-align: middle; width:25%;">
+                        {{ a.shipper.first_name }} {{ a.shipper.last_name }}
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            Don't have auction
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-12 col-lg-12">
+            <strong>Voucher:</strong>
+            {% if vouchers.count > 0 %}
+            <table class="table table-striped"
+                   style="width: 100%; text-align: center; vertical-align: middle; margin-left: auto; margin-right: auto;">
+                <thead>
+                <tr>
+                    <th><p><strong>Title</strong></p></th>
+                    <th><p><strong>Decreased money</strong></p></th>
+                    <th><p><strong>Use date</strong></p></th>
+                </tr>
+                </thead>
+                <tbody id="myTable4">
+                {% for a in vouchers %}
+                <tr>
+                    <td style="vertical-align: middle;">{{ a.voucher.title }}</td>
+                    <td style="text-align:center; width:25%; vertical-align: middle;">{{ a.decreased_money }}</td>
+                    <td style="vertical-align: middle;">{{ a.useDate }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            Don't have voucher
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+<!-- Bootstrap core JavaScript-->
+<script src="{% static 'sb-admin-2/vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'sb-admin-2/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="{% static 'sb-admin-2/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="{% static 'sb-admin-2/js/sb-admin-2.min.js' %}"></script>
+
+<!-- Page level plugins -->
+<script src="{% static 'sb-admin-2/vendor/chart.js/Chart.min.js' %}"></script>
+
+<!-- Page level custom scripts -->
+<script src="{% static 'sb-admin-2/js/demo/chart-area-demo.js' %}"></script>
+<script src="{% static 'sb-admin-2/js/demo/chart-pie-demo.js' %}"></script>
+
+<!-- Link CSS cho sidebar -->
+<link rel="stylesheet" href="{% static 'sb-admin-2/css/sb-admin-2.min.css' %}">
+
+<!-- Link JavaScript cho sidebar -->
+<script src="{% static 'sb-admin-2/vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'sb-admin-2/js/sb-admin-2.min.js' %}"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+      integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
+      crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+      integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+      crossorigin="anonymous">
+
+
+{% endblock %}

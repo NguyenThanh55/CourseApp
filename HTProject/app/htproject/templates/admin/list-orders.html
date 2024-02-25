@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
       integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
-      crossorigin="anonymous"></head>
+      crossorigin="anonymous">
 <!-- Custom styles for this template-->
 <link href="{% static 'sb-admin-2/css/sb-admin-2.min.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
@@ -83,7 +83,6 @@
       font-weight: bold;
     }
 
-
 </style>
 {% endblock %}
 
@@ -97,74 +96,64 @@
 <!-- ... -->
 
 <div class="container mt-3">
-    <h1 style="text-align: center; font-weight: bold; font-size: 30px;">Browse your accounts</h1>
+    <h1 style="text-align: center; font-weight: bold; font-size: 30px;">List orders</h1>
     <!-- Nav tabs -->
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" href="#menu1">Wait for approval</a>
+            <a class="nav-link active" data-toggle="tab" href="#menu1">Order waiting for ship </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#menu2">Approved</a>
+            <a class="nav-link" data-toggle="tab" href="#menu2">Order no shipper auction</a>
         </li>
     </ul>
     <!-- Tab panes -->
     <div class="tab-content">
         <div id="menu1" class="container tab-pane active"><br>
-            <input class="form-control" id="myInput" type="text" placeholder="Search..">
+            <input class="form-control" id="myInput3" type="text" placeholder="Search..">
             <br>
             <div class="table-responsive">
                 <table class="table table-striped"
                        style="width: 100%; text-align: center; vertical-align: middle; margin-left: auto; margin-right: auto;">
                     <thead>
                     <tr>
-                        <th>STT</th>
-                        <th colspan="2">Name</th>
-                        <th>Role</th>
-                        <th>Status</th>
-                        <th colspan="2">Process</th>
+                        <th><strong>ID</strong></th>
+                        <th><strong>Title</strong></th>
+                        <th><strong>Content</strong></th>
+                        <th><strong>From Address</strong>
+                        </th>
+                        <th><strong>To Address</strong>
+                        </th>
+                        <th><strong>Status</strong></th>
+                        <th><strong>Customer </strong></th>
+                        <th><strong>Shipper </strong>
+                        </th>
                     </tr>
                     </thead>
-                    <tbody id="myTable">
-                    {% for u in user_approve %}
+                    <tbody id="myTable3">
+                    {% for order in order_no_shipper %}
                     <tr>
-                        <td style="vertical-align: middle;">{{ u.id }}</td>
-                        <td style="text-align: end; width:25%; vertical-align: middle;">
-                            {% if u.avatar %}
-                            <img src="{{ u.avatar.url }}" style="width: 50px" class="rounded-circle"
-                                 alt="{{ u.username }}"/>
+                        <td> {{ order.id }}</td>
+                        <td><a href="{% url 'admin:info' order.id %}">
+                                {{ order.title }}
+                            </a></td>
+                        <td> {{ order.content }}</td>
+                        <td>
+                            {{ order.fromStreet }}, {{ order.fromWard.name }},
+                            {{ order.fromWard.district.name }}, {{ order.fromWard.district.city.name }}
+                        </td>
+                        <td>
+                            {{ order.toStreet }}, {{ order.toWard.name }},
+                            {{ order.toWard.district.name }}, {{ order.toWard.district.city.name }}
+                        </td>
+                        <td> {{ order.status }}</td>
+                        <td> {{ order.customer.first_name }} {{ order.customer.last_name }}</td>
+                        <td>
+                            {% if order.shipper is not None %}
+                            {{ order.shipper.first_name }} {{ order.shipper.last_name }}
+                            {% else %}
+                            Waiting for auction to choose shipper
                             {% endif %}
                         </td>
-                        <td style="text-align: start; vertical-align: middle; width:25%;">
-                            {{ u.last_name }} {{ u.first_name }}
-                        </td>
-                        <td style="vertical-align: middle;">Shipper</td>
-                        {% if u.isApproved == False and u.is_active == True %}
-                        <td style="vertical-align: middle;">
-                            Unprocessed
-                        </td>
-                        {% else %}
-                        <td style="vertical-align: middle;">
-                            Rejected
-                        </td>
-                        {% endif %}
-                        {% if u.isApproved == False and u.is_active == True %}
-                        <td style="vertical-align: middle;">
-                            <form class="review-form" method="post" action="{% url 'admin:approve' u.id %}">
-                                {% csrf_token %}
-                                <button id="show-toast-btn" class="approve-button" type="submit">Approve</button>
-                            </form>
-                        </td>
-                        <td style="vertical-align: middle;">
-                            <form class="review-form" method="post" action="{% url 'admin:reject' u.id %}">
-                                {% csrf_token %}
-                                <button class="reject-button" type="submit">Reject</button>
-                            </form>
-                        </td>
-                        {% else %}
-                        <td colspan="2" style="vertical-align: middle;">
-                            Processed
-                        </td>
-                        {% endif %}
                     </tr>
                     {% endfor %}
                     </tbody>
@@ -172,38 +161,51 @@
             </div>
         </div>
         <div id="menu2" class="container tab-pane fade"><br>
-            <input class="form-control" id="myInput2" type="text" placeholder="Search..">
+            <input class="form-control" id="myInput4" type="text" placeholder="Search..">
             <br>
             <div class="table-responsive">
                 <table class="table table-striped"
                        style="width: 100%; text-align: center; vertical-align: middle; margin-left: auto; margin-right: auto;">
                     <thead>
                     <tr>
-                        <th>STT</th>
-                        <th colspan="2">Name</th>
-                        <th>Role</th>
-                        <th>Status</th>
+                        <th><strong>ID</strong></th>
+                        <th><strong>Title</strong></th>
+                        <th><strong>Content</strong></th>
+                        <th><strong>From Address</strong>
+                        </th>
+                        <th><strong>To Address</strong>
+                        </th>
+                        <th><strong>Status</strong></th>
+                        <th><strong>Customer </strong></th>
+                        <th><strong>Shipper </strong>
+                        </th>
                     </tr>
                     </thead>
-                    <tbody id="myTable2">
-                    {% for u in user_approved %}
+                    <tbody id="myTable4">
+                    {% for order in order_no_auction %}
                     <tr>
-                        <td style="vertical-align: middle;">{{ u.id }}</td>
-                        <td style="text-align: end; width:25%; vertical-align: middle;">
-                            {% if u.avatar %}
-                            <img src="{{ u.avatar.url }}" style="width: 50px" class="rounded-circle"
-                                 alt="{{ u.username }}"/>
+                        <td> {{ order.id }}</td>
+                        <td><a href="{% url 'admin:info' order.id %}">
+                                {{ order.title }}
+                            </a></td>
+                        <td> {{ order.content }}</td>
+                        <td>
+                            {{ order.fromStreet }}, {{ order.fromWard.name }},
+                            {{ order.fromWard.district.name }}, {{ order.fromWard.district.city.name }}
+                        </td>
+                        <td>
+                            {{ order.toStreet }}, {{ order.toWard.name }},
+                            {{ order.toWard.district.name }}, {{ order.toWard.district.city.name }}
+                        </td>
+                        <td> {{ order.status }}</td>
+                        <td> {{ order.customer.first_name }} {{ order.customer.last_name }}</td>
+                        <td>
+                            {% if order.shipper is not None %}
+                            {{ order.shipper.first_name }} {{ order.shipper.last_name }}
+                            {% else %}
+                            Waiting for auction to choose shipper
                             {% endif %}
                         </td>
-                        <td style="text-align: start; vertical-align: middle; width:25%;">
-                            {{ u.last_name }} {{ u.first_name }}
-                        </td>
-                        <td style="vertical-align: middle;">Shipper</td>
-                        {% if u.isApproved == True and u.is_active == True %}
-                        <td style="vertical-align: middle;">
-                            Processed
-                        </td>
-                        {% endif %}
                     </tr>
                     {% endfor %}
                     </tbody>
@@ -220,24 +222,28 @@
 
 <script>
         $(document).ready(function(){
-            $("#myInput").on("keyup", function() {
+            $("#myInput3").on("keyup", function() {
                 var value = $(this).val().toLowerCase();
-                $("#myTable tr").filter(function() {
+                $("#myTable3 tr").filter(function() {
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
                 });
             });
         });
-        $(document).ready(function(){
-            $("#myInput2").on("keyup", function() {
+
+         $(document).ready(function(){
+            $("#myInput4").on("keyup", function() {
                 var value = $(this).val().toLowerCase();
-                $("#myTable2 tr").filter(function() {
+                $("#myTable4 tr").filter(function() {
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
                 });
             });
         });
+
         document.getElementById('show-toast-btn').addEventListener('click', function() {
             toastr.success('Approved successfully!');
         });
+
+
 </script>
 
 
