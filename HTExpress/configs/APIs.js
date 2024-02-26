@@ -13,14 +13,14 @@ export const endpoints = {
 
 export const authApi = (accessToken) =>
   axios.create({
-    //  baseURL: "http://192.168.1.79:8080",
-    baseURL: "http://192.168.1.103:8000",
+     baseURL: "http://192.168.1.79:8080",
+    // baseURL: "http://192.168.1.103:8000",
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
   });
 
 export default axios.create({
-  //  baseURL: "http://192.168.1.79:8080",
-  baseURL: "http://192.168.1.103:8000",
+   baseURL: "http://192.168.1.79:8080",
+  // baseURL: "http://192.168.1.103:8000",
 });

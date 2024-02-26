@@ -15,6 +15,7 @@ import MyContext from "../configs/MyContext";
 import Signup from '../screens/SingUpScreen';
 import MyOrderScreen from './../screens/MyOrderScreen';
 import CreateOrderScreen from '../screens/CreateOrderScreen';
+import CheckOutScreen from '../screens/CheckOutScreen';
 
 
 
@@ -51,6 +52,7 @@ export default function AppNavigation() {
             <>
               <Stack.Screen name="Home" options={{ headerShown: false }} component={HomeTabs} />
               <Stack.Screen name="Product" options={{ headerShown: false }} component={ProductScreen} />
+              <Stack.Screen name="Checkout" options={{ headerShown: false }} component={CheckOutScreen} />
               <Stack.Screen name="Create" options={{ headerShown: false }} component={CreateOrderScreen} />
             </>}
 
