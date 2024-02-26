@@ -26,6 +26,7 @@ import MyOrderScreen from "./../screens/MyOrderScreen";
 import CreateOrderScreen from "../screens/CreateOrderScreen";
 import InfoScreen from "../screens/InfoScreen";
 import CheckOutScreen from "../screens/CheckOutScreen";
+import MyRatingScreen from "../screens/MyRatingScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -85,6 +86,11 @@ export default function AppNavigation() {
                 name="Info"
                 options={{ headerShown: false }}
                 component={InfoScreen}
+              />
+              <Stack.Screen
+                name="MyRating"
+                options={{ headerShown: false }}
+                component={MyRatingScreen}
               />
             </>
           )}

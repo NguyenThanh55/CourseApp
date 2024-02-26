@@ -19,7 +19,6 @@ export const authApi = (accessToken) =>
       Authorization: `Bearer ${accessToken}`,
     },
   });
-
 export default axios.create({
   //  baseURL: "http://192.168.1.79:8080",
   baseURL: "http://192.168.1.103:8000",
