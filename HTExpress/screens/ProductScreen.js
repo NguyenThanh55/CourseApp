@@ -14,7 +14,8 @@ import {
   Alert,
   ScrollView,
   KeyboardAvoidingView,
-  Keyboard
+  Keyboard,
+  DeviceEventEmitter, NativeModules, NativeEventEmitter
 } from "react-native";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -40,6 +41,7 @@ import MyContext from "../configs/MyContext";
 import { MapPinIcon as MapPinOutline } from "react-native-heroicons/outline";
 
 
+
 const { width, height } = Dimensions.get("window");
 const ios = Platform.OS == "ios";
 
@@ -63,11 +65,13 @@ export default function ProductScreen(props) {
     money: "",
   });
 
+
   const [newAuction, setNewAuction] = useState({
     title: "",
     content: "",
     money: "",
   });
+
 
   const change = (field, value) => {
     setAuction((current) => {
@@ -109,6 +113,7 @@ export default function ProductScreen(props) {
       } else {
         const response = await api.get(`/order/` + order_id + `/auctions/`);
         setListAuction(response.data);
+        console.log(response.data);
       }
     } catch (error) {
       // Handle errors
@@ -164,6 +169,7 @@ export default function ProductScreen(props) {
     }
   }
 
+
   const updateAuction = async () => {
     const accessToken = await AsyncStorage.getItem("access-token");
     setloadingUpdateAuction(true);
@@ -187,6 +193,7 @@ export default function ProductScreen(props) {
       setloadingUpdateAuction(false);
     }
   }
+
 
 
   const handleSelectItem = (item) => {
@@ -303,7 +310,7 @@ export default function ProductScreen(props) {
               const accessToken = await AsyncStorage.getItem("access-token");
               const api = authApi(accessToken);
               const id = item.id;
-              
+
               const response = await api.patch(`/order/${id}/update-shipper-for-order/`, {
                 shipper: item.shipper.id,
                 status: "Completed",
@@ -466,62 +473,81 @@ export default function ProductScreen(props) {
               </View>
             </View>
 
-            {user.role == "CUSTOMER" ? (
-              item.status === "New" ? (
-                <View className="px-4 space-y-2">
-                  <Text
-                    style={{ color: themeColors.text }}
-                    className="text-lg font-bold"
-                  >
-                    Danh sách đấu giá
-                  </Text>
-                  <Text className="text-gray-600">{item.desc}</Text>
+            {user.role === "CUSTOMER" ? (
+              <View>
+                {item.status === "New" ? (
+                  <View className="px-4 space-y-2">
+                    <Text
+                      style={{ color: themeColors.text }}
+                      className="text-lg font-bold"
+                    >
+                      Danh sách đấu giá
+                    </Text>
+                    <Text className="text-gray-600">{item.desc}</Text>
 
+                    <FlatList
+                      data={listAuction}
+                      renderItem={({ item }) => (
+                        <ActionListItem item={item} onPress={handleSelectItem} />
+                      )}
+                      keyExtractor={(item, index) => index.toString()}
+                    />
 
-                  <FlatList
-                    data={listAuction}
-                    renderItem={({ item }) => (
-                      <ActionListItem item={item} onPress={handleSelectItem} />
-                    )}
-                    keyExtractor={(item, index) => index.toString()}
-                  />
-
-
-
-                </View>
-              ) : (
-                <View className="px-4 space-y-2">
-                  <Text
-                    style={{ color: themeColors.text }}
-                    className="text-lg font-bold"
-                  >
-                    Tài xế:
-                  </Text>
-                  <Text className="text-gray-600">{item.desc}</Text>
-                  {item.shipper && ( // Check if item.shipper is not null
-                    <View style={styles.profileContainer}>
-                      <Image
-                        source={{ uri: item.shipper.avatar }}
-                        style={styles.avatar}
-                      />
-                    </View>
-                  )}
-                  <View style={{ marginHorizontal: 22 }}>
-                    {item.shipper && ( // Check if item.shipper is not null
-                      <>
-                        <Text style={styles.text}>
-                          Tên: {item.shipper.first_name} {item.shipper.last_name}
-                        </Text>
-                        <Text style={styles.text}>Email: {item.shipper.email}</Text>
-                        <Text style={styles.text}>
-                          Số điện thoại: {item.shipper.phone}
-                        </Text>
-                        <PhoneCallButton phoneNumber={item.shipper.phone} />
-                      </>
-                    )}
                   </View>
-                </View>
-              )
+                ) : (
+                  <View className="px-4 space-y-2">
+                    <Text
+                      style={{ color: themeColors.text }}
+                      className="text-lg font-bold"
+                    >
+                      Tài xế:
+                    </Text>
+                    <Text className="text-gray-600">{item.desc}</Text>
+                    {item.shipper && ( // Check if item.shipper is not null
+                      <View style={styles.profileContainer}>
+                        <Image
+                          source={{ uri: item.shipper.avatar }}
+                          style={styles.avatar}
+                        />
+                      </View>
+                    )}
+                    <View style={{ marginHorizontal: 22 }}>
+                      {item.shipper && ( // Check if item.shipper is not null
+                        <>
+                          <Text style={styles.text}>
+                            Tên: {item.shipper.first_name} {item.shipper.last_name}
+                          </Text>
+                          <Text style={styles.text}>Email: {item.shipper.email}</Text>
+                          <Text style={styles.text}>
+                            Số điện thoại: {item.shipper.phone}
+                          </Text>
+                          <PhoneCallButton phoneNumber={item.shipper.phone} />
+                        </>
+                      )}
+                    </View>
+                  </View>
+                )
+                }
+                {item.status == "Completed" ? (
+                  <View className="px-4 space-y-2" style={{ marginHorizontal: 22 }}>
+                    <Button
+                      title="Thanh toán"
+                      filled
+                      onPress={() => navigation.navigate('Checkout', { ...item })}
+                      disabled={loadingCreateAuction}
+                      style={{
+                        marginTop: 18,
+                        marginBottom: 4,
+                      }}
+                    />
+                  </View>
+
+                ) : (
+                  <View></View>
+                )}
+
+
+              </View>
             ) : (
 
               item.status === 'New' ? (
@@ -755,10 +781,10 @@ export default function ProductScreen(props) {
 
                 )
               ) :
-              (
-                item.status === "Pending" ? (
-                <View className="px-4 space-y-2">
-                <Button
+                (
+                  item.status === "Pending" ? (
+                    <View className="px-4 space-y-2">
+                      <Button
                         title="Đã giao xong"
                         filled
                         onPress={confirm}
@@ -767,12 +793,12 @@ export default function ProductScreen(props) {
                           marginBottom: 4,
                         }}
                       />
-                </View>
-                
-              ) : (
-                <View></View>
-              )
-              )
+                    </View>
+
+                  ) : (
+                    <View></View>
+                  )
+                )
 
             )}
           </ScrollView>
@@ -880,3 +906,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
 });
+
+
+
+
+

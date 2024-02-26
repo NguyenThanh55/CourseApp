@@ -20,10 +20,12 @@ import {
 } from "react-native-heroicons/solid";
 import MyUserReducer from "../reducers/MyUserReducer";
 import MyContext from "../configs/MyContext";
+
 import Signup from "../screens/SingUpScreen";
 import MyOrderScreen from "./../screens/MyOrderScreen";
 import CreateOrderScreen from "../screens/CreateOrderScreen";
 import InfoScreen from "../screens/InfoScreen";
+import CheckOutScreen from "../screens/CheckOutScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -68,6 +70,11 @@ export default function AppNavigation() {
                 name="Product"
                 options={{ headerShown: false }}
                 component={ProductScreen}
+              />
+              <Stack.Screen
+                name="Checkout"
+                options={{ headerShown: false }}
+                component={CheckOutScreen}
               />
               <Stack.Screen
                 name="Create"
