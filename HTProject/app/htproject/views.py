@@ -5,6 +5,7 @@ from urllib.parse import urlencode
 
 import paypalrestsdk
 from django.core import mail
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.template.response import TemplateResponse
@@ -515,10 +516,12 @@ class OrderViewSet(viewsets.ViewSet,
     def checkout(self, request, pk):
 
         order = Order.objects.get(id=pk)
+        # breakpoint()
         # money = order.auction_order.money
         host = request.get_host()
         # money = self.get_object().bill_set.first().total_money
-        money = 100000
+        auction = Auction.objects.filter(Q(shipper=order.shipper) & Q(order=order)).values('money')
+        money = auction.first().get('money')
         paypal_checkout = {
             'business': settings.PAYPAL_RECEIVER_EMAIL,
             'amount': money,
