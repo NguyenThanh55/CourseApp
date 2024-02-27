@@ -57,6 +57,7 @@ export default function ProductScreen(props) {
   const [loadingCreateAuction, setloadingCreateAuction] = useState(false);
   const [loadingUpdateAuction, setloadingUpdateAuction] = useState(false);
   const [myAuction, setMyAuction] = useState([]);
+  const [activeAuction, setActiveAuction] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
 
   const [auction, setAuction] = useState({
@@ -71,6 +72,8 @@ export default function ProductScreen(props) {
     content: "",
     money: "",
   });
+
+
 
 
   const change = (field, value) => {
@@ -112,8 +115,20 @@ export default function ProductScreen(props) {
         setMyAuction(filteredAuctions);
       } else {
         const response = await api.get(`/order/` + order_id + `/auctions/`);
-        setListAuction(response.data);
-        console.log(response.data);
+        if(response.data !== "No data" && response.data !== "") {
+          setListAuction(response.data);
+          if(item.status !== "New") {
+            const shipper_id = item.shipper.id
+            const res = await api.get(`/user/` + shipper_id + `/auctions/`);
+            
+          // Check if listAuction is not undefined or null
+          const filteredAuctions = res.data.filter(auction => auction.order.id === order_id);
+          console.log(filteredAuctions);
+          setActiveAuction(filteredAuctions);
+          }
+          
+        }
+        
       }
     } catch (error) {
       // Handle errors
@@ -518,6 +533,9 @@ export default function ProductScreen(props) {
                             Tên: {item.shipper.first_name} {item.shipper.last_name}
                           </Text>
                           <Text style={styles.text}>Email: {item.shipper.email}</Text>
+                          <Text style={styles.text}>
+                            Phí vận chuyển: {formatMoney(activeAuction[0].money)}
+                          </Text>
                           <Text style={styles.text}>
                             Số điện thoại: {item.shipper.phone}
                           </Text>

@@ -35,7 +35,12 @@ export default function HomeScreen({ navigation }) {
   const [user, dispatch] = useContext(MyContext);
   const [activeCategory, setActiveCategory] = useState(1);
   const [listOrder, setListOrder] = useState();
-  const [filterOrder, setFilterOrder] = useState();
+  const [filterOrder, setFilterOrder] = useState([]);
+
+
+  const [loadedItems, setLoadedItems] = useState(3); // Số lượng item đã nạp
+  const [allItemsLoaded, setAllItemsLoaded] = useState(false); 
+
 
   const fetchData = async () => {
     const accessToken = await AsyncStorage.getItem("access-token");
@@ -72,6 +77,11 @@ export default function HomeScreen({ navigation }) {
   useEffect(() => {
     // Call the async function
     fetchData();
+    if (filterOrder && filterOrder.length <= loadedItems) {
+      setAllItemsLoaded(true);
+    } else {
+      setAllItemsLoaded(false);
+    }
   }, []);
 
   // This will be triggered whenever the screen gains focus
@@ -80,6 +90,11 @@ export default function HomeScreen({ navigation }) {
       fetchData();
     }, [])
   );
+
+  const loadMoreItems = () => {
+    // Nạp thêm 3 item mỗi lần
+    setLoadedItems(prevLoadedItems => prevLoadedItems + 3);
+  };
 
 
 
@@ -186,17 +201,19 @@ export default function HomeScreen({ navigation }) {
           }`}
       >
         <View>
-          <Carousel
-            containerCustomStyle={{ overflow: "visible" }}
-            data={filterOrder}
-            renderItem={({ item }) => <OrderCard item={item} />}
-            firstItem={1}
-            inactiveSlideScale={0.75}
-            inactiveSlideOpacity={0.75}
-            sliderWidth={width}
-            itemWidth={width * 0.7}
-            slideStyle={{ display: "flex", alignItems: "center" }}
-          />
+        <Carousel
+        containerCustomStyle={{ overflow: "visible" }}
+        data={filterOrder.slice(0, loadedItems)}
+        renderItem={({ item }) => <OrderCard item={item} />}
+        inactiveSlideScale={0.75}
+        inactiveSlideOpacity={0.75}
+        sliderWidth={width}
+        itemWidth={width * 0.7}
+        slideStyle={{ display: "flex", alignItems: "center" }}
+        onEndReached={loadMoreItems} // Gọi hàm loadMoreItems khi scroll đến cuối danh sách
+        onEndReachedThreshold={0.5} // Ngưỡng 50% đến cuối danh sách để gọi hàm onEndReached
+      />
+
         </View>
       </View>
     </View>
