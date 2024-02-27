@@ -95,6 +95,30 @@ class UserViewSet(viewsets.ViewSet,
         else:
             return Response(serializers.AuctionDetailSerializer(auctions, many=True).data, status=status.HTTP_200_OK)
 
+    @action(methods=['get'], url_name='ratings', detail=True)
+    def ratings(self, request, pk):
+        ratings = Rating.objects.filter(user=pk)
+        if not ratings:
+            return Response("No data", status=status.HTTP_200_OK)
+        else:
+            return Response(serializers.RatingSerializer(ratings, many=True).data, status=status.HTTP_200_OK)
+
+    @action(methods=['get'], url_name='bill', detail=True)
+    def bill(self, request, pk):
+        if request.user.role == "CUSTOMER":
+            bill = Bill.objects.filter(order_customer=request.user)
+            if not bill:
+                return Response("No data", status=status.HTTP_200_OK)
+            else:
+                return Response(serializers.BillSerializer(bill, many=True).data, status=status.HTTP_200_OK)
+        if request.user.role == "SHIPPER":
+            bill = Bill.objects.filter(order_shipper=request.user)
+            if not bill:
+                return Response("No data", status=status.HTTP_200_OK)
+            else:
+                return Response(serializers.BillSerializer(bill, many=True).data, status=status.HTTP_200_OK)
+
+
 
 class CityViewSet(viewsets.ModelViewSet):
     queryset = City.objects.all()
@@ -369,6 +393,14 @@ class OrderViewSet(viewsets.ViewSet,
             return Response("No data", status=status.HTTP_200_OK)
         else:
             return Response(serializers.RatingSerializer(ratings, many=True).data, status=status.HTTP_200_OK)
+
+    @action(methods=['get'], url_name='bill', detail=True)
+    def bill(self, request, pk):
+        bill = Bill.objects.filter(order=pk)
+        if not bill:
+            return Response("No data", status=status.HTTP_200_OK)
+        else:
+            return Response(serializers.BillSerializer(bill, many=True).data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
         operation_description="Create a new auction",

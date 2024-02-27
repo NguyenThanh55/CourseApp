@@ -9,6 +9,7 @@ import {
   Platform,
   Button,
   RefreshControl,
+  ActivityIndicator,
   ScrollView,
 } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
@@ -31,9 +32,9 @@ const ios = Platform.OS == "ios";
 const MyRatingScreen = () => {
   const [user, dispatch] = useContext(MyContext);
   const [activeCategory, setActiveCategory] = useState(1);
-  const [listOrder, setListOrder] = useState();
+  const [listRating, setListRating] = useState(null);
   const [filterOrder, setFilterOrder] = useState();
-
+  const userId = user.id;
   useEffect(() => {
     // Call the async function
     fetchData();
@@ -49,34 +50,16 @@ const MyRatingScreen = () => {
     const accessToken = await AsyncStorage.getItem("access-token");
     try {
       const api = authApi(accessToken);
-
-      if (user["role"] === "SHIPPER") {
-        const res = await api.get(endpoints["my-order"], {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        });
-
-        setListOrder(res.data);
-      } else {
-        const res = await api.get(endpoints["my-order"], {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        });
-        console.log(res.data);
-        setListOrder(res.data.filter((order) => order.shipper != null));
-        setFilterOrder(res.data.filter((order) => order.shipper !== null));
-        console.log(filterOrder);
-      }
+      let res = await api.get(endpoints["ratings"](userId));
+      setListRating(res.data);
     } catch (error) {
       // Handle errors
       console.error("API Error:", error);
     }
   };
-  const renderItem = ({ item }) => {
-    return <Rating item={item} />;
-  };
+  // const renderItem = ({ item }) => {
+  //   return <Rating item={item} />;
+  // };
 
   return (
     <View className="flex-1 relative bg-white">
@@ -105,18 +88,17 @@ const MyRatingScreen = () => {
       {/* coffee cards */}
 
       <View>
-        <Carousel
-          containerCustomStyle={{ overflow: "visible" }}
-          data={filterOrder}
-          renderItem={renderItem}
-          firstItem={1}
-          inactiveSlideScale={0.75}
-          inactiveSlideOpacity={0.75}
-          sliderHeight={height}
-          itemHeight={height * 0.5}
-          vertical={true} // Chuyển sang chế độ dọc
-          slideStyle={{ display: "flex", alignItems: "center" }}
-        />
+        <ScrollView className="mb-20">
+          {listRating === null ? (
+            <ActivityIndicator />
+          ) : (
+            <>
+              {listRating.map((r) => (
+                <Rating item={r} />
+              ))}
+            </>
+          )}
+        </ScrollView>
       </View>
     </View>
   );

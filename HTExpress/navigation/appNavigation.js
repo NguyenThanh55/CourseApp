@@ -27,6 +27,9 @@ import CreateOrderScreen from "../screens/CreateOrderScreen";
 import InfoScreen from "../screens/InfoScreen";
 import CheckOutScreen from "../screens/CheckOutScreen";
 import MyRatingScreen from "../screens/MyRatingScreen";
+import ChangePassword from "../screens/ChangePassword";
+import HistoryScreen from "../screens/HistoryScreen";
+import FollowOrderScreen from "../screens/FollowOrderScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -91,6 +94,21 @@ export default function AppNavigation() {
                 name="MyRating"
                 options={{ headerShown: false }}
                 component={MyRatingScreen}
+              />
+              <Stack.Screen
+                name="FollowOrder"
+                options={{ headerShown: false }}
+                component={FollowOrderScreen}
+              />
+              <Stack.Screen
+                name="History"
+                options={{ headerShown: false }}
+                component={HistoryScreen}
+              />
+              <Stack.Screen
+                name="ChangePassword"
+                options={{ headerShown: false }}
+                component={ChangePassword}
               />
             </>
           )}

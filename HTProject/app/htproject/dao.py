@@ -5,7 +5,7 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 
 from .models import Order, Voucher, User, OrderVoucher, Auction, Rating
-from django.db.models import Count, Q
+from django.db.models import Count, Q, OuterRef
 from .serializers import UserDetailSerializer
 
 
@@ -246,12 +246,6 @@ def list_order_no_ship():
 
 
 def list_order_no_auction():
-    order = Order.objects.exclude(shipper="1")
-    orders = []
-
-    for o in order:
-        auction = Auction.objects.filter(order=o)
-        if not auction:
-            orders.append(o)
+    orders = Order.objects.exclude(Q(shipper=1) | Q(auction_order__isnull=False))
 
     return orders

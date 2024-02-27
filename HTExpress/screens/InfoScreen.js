@@ -44,6 +44,8 @@ const InfoScreen = () => {
             {user.first_name} {user.last_name}
           </Text>
           <Text style={styles.text}>Tên tài khoản: {user.username}</Text>
+          <Text style={styles.text}>Họ: {user.first_name}</Text>
+          <Text style={styles.text}>Tên: {user.last_name}</Text>
           <Text style={styles.text}>Số điện thoại: 0{user.phone}</Text>
           <Text style={styles.text}>Email: {user.email}</Text>
           {user.role == "SHIPPER" ? (

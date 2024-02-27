@@ -139,10 +139,11 @@ class AuctionSerializer(ModelSerializer):
 
 class RatingSerializer(ModelSerializer):
     user = UserDetailSerializer()
+    order = OrderDetailSerializer()
 
     class Meta:
         model = Rating
-        fields = ['id', 'content', 'score', 'user', 'order']
+        fields = ['id', 'content', 'score', 'user', 'order', 'created_date', 'updated_date']
 
 
 class BillSerializer(ModelSerializer):

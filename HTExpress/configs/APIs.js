@@ -9,6 +9,8 @@ export const endpoints = {
   "my-order": "/user/my-orders/",
   "create-order": "/order/create-order/",
   ward: "/ward/",
+
+  ratings: (userId) => `/order/${userId}/ratings/`,
 };
 
 export const authApi = (accessToken) =>
