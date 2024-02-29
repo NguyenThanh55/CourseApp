@@ -21,17 +21,14 @@ const { width, height } = Dimensions.get("window");
 const ios = Platform.OS == "ios";
 export default function Rating({ item }) {
   const navigation = useNavigation();
-  console.log(item);
+
   return (
     <View
       style={{
-        borderRadius: 40,
+        borderRadius: 20,
         backgroundColor: themeColors.bgDark,
-        height: ios ? height * 0.4 : height * 0.25,
         width: width * 0.95,
-        marginLeft: 10,
-        marginRight: 10,
-        marginTop: 10,
+        margin: 10,
       }}
     >
       <View style={styles.boxRow}>
@@ -42,19 +39,19 @@ export default function Rating({ item }) {
             shadowRadius: 30,
             shadowOffset: { width: 0, height: 40 },
             shadowOpacity: 0.8,
-            marginTop: ios ? -(height * 0.1) : 15,
+            marginTop: ios ? 15 : 15,
             paddingLeft: 10,
           }}
           className="flex-row justify-center"
         >
           <Image
-            style={{ borderRadius: 30 }}
+            style={{ borderRadius: 50 }}
             source={{ uri: item.user.avatar }}
             className="h-20 w-20"
           />
         </View>
         {/* content */}
-        <View className="ml-2">
+        <View className="ml-3">
           <View className="space-y-3 mt-3">
             <Text
               style={{
@@ -66,7 +63,7 @@ export default function Rating({ item }) {
               numberOfLines={null}
               ellipsizeMode="tail"
             >
-              Đánh giá của đơn {item.order.title}
+              Đánh giá của đơn {item.order.id}
             </Text>
             <View className="flex-row space-x-1 z-10">
               <Text className="text-xxl text-white font-semibold opacity-60">
@@ -80,13 +77,13 @@ export default function Rating({ item }) {
           </View>
         </View>
       </View>
-      <View className="ml-2 mt-1">
-        <View className="flex-row space-x-1 z-10">
+      <View className="ml-2 mt-3">
+        <View className="flex-row justify-between items-center mb-5">
           <Text className="text-xxl text-white font-semibold opacity-60">
             Nội dung đánh giá:
           </Text>
           <Text
-            className="text-xxl text-white font-semibold "
+            className="text-xxl text-white font-semibold mr-3"
             numberOfLines={null}
             ellipsizeMode="tail"
           >
@@ -94,11 +91,11 @@ export default function Rating({ item }) {
             {item.content}
           </Text>
         </View>
-        <View className="flex-row space-x-1 z-10">
+        <View className="flex-row justify-between items-center mb-5">
           <Text className="text-xxl text-white font-semibold opacity-60">
             Đánh giá:
           </Text>
-          <Text className="text-xxl text-white font-semibold ">
+          <Text className="text-xxl text-white font-semibold mr-3">
             {" "}
             {item.score}
           </Text>
@@ -106,18 +103,15 @@ export default function Rating({ item }) {
         <View
           style={{
             backgroundColor: ios ? themeColors.bgDark : "transparent",
-            shadowColor: themeColors.bgDark,
-            shadowRadius: 25,
-            shadowOffset: { width: 0, height: 40 },
-            shadowOpacity: 0.8,
+      
           }}
           className="flex-row justify-between items-center mb-5"
         >
           <Text className="text-xxl text-white font-semibold opacity-60">
             Ngày đánh giá:
           </Text>
-          <Text className="text-white font-bold text-xl mr-1">
-            {moment(item.updated_date, "YYYY-DD-MM").format("DD/MM/YYYY")}
+          <Text className="text-white font-bold text-xxl mr-3">
+            {moment(item.updated_date, "YYYY-MM-DD").format("DD-MM-YYYY")}
           </Text>
         </View>
       </View>

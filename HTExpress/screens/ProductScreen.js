@@ -39,6 +39,7 @@ import Button from "../components/Button";
 import LoaddingButton from "../components/LoaddingButton";
 import MyContext from "../configs/MyContext";
 import { MapPinIcon as MapPinOutline } from "react-native-heroicons/outline";
+import { useFocusEffect } from '@react-navigation/native';
 
 
 
@@ -50,6 +51,7 @@ export default function ProductScreen(props) {
   const item = props.route.params;
   const [size, setSize] = useState("small");
   const [listAuction, setListAuction] = useState();
+  const [listVoucher, setListVoucher] = useState();
   const navigation = useNavigation();
   const [selectedItem, setSelectedItem] = useState(null);
   const modalRef = useRef(null);
@@ -58,7 +60,13 @@ export default function ProductScreen(props) {
   const [loadingUpdateAuction, setloadingUpdateAuction] = useState(false);
   const [myAuction, setMyAuction] = useState([]);
   const [activeAuction, setActiveAuction] = useState([]);
+  const [billOrder, setBill] = useState();
   const [isEdit, setIsEdit] = useState(false);
+  const [vouchers, setVouchers] = useState([]);
+  const [filterVouchers, setFilterVouchers] = useState([]);
+  const [selectVoucher, setSelectVoucher] = useState();
+  const [total, setTotal] = useState();
+  const [orderrating, setOrderRating] = useState();
 
   const [auction, setAuction] = useState({
     title: `Đấu giá của ` + user.first_name + ' ' + user.last_name,
@@ -72,7 +80,6 @@ export default function ProductScreen(props) {
     content: "",
     money: "",
   });
-
 
 
 
@@ -100,6 +107,13 @@ export default function ProductScreen(props) {
   }, []);
 
 
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchData();
+    }, [])
+  );
+
+
 
   const fetchData = async () => {
     const accessToken = await AsyncStorage.getItem("access-token");
@@ -115,20 +129,44 @@ export default function ProductScreen(props) {
         setMyAuction(filteredAuctions);
       } else {
         const response = await api.get(`/order/` + order_id + `/auctions/`);
-        if(response.data !== "No data" && response.data !== "") {
+        if (response.data !== "No data" && response.data !== "") {
           setListAuction(response.data);
-          if(item.status !== "New") {
+          console.log(response.data);
+          if (item.status !== "New") {
             const shipper_id = item.shipper.id
             const res = await api.get(`/user/` + shipper_id + `/auctions/`);
-            
-          // Check if listAuction is not undefined or null
-          const filteredAuctions = res.data.filter(auction => auction.order.id === order_id);
-          console.log(filteredAuctions);
-          setActiveAuction(filteredAuctions);
+
+            // Check if listAuction is not undefined or null
+            const filteredAuctions = res.data.filter(auction => auction.order.id === order_id);
+            // console.log(filteredAuctions);
+            setActiveAuction(filteredAuctions);
+            setTotal(filteredAuctions[0].money);
           }
-          
+          if (item.status === "Completed") {
+            const urlBill = `/order/` + order_id + `/bill/`;
+            const urlRatings = `/order/` + order_id + `/ratings/`
+            const bill = await api.get(urlBill);
+            const resrating = await api.get(urlRatings);
+            if (bill.status == 200) {
+              setBill(bill.data);
+            }
+            if (resrating.status == 200 && resrating.data !== "No data") {
+              setOrderRating(resrating.data);
+              console.log(resrating.data);
+            }
+
+          }
         }
-        
+
+        const vouchers = await api.get(endpoints["voucher"], {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        });
+        setVouchers(vouchers.data);
+        setFilterVouchers(vouchers.data);
+
+
       }
     } catch (error) {
       // Handle errors
@@ -240,7 +278,7 @@ export default function ProductScreen(props) {
 
     return (
       <View>
-        <Button title="Gọi tài xế" onPress={handlePhoneCall} />
+        <Button filled title="Gọi tài xế" onPress={handlePhoneCall} />
       </View>
     );
   };
@@ -268,6 +306,123 @@ export default function ProductScreen(props) {
       </TouchableOpacity>
     );
   };
+
+
+  const Coupon = ({ discount, startDate, endDate, title, onPressButton }) => {
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>{title}</Text>
+        </View>
+        <View style={styles.content}>
+          <View style={styles.rowContainer}>
+            <Text style={styles.dateText}>Phần trăm giảm giá: </Text>
+            <Text style={styles.labelText}>{discount * 100}%</Text>
+          </View>
+          <View style={styles.rowContainer}>
+            <Text style={styles.dateText}>Ngày bắt đầu: </Text>
+            <Text style={styles.labelText}>{moment(startDate, "YYYY-DD-MM").format("DD-MM-YYYY")}</Text>
+          </View>
+          <View style={styles.rowContainer}>
+            <Text style={styles.dateText}>Ngày kết thúc: </Text>
+            <Text style={styles.labelText}>{moment(endDate, "YYYY-DD-MM").format("DD-MM-YYYY")}</Text>
+          </View>
+          <TouchableOpacity style={styles.button} onPress={onPressButton}>
+            <Text style={styles.buttonText}>Sử dụng</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
+
+
+
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState('');
+
+  const handleRating = (value) => {
+    setRating(value);
+  };
+
+  const handleCommentChange = (text) => {
+    setComment(text);
+  };
+
+  const handleSubmitRating = async () => {
+    if (rating === 0) {
+      Alert.alert('Thông báo', 'Vui lòng chọn số điểm trước khi gửi đánh giá.');
+      return;
+    }
+
+
+    const accessToken = await AsyncStorage.getItem("access-token");
+    try {
+      const api = authApi(accessToken);
+      const order_id = item.id;
+
+      try {
+        const response = await api.post(`/order/${order_id}/rating/`, {
+          "content": comment,
+          "score": rating
+        });
+        console.log(response)
+        if (response.status === 201) {
+          fetchData();
+          Alert.alert('Thông báo', `Đã gửi đánh giá: ${rating} sao. Nội dung: ${comment}`);
+        } else {
+          Alert.alert("Lỗi", "Hệ thống đã xảy ra lỗi, vui lòng thử lại sau");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        Alert.alert("Lỗi", "Hệ thống đã xảy ra lỗi, vui lòng thử lại sau");
+      }
+
+
+    } catch (error) {
+      console.error("API Error: ", error);
+    }
+
+  };
+
+
+
+  const payment = async () => {
+    const accessToken = await AsyncStorage.getItem("access-token");
+    try {
+      const api = authApi(accessToken);
+      const order_id = item.id;
+      const decreased_money = activeAuction[0].money - total;
+      const voucher_id = selectVoucher ? selectVoucher.id : null;
+
+      if (voucher_id !== null) {
+        try {
+          const response = await api.post(`/order/${order_id}/vouchers/`, {
+            "decreased_money": decreased_money,
+            "voucher": voucher_id
+          });
+          console.log(response)
+          if (response.status === 201) {
+            fetchData();
+            navigation.navigate('Checkout', { ...item });
+          } else {
+            Alert.alert("Lỗi", "Hệ thống đã xảy ra lỗi, vui lòng thử lại sau");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          Alert.alert("Lỗi", "Hệ thống đã xảy ra lỗi, vui lòng thử lại sau");
+        }
+      } else {
+        Alert.alert("Thông báo", "Bạn chưa chọn voucher");
+      }
+
+    } catch (error) {
+      console.error("API Error: ", error);
+    } finally {
+      setloadingCreateAuction(false);
+    }
+
+  }
+
 
   const handleEdit = () => {
     // Call your API to edit the auction
@@ -309,6 +464,16 @@ export default function ProductScreen(props) {
   };
 
 
+
+  const handlePressShipper = () => {
+    // Chuyển sang trang ShipperProfile và truyền props selectedItem.shipper
+    // Điều này phụ thuộc vào cách bạn quản lý địa chỉ trang trong ứng dụng của bạn
+    // Dưới đây là một ví dụ đơn giản:
+    console.log(selectedItem.shipper);
+    navigation.navigate('ShipperProfile', { shipper: selectedItem.shipper });
+  };
+
+
   const confirm = () => {
     Alert.alert(
       'Xác nhận',
@@ -346,7 +511,28 @@ export default function ProductScreen(props) {
   };
 
 
+  const useVoucher = (coupon) => {
+    const newTotal = activeAuction[0].money * (1 - coupon.discount);
+    setSelectVoucher(coupon);
+    setTotal(newTotal)
+
+    const updatedVouchers = vouchers.filter(item => item !== coupon);
+    setFilterVouchers(updatedVouchers);
+  }
+
+
   const formatMoney = (input) => {
+    // Kiểm tra nếu input không được định nghĩa hoặc có giá trị là undefined
+    if (input === undefined || input === null) {
+      return ''; // hoặc giá trị mặc định khác tùy thuộc vào yêu cầu của bạn
+    }
+
+    // Kiểm tra nếu input không phải là chuỗi
+    if (typeof input !== 'string') {
+      // Xử lý input không phải là chuỗi ở đây, ví dụ: 
+      input = input.toString(); // Chuyển đổi sang chuỗi
+    }
+
     // Remove non-numeric characters
     const numericInput = input.replace(/[^0-9]/g, '');
 
@@ -355,7 +541,6 @@ export default function ProductScreen(props) {
 
     return formattedMoney;
   };
-
 
 
 
@@ -533,9 +718,13 @@ export default function ProductScreen(props) {
                             Tên: {item.shipper.first_name} {item.shipper.last_name}
                           </Text>
                           <Text style={styles.text}>Email: {item.shipper.email}</Text>
-                          <Text style={styles.text}>
-                            Phí vận chuyển: {formatMoney(activeAuction[0].money)}
-                          </Text>
+
+                          {activeAuction !== undefined && activeAuction.length !== 0 && (
+                            <Text style={styles.text}>
+                              Phí vận chuyển: {formatMoney(activeAuction[0].money)}
+                            </Text>
+                          )}
+
                           <Text style={styles.text}>
                             Số điện thoại: {item.shipper.phone}
                           </Text>
@@ -546,23 +735,88 @@ export default function ProductScreen(props) {
                   </View>
                 )
                 }
-                {item.status == "Completed" ? (
-                  <View className="px-4 space-y-2" style={{ marginHorizontal: 22 }}>
-                    <Button
-                      title="Thanh toán"
-                      filled
-                      onPress={() => navigation.navigate('Checkout', { ...item })}
-                      disabled={loadingCreateAuction}
-                      style={{
-                        marginTop: 18,
-                        marginBottom: 4,
-                      }}
-                    />
-                  </View>
 
-                ) : (
-                  <View></View>
+
+                {item.status === "Completed" && orderrating == undefined && (
+                  <View style={styles.container}>
+                    <Text style={styles.title}>Đánh giá:</Text>
+                    <Text style={styles.ratingText}>Điểm: {rating}</Text>
+                    <View style={styles.starsContainer}>
+                      {[1, 2, 3, 4, 5].map((value) => (
+                        <TouchableOpacity
+                          key={value}
+                          style={styles.starButton}
+                          onPress={() => handleRating(value)}
+                        >
+                          <Text style={value <= rating ? styles.filledStar : styles.emptyStar}>★</Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="Nhập nội dung đánh giá"
+                      value={comment}
+                      onChangeText={handleCommentChange}
+                    />
+
+                    <Button filled title="Gửi đánh giá" onPress={handleSubmitRating} disabled={rating === 0} />
+                  </View>
                 )}
+
+
+                {item.status === "Completed" ?
+                  billOrder == undefined || billOrder === "No data" ? (
+                    <>
+                      <View>
+                        {total !== undefined && (
+                          <Text style={styles.textTotal}>
+                            Tổng tiền: {formatMoney(total)}
+                          </Text>
+                        )}
+
+                      </View>
+                      <ScrollView horizontal>
+                        {filterVouchers.map((coupon, index) => (
+                          <View style={styles.couponContainer} key={index}>
+                            <Coupon
+                              discount={coupon.discount}
+                              startDate={coupon.startDate}
+                              endDate={coupon.endDate}
+                              title={coupon.title}
+                              onPressButton={() => useVoucher(coupon)}
+                            />
+                          </View>
+                        ))}
+                      </ScrollView>
+                      <View className="px-4 space-y-2" style={{ marginHorizontal: 22 }}>
+
+                        <Button
+                          title="Thanh toán"
+                          filled
+                          onPress={() => payment()}
+                          disabled={loadingCreateAuction}
+                          style={{
+                            marginTop: 18,
+                            marginBottom: 4,
+                          }}
+                        />
+                      </View>
+                    </>
+
+                  ) : (
+                    <View className="px-4 space-y-2" style={{ marginHorizontal: 22 }}>
+                      <Button
+                        title="Đã thanh toán"
+                        filled
+                        style={{
+                          marginTop: 18,
+                          marginBottom: 4,
+                        }}
+                      />
+                    </View>
+                  ) : (<View></View>)
+
+                }
 
 
               </View>
@@ -832,24 +1086,21 @@ export default function ProductScreen(props) {
           >
             <Text style={styles.closeButtonText}>Hủy</Text>
           </TouchableOpacity>
-          <View
-            style={{ flexDirection: "row", alignItems: "center", padding: 10 }}
-          >
+
+
+          <TouchableOpacity onPress={handlePressShipper} style={{ flexDirection: "row", alignItems: "center", padding: 10 }}>
             <Image
               source={{ uri: selectedItem.shipper.avatar }}
               style={{ width: 50, height: 50, borderRadius: 25 }}
             />
             <View style={{ marginLeft: 10 }}>
-              <Text style={{ fontSize: 16, fontWeight: "600" }}>
-                {selectedItem.shipper.first_name}{" "}
-                {selectedItem.shipper.last_name}
-              </Text>
+              <Text style={{ fontSize: 16, fontWeight: "600" }}>{selectedItem.shipper.first_name} {selectedItem.shipper.last_name}</Text>
               <Text>{selectedItem.content}</Text>
-              <Text style={{ marginTop: 5, fontWeight: "600", color: 'red' }}>
-                {formatMoney(selectedItem.money)}
-              </Text>
+              <Text style={{ marginTop: 5, fontWeight: "600", color: 'red' }}>{formatMoney(selectedItem.money)}</Text>
             </View>
-          </View>
+          </TouchableOpacity>
+
+
 
           {!loading ? (
             <Button
@@ -922,6 +1173,105 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     marginBottom: 8,
+  },
+
+  textTotal: {
+    fontSize: 20, // Kích thước của chữ
+    color: 'red', // Màu của chữ
+    fontWeight: '600',
+    marginTop: 20,
+    marginLeft: 20,
+  },
+  // Coupon 
+
+  container: {
+    borderWidth: 2,
+    borderColor: COLORS.primary,
+    borderRadius: 10,
+    padding: 10,
+    margin: 20,
+  },
+  header: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    paddingBottom: 10,
+    marginBottom: 10,
+    alignItems: 'center',
+  },
+  headerText: {
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: 600
+  },
+  content: {
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: COLORS.primary,
+    padding: 10,
+    marginTop: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+  },
+  discountText: {
+    fontWeight: '600',
+    color: '#B9B9B9',
+    // Các thuộc tính khác cho văn bản
+  },
+  dateText: {
+    fontWeight: '500',
+    color: '#B9B9B9',
+    // Các thuộc tính khác cho văn bản
+  },
+
+  rowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center', // Đảm bảo các phần tử nằm cùng một hàng căn giữa theo chiều dọc
+    marginBottom: 5, // Thêm khoảng cách giữa các hàng nếu cần
+  },
+  labelText: {
+    fontWeight: '500', // Kiểu cho văn bản label
+    marginRight: 5, // Thêm khoảng cách giữa label và ngày
+  },
+
+  //Rating
+  containerRating: {
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  starsContainer: {
+    flexDirection: 'row',
+  },
+  starButton: {
+    padding: 5,
+  },
+  filledStar: {
+    color: 'gold',
+    fontSize: 24,
+  },
+  emptyStar: {
+    color: 'gray',
+    fontSize: 24,
+  },
+  ratingText: {
+    marginTop: 10,
+  },
+  input: {
+    height: 40,
+    width: '100%',
+    borderRadius: 10,
+    borderColor: 'gray',
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    marginTop: 10,
+    marginBottom: 10,
   },
 });
 

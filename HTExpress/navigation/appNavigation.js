@@ -30,6 +30,7 @@ import MyRatingScreen from "../screens/MyRatingScreen";
 import ChangePassword from "../screens/ChangePassword";
 import HistoryScreen from "../screens/HistoryScreen";
 import FollowOrderScreen from "../screens/FollowOrderScreen";
+import ShipperProfile from "../screens/ShipperProfile";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -109,6 +110,11 @@ export default function AppNavigation() {
                 name="ChangePassword"
                 options={{ headerShown: false }}
                 component={ChangePassword}
+              />
+              <Stack.Screen
+                name="ShipperProfile"
+                options={{ headerShown: false }}
+                component={ShipperProfile}
               />
             </>
           )}

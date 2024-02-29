@@ -71,11 +71,6 @@ const UserInfoScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  boxContent: {
-    marginTop: 30,
-    marginLeft: 10,
-    marginRight: 10,
-  },
   boxRow: {
     display: "flex",
     flexDirection: "row",

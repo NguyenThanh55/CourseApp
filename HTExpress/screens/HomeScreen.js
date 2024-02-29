@@ -63,10 +63,10 @@ export default function HomeScreen({ navigation }) {
             "Content-Type": "application/x-www-form-urlencoded",
           },
         });
-
+        console.log(res);
         setListOrder(res.data.filter((order) => order.shipper === null));
-
         setFilterOrder(res.data.filter((order) => order.shipper === null));
+        
       }
     } catch (error) {
       // Handle errors

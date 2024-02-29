@@ -51,7 +51,10 @@ const MyRatingScreen = () => {
     try {
       const api = authApi(accessToken);
       let res = await api.get(endpoints["ratings"](userId));
-      setListRating(res.data);
+      if(res.data !== "No data") {
+        setListRating(res.data);
+      }
+      
     } catch (error) {
       // Handle errors
       console.error("API Error:", error);
@@ -65,11 +68,7 @@ const MyRatingScreen = () => {
     <View className="flex-1 relative bg-white">
       <StatusBar />
 
-      <Image
-        source={require("../assets/images/beansBackground1.png")}
-        style={{ height: height * 0.2 }}
-        className="w-full absolute -top-5 opacity-10"
-      />
+     
 
       <SafeAreaView className={ios ? "-mb-8" : ""}>
         {/* avatar and bell icon */}
@@ -87,9 +86,9 @@ const MyRatingScreen = () => {
 
       {/* coffee cards */}
 
-      <View>
+      <View >
         <ScrollView className="mb-20">
-          {listRating === null ? (
+          {listRating == null ? (
             <ActivityIndicator />
           ) : (
             <>
