@@ -97,7 +97,22 @@ class UserViewSet(viewsets.ViewSet,
 
     @action(methods=['get'], url_name='ratings', detail=True)
     def ratings(self, request, pk):
-        ratings = Rating.objects.filter(user=pk)
+        if request.user.role == "CUSTOMER":
+            ratings = Rating.objects.filter(user=pk)
+            if not ratings:
+                return Response("No data", status=status.HTTP_200_OK)
+            else:
+                return Response(serializers.RatingSerializer(ratings, many=True).data, status=status.HTTP_200_OK)
+        if request.user.role == "SHIPPER":
+            ratings = Rating.objects.filter(order__shipper=pk)
+            if not ratings:
+                return Response("No data", status=status.HTTP_200_OK)
+            else:
+                return Response(serializers.RatingSerializer(ratings, many=True).data, status=status.HTTP_200_OK)
+
+    @action(methods=['get'], url_name='rating-shipper', url_path="rating-shipper", detail=True)
+    def rating_shipper(self, request, pk):
+        ratings = Rating.objects.filter(order__shipper=pk)
         if not ratings:
             return Response("No data", status=status.HTTP_200_OK)
         else:
@@ -106,18 +121,49 @@ class UserViewSet(viewsets.ViewSet,
     @action(methods=['get'], url_name='bill', detail=True)
     def bill(self, request, pk):
         if request.user.role == "CUSTOMER":
-            bill = Bill.objects.filter(order_customer=request.user)
+            bill = Bill.objects.filter(order__customer=pk)
             if not bill:
                 return Response("No data", status=status.HTTP_200_OK)
             else:
                 return Response(serializers.BillSerializer(bill, many=True).data, status=status.HTTP_200_OK)
         if request.user.role == "SHIPPER":
-            bill = Bill.objects.filter(order_shipper=request.user)
+            bill = Bill.objects.filter(order__shipper=pk)
             if not bill:
                 return Response("No data", status=status.HTTP_200_OK)
             else:
                 return Response(serializers.BillSerializer(bill, many=True).data, status=status.HTTP_200_OK)
 
+    # @swagger_auto_schema(
+    #     operation_description="Change password",
+    #     request_body=openapi.Schema(
+    #         type=openapi.TYPE_OBJECT,
+    #         properties={
+    #             'password_old': openapi.Schema(type=openapi.TYPE_INTEGER, description='Old password'),
+    #             'password_new': openapi.Schema(type=openapi.TYPE_STRING, description='New password'),
+    #         },
+    #         required=['password_old', 'password_new'],
+    #     ),
+    #     responses={
+    #         200: openapi.Response(
+    #             description="Successfully",
+    #         ),
+    #         400: openapi.Response(
+    #             description="Bad request",
+    #         )
+    #     }
+    # )
+    # @action(methods=['patch'], url_path='change-password', url_name='change-password', detail=True)
+    # def change_password(self, request, pk):
+    #     user = User.objects.get(pk=pk)
+    #     password_old = request.data.get('password_old')
+    #     password_new = request.data.get('password_new')
+    #
+    #     if user.check_password(password_old):
+    #         user.set_password(password_new)
+    #         user.save()
+    #         return Response("Password updated successfully", status=status.HTTP_200_OK)
+    #     else:
+    #         return Response("Invalid old password", status=status.HTTP_400_BAD_REQUEST)
 
 
 class CityViewSet(viewsets.ModelViewSet):
@@ -437,8 +483,8 @@ class OrderViewSet(viewsets.ViewSet,
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                'title': openapi.Schema(type=openapi.TYPE_STRING, description='Title of the rating'),
-                'score': openapi.Schema(type=openapi.TYPE_INTEGER, description='Content of the rating'),
+                'content': openapi.Schema(type=openapi.TYPE_STRING, description='Content of the rating'),
+                'score': openapi.Schema(type=openapi.TYPE_INTEGER, description='Score of the rating'),
             }
         ),
         responses={
@@ -554,6 +600,10 @@ class OrderViewSet(viewsets.ViewSet,
         # money = self.get_object().bill_set.first().total_money
         auction = Auction.objects.filter(Q(shipper=order.shipper) & Q(order=order)).values('money')
         money = auction.first().get('money')
+        voucher = OrderVoucher.objects.filter(order=order)
+        if voucher:
+            for v in voucher:
+                money = money - v.decreased_money
         paypal_checkout = {
             'business': settings.PAYPAL_RECEIVER_EMAIL,
             'amount': money,
@@ -578,7 +628,13 @@ class OrderViewSet(viewsets.ViewSet,
     def paymentsuccessful(request, pk):
 
         order = Order.objects.get(id=pk)
-        bill = Bill.objects.create(total_money=100000, order=order)
+        auction = Auction.objects.filter(Q(shipper=order.shipper) & Q(order=order)).values('money')
+        money = auction.first().get('money')
+        voucher = OrderVoucher.objects.filter(order=order)
+        if voucher:
+            for v in voucher:
+                money = money - v.decreased_money
+        bill = Bill.objects.create(total_money=money, order=order)
         return render(request, 'admin/payment-success.html', {'order': order,
                                                               'bill': bill})
 

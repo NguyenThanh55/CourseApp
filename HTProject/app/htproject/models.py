@@ -113,7 +113,7 @@ class Voucher(BaseModel):
 
 
 class OrderVoucher(BaseModel):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="ordervoucher")
     decreased_money = models.DecimalField(max_digits=12, decimal_places=0, null=True)
     voucher = models.ForeignKey(Voucher, on_delete=models.CASCADE)
     useDate = models.DateField(auto_now_add=True, null=True)

@@ -50,17 +50,21 @@ const UserInfoScreen = ({ navigation }) => {
           <TouchableOpacity onPress={() => navigation.navigate("MyRating")}>
             <Text style={styles.text}>Đánh giá của tôi </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("FollowOrder")}>
+          {/* <TouchableOpacity onPress={() => navigation.navigate("FollowOrder")}>
             <Text style={styles.text}>Theo dõi đơn hàng</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("History")}>
-            <Text style={styles.text}>Lịch sử thanh toán</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+          </TouchableOpacity> */}
+          {user.role == "CUSTOMER" ? (
+            <TouchableOpacity onPress={() => navigation.navigate("History")}>
+              <Text style={styles.text}>Lịch sử thanh toán</Text>
+            </TouchableOpacity>
+          ) : (
+            <></>
+          )}
+          {/* <TouchableOpacity
             onPress={() => navigation.navigate("ChangePassword")}
           >
             <Text style={styles.text}>Đổi mật khẩu </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity style={styles.logoutButton} onPress={logout}>
             <Text style={styles.buttonText}>Đăng Xuất</Text>
           </TouchableOpacity>

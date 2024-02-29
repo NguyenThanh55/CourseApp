@@ -3,6 +3,12 @@ from cloudinary.models import CloudinaryField
 from .models import User, City, District, Order, Rating, Auction, Voucher, OrderVoucher, Ward, Bill
 
 
+class UserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'username', 'password']
+
+
 class UserDetailSerializer(ModelSerializer):
 
     class Meta:

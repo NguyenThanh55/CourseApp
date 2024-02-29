@@ -5,7 +5,7 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 
 from .models import Order, Voucher, User, OrderVoucher, Auction, Rating
-from django.db.models import Count, Q, OuterRef
+from django.db.models import Count, Q, OuterRef, Sum, F
 from .serializers import UserDetailSerializer
 
 
@@ -69,6 +69,9 @@ def total_order():
                         total += auction.money - voucher.decreased_money
             else:
                 total += auction.money
+    # total = Auction.objects.filter(order__in=Order.objects.all(), shipper=F('order__shipper')).annotate(
+    #     total_money=Sum('money') - Sum('order__ordervoucher__decreased_money')
+    # ).aggregate(total=Sum('total_money'))['total'] or 0
 
     return total
 
